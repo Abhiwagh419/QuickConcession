@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum Shift {
+  FIRST
+  SECOND
+}
+
+enum Semester {
+  SEM_I
+  SEM_II
+  SEM_III
+  SEM_IV
+  SEM_V
+  SEM_VI
+}
+
+enum Year {
+  FY
+  SY
+  TY
+}
+
+model Student {
+  id           Int    @id @default(autoincrement())
+  enrollmentNo String @unique
+  passwordHash String
+  fullName     String
+  email        String @unique
+  mobileNumber String
+  course       String
+
+  year  Year
+  sem   Semester
+  shift Shift
+
+  dateOfBirth DateTime? // ✅ ADD
+  address     String? // ✅ ADD
+
+  createdAt DateTime @default(now())
+
+  applications ConcessionApplication[]
+  otpEntries   OtpVerification[]
+}
+
+model OtpVerification {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  otpHash   String
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
+
+  @@index([studentId, isUsed, expiresAt])
+}
+
+model ConcessionApplication {
+  id        Int @id @default(autoincrement())
+  studentId Int
+
+  fromLine    String
+  toLine      String
+  fromStation String
+  toStation   String
+
+  travelClass String
+  duration    String
+  startDate   DateTime
+  status      ApplicationStatus @default(PENDING)
+  appliedAt   DateTime          @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
+
+  @@unique([studentId, fromLine, toLine, fromStation, toStation, startDate])
+}
