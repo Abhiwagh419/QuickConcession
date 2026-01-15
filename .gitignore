@@ -1,0 +1,10 @@
+# Editor settings
+.vscode/
+.idea/
+
+# OS metadata
+Thumbs.db
+.DS_Store
+
+# Environment files (if you have any in the root)
+.env
