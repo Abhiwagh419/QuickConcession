@@ -27,5 +27,8 @@ app.use("/student", studentRoutes);
 import concessionRoutes from "./routes/concession.routes";
 app.use("/concession", concessionRoutes);
 
+import { startConcessionExpiryCron } from "./cron/concessionExpiry.cron";
+
+startConcessionExpiryCron();
 
 export default app;

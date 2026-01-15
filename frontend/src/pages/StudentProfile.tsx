@@ -29,6 +29,7 @@ const StudentProfile = () => {
       setFormData({
         name: student.fullName,
         enrollmentNo: student.enrollmentNo,
+        course: student.course,  
         year: student.year, 
         semester: student.sem,     // ENUM VALUE
         dateOfBirth: student.dateOfBirth ?? "",
@@ -54,6 +55,7 @@ const StudentProfile = () => {
   const [formData, setFormData] = useState({
     name: "",
     enrollmentNo: "",
+    course: "",
     year: "",
     semester: "",
     dateOfBirth: "",
@@ -199,6 +201,11 @@ const StudentProfile = () => {
                 </div>
               </div>
 
+              <div className="space-y-2 md:col-span-2">
+    <Label className="text-muted-foreground">Department</Label>
+    <Input value={formData.course} disabled className="bg-muted/50" />
+  </div>
+
               {/* Editable Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -246,8 +253,8 @@ const StudentProfile = () => {
                   <Input value={formData.dateOfBirth ? formatDate(formData.dateOfBirth) : ""}
                    disabled
                   />
-
-                </div>
+                  </div>
+               
 
                 <div className="space-y-2">
                   <Label htmlFor="shift">Shift <span className="text-destructive">*</span></Label>

@@ -165,7 +165,7 @@ const [loading, setLoading] = useState(true);
                   {currentApplication.expiryDate && (
                     <p className="text-sm mt-2">
                       <span className="text-muted-foreground">Valid Until: </span>
-                      <strong className="text-foreground">{formatDate(currentApplication.expiryDate)}</strong>
+                      <strong className="text-foreground">{currentApplication?.expiryDate? new Date(currentApplication.expiryDate).toLocaleDateString("en-IN"): "-"}</strong>
                     </p>
                   )}
                 </div>

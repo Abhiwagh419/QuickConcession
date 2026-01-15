@@ -11,6 +11,7 @@ enum ApplicationStatus {
   PENDING
   APPROVED
   REJECTED
+  EXPIRED
 }
 
 enum Shift {
@@ -69,8 +70,8 @@ model OtpVerification {
 }
 
 model ConcessionApplication {
-  id        Int @id @default(autoincrement())
-  studentId Int
+  id          Int               @id @default(autoincrement())
+  studentId   Int
 
   fromLine    String
   toLine      String
@@ -80,10 +81,11 @@ model ConcessionApplication {
   travelClass String
   duration    String
   startDate   DateTime
+  expiryDate  DateTime?   // ✅ nullable for now
+
   status      ApplicationStatus @default(PENDING)
   appliedAt   DateTime          @default(now())
 
-  student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
-
-  @@unique([studentId, fromLine, toLine, fromStation, toStation, startDate])
+  student     Student           @relation(fields: [studentId], references: [id], onDelete: Restrict)
 }
+
