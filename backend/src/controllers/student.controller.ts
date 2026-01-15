@@ -1,10 +1,8 @@
-import { Response } from "express";
 import { prisma } from "../prisma";
-import { AuthRequest } from "../middleware/auth.middleware";
+import { Request, Response } from "express";
 
-export const getMe = async (req: AuthRequest, res: Response) => {
-  const studentId = req.studentId;
-
+export const getMe = async (req: Request, res: Response) => {
+const studentId = req.user.id;
   if (!studentId) {
     return res.status(401).json({ message: "Unauthorized" });
   }

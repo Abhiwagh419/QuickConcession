@@ -1,9 +1,8 @@
-import { Response } from "express";
-import { prisma } from "../prisma";
-import { AuthRequest } from "../middleware/auth.middleware";
 
-export const applyConcession = async (req: AuthRequest, res: Response) => {
-  const studentId = req.studentId!;
+import { prisma } from "../prisma";
+import { Request, Response } from "express";
+export const applyConcession = async (req: Request, res: Response)=> {
+  const studentId = req.user.id;
 
   const {
     fromLine,
