@@ -95,7 +95,10 @@ const NewConcessionApplication = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {setIsSubmitting(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();                
+    if (!validateForm()) return;
+    setIsSubmitting(true);
 
     try {
       await apiFetch("/concession/apply", {
