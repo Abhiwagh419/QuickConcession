@@ -50,6 +50,7 @@ const [application, setApplication] = useState<any | null>(null);
 const [loading, setLoading] = useState(true);
 const [showRejectDialog, setShowRejectDialog] = useState(false);
 const [showIssueSection, setShowIssueSection] = useState(false);
+
 useEffect(() => {
   if (application?.status === "APPROVED") {
     setShowIssueSection(true);
@@ -58,6 +59,7 @@ useEffect(() => {
 
 useEffect(() => {
   const fetchApplication = async () => {
+    
     try {
       const res = await staffAxios.get(`/staff/concessions/${id}`);
       setApplication(res.data);
@@ -187,12 +189,12 @@ const handleIssue = async () => {
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      Pending: "bg-warning/20 text-warning border-warning/30",
-      Approved: "bg-success/20 text-success border-success/30",
-      Rejected: "bg-destructive/20 text-destructive border-destructive/30",
-      Issued: "bg-primary/20 text-primary border-primary/30",
+      PENDING: "bg-warning/20 text-warning border-warning/30",
+      APPROVED: "bg-success/20 text-success border-success/30",
+      REJECTED: "bg-destructive/20 text-destructive border-destructive/30",
+      EXPIRED: "bg-primary/20 text-primary border-primary/30",
     };
-    return styles[status as keyof typeof styles] || styles.Pending;
+    return styles[status as keyof typeof styles] || styles.PENDING;
   };
 
   return (
@@ -246,14 +248,14 @@ const handleIssue = async () => {
 
               <div className="flex items-center gap-2 text-sm">
                 <GraduationCap className="w-4 h-4 text-muted-foreground" />
-                <span>{application.department}</span>
+                <span>{application.student.course}</span>
               </div>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-muted-foreground">Year:</span> {application.year}
+                  <span className="text-muted-foreground">Year:</span> {application.student.year}
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Semester:</span> {application.sem}
+                  <span className="text-muted-foreground">Semester:</span> {application.student.sem}
                 </div>
                 
               </div>
@@ -263,19 +265,19 @@ const handleIssue = async () => {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <span>DOB: {formatDate(application.dateOfBirth)}</span>
+                  <span>DOB:  {formatDate(application.student.dateOfBirth)}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span>{application.email}</span>
+                  <span>{application.student.email}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-muted-foreground" />
-                  <span>{application.mobileNumber}</span>
+                  <span>{application.student.mobileNumber}</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <span>{application.address}</span>
+                  <span>{application.student.address}</span>
                 </div>
               </div>
 
@@ -364,7 +366,11 @@ const handleIssue = async () => {
         </div>
 
         {/* Action Section */}
-        {(application.status === "PENDING" || application.status === "APPROVED") && (
+        {(
+  application.status === "PENDING" ||
+  (application.status === "APPROVED" && !application.concessionNumber)
+) && (
+
           <Card className="mt-6 border shadow-sm">
             <CardHeader className="pb-4">
               <CardTitle className="font-heading text-lg">

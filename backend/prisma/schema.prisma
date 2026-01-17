@@ -68,10 +68,11 @@ model Staff {
 }
 
 enum ApplicationStatus {
-  PENDING
+  PENDING 
   APPROVED
   REJECTED
   EXPIRED
+  ISSUED
 }
 
 enum Shift {

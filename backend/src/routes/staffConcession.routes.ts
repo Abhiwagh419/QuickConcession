@@ -2,6 +2,9 @@ import { Router } from "express";
 import { getConcessionApplications } from "../controllers/staffConcession.controller";
 import { requireAuth } from "../middleware/requireAuth";
 import { requireStaff } from "../middleware/requireStaff";
+import {
+  getConcessionApplicationById,
+} from "../controllers/staffConcession.controller";
 
 const router = Router();
 
@@ -29,6 +32,13 @@ router.post(
   requireAuth,
   requireStaff,
   rejectConcessionApplication
+);
+
+router.get(
+  "/concessions/:id",
+  requireAuth,
+  requireStaff,
+  getConcessionApplicationById
 );
 
 

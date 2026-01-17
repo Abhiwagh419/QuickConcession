@@ -50,7 +50,7 @@ if (loading) {
  const pendingCount = applications.filter(a => a.status === "PENDING").length;
 const approvedCount = applications.filter(a => a.status === "APPROVED").length;
 const rejectedCount = applications.filter(a => a.status === "REJECTED").length;
-const issuedCount = applications.filter(a => a.status === "APPROVED").length;
+const issuedCount = applications.filter(a => a.status === "ISSUED").length;
 
   const adminModules = [
     { 

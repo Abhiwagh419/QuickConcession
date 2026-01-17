@@ -2,7 +2,12 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import authRoutes from "./routes/auth.routes";
-
+import { expireIssuedConcessions } from "./utils/expireIssuedConcessions";
+import studentRoutes from "./routes/student.routes";
+import concessionRoutes from "./routes/concession.routes";
+import { startExpiryCron } from "./cron/expireConcessions";
+import staffAuthRoutes from "./routes/staffAuth.routes";
+import staffConcessionRoutes from "./routes/staffConcession.routes";
 const app = express();
 
 app.use(
@@ -17,26 +22,14 @@ app.use(
   
 app.use(helmet());
 app.use(express.json());
-
 app.use("/auth", authRoutes);
-
-import studentRoutes from "./routes/student.routes";
-
 app.use("/student", studentRoutes);
-
-import concessionRoutes from "./routes/concession.routes";
 app.use("/concession", concessionRoutes);
-
-import { startExpiryCron } from "./cron/expireConcessions";
-
+(async () => {
+  await expireIssuedConcessions();
+})();
 startExpiryCron();
-
-import staffAuthRoutes from "./routes/staffAuth.routes";
-
 app.use("/staff", staffAuthRoutes);
-
-import staffConcessionRoutes from "./routes/staffConcession.routes";
-
 app.use("/staff", staffConcessionRoutes);
 
 export default app;

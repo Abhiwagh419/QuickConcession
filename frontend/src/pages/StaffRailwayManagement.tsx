@@ -38,9 +38,15 @@ useEffect(() => {
 }, []);
 
   const pendingApps = applications.filter(a => a.status === "PENDING");
-  const approvedApps = applications.filter(a => a.status === "APPROVED");
+const approvedApps = applications.filter(
+  (a) => a.status === "APPROVED" && !a.concessionNumber
+);
+
   const rejectedApps = applications.filter(a => a.status === "REJECTED");
-  const issuedApps = applications.filter(a => a.status === "ISSUED");
+ const issuedApps = applications.filter(
+  (a) => Boolean(a.concessionNumber)
+);
+
 
   const handleProcess = (appId: string) => {
     navigate(`/staff/railway/process/${appId}`);

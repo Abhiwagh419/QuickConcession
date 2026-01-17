@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { prisma } from "../prisma/client";
 import { ApplicationStatus } from "@prisma/client";
 import { calculateExpiryFromApproval } from "../utils/expiry";
+import { sendMail } from "../utils/sendMail";
+
+
 export async function getConcessionApplications(
   req: Request,
   res: Response
@@ -27,8 +30,11 @@ export async function getConcessionApplications(
 
     const applications = await prisma.concessionApplication.findMany({
       where: statusFilter
-        ? { status: statusFilter }
-        : undefined,
+  ? statusFilter === "ISSUED"
+    ? { status: { in: ["ISSUED", "EXPIRED"] } }
+    : { status: statusFilter }
+  : undefined,
+
       orderBy: {
         appliedAt: "desc",
       },
@@ -56,23 +62,19 @@ export async function getConcessionApplications(
   }
 }
 
+
 export async function approveConcessionApplication(
   req: Request,
   res: Response
-) { 
+) {
   try {
     const applicationId = Number(req.params.id);
     const staffId = req.user!.sub;
-    const { concessionNumber } = req.body; // ✅ ADD
+    const { concessionNumber } = req.body;
 
     if (isNaN(applicationId)) {
       return res.status(400).json({ message: "Invalid application id" });
     }
-    if (!concessionNumber || typeof concessionNumber !== "string") {
-  return res.status(400).json({
-    message: "Concession number is required for approval",
-  });
-}
 
     const application = await prisma.concessionApplication.findUnique({
       where: { id: applicationId },
@@ -82,34 +84,124 @@ export async function approveConcessionApplication(
       return res.status(404).json({ message: "Application not found" });
     }
 
-    if (application.status !== "PENDING") {
-      return res.status(400).json({
-        message: "Only pending applications can be approved",
+    /* =========================
+       PENDING → APPROVED
+       ========================= */
+    if (application.status === "PENDING") {
+      const approvedAt = new Date();
+      const expiryDate = calculateExpiryFromApproval(
+        approvedAt,
+        application.duration
+      );
+
+      const updated = await prisma.concessionApplication.update({
+        where: { id: applicationId },
+        data: {
+          status: "APPROVED",
+          approvedAt,
+          expiryDate,
+          approvedByStaffId: staffId,
+        },
       });
+ 
+return res.json(updated);
+
+      return res.json(updated);
     }
 
-    const approvedAt = new Date();
-const expiryDate = calculateExpiryFromApproval(
-  approvedAt,
-  application.duration
-);
+    /* =========================
+       APPROVED → ISSUED
+       ========================= */
+    if (application.status === "APPROVED") {
+  if (!concessionNumber || typeof concessionNumber !== "string") {
+    return res.status(400).json({
+      message: "Concession number is required to issue",
+    });
+  }
+if (application.status !== "APPROVED") {
+  return res.status(400).json({
+    message: "Only approved applications can be issued",
+  });
+}
 
-const updated = await prisma.concessionApplication.update({
-  where: { id: applicationId },
-  data: {
-    status: "APPROVED",
-    approvedAt,
-    expiryDate,
-    approvedByStaffId: staffId,
-    concessionNumber, 
-  },
-});
+  if (application.concessionNumber) {
+    return res.status(400).json({
+      message: "Concession already issued",
+    });
+  }
 
-    return res.json(updated);
+  const issuedAt = new Date(); // not stored, just for logic
+  const expiryDate = calculateExpiryFromApproval(
+    application.approvedAt!,
+    application.duration
+  );
+
+  const updated = await prisma.concessionApplication.update({
+    where: { id: applicationId },
+    data: {
+      status: "ISSUED",
+      concessionNumber,
+      expiryDate,
+    },
+  });
+
+return res.json(updated);
+}
+
+
+    return res.status(400).json({
+      message: `Cannot process application in ${application.status} state`,
+    });
   } catch (error) {
-    console.error("Approve concession error:", error);
+    console.error("Approve / Issue concession error:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
+}
+
+
+export async function getConcessionApplicationById(
+  req: Request,
+  res: Response
+) {
+  const applicationId = Number(req.params.id);
+
+  if (isNaN(applicationId)) {
+    return res.status(400).json({ message: "Invalid application id" });
+  }
+
+  const application = await prisma.concessionApplication.findUnique({
+    where: { id: applicationId },
+    include: {
+      student: {
+        select: {
+          fullName: true,
+          enrollmentNo: true,
+          email: true,
+          mobileNumber: true,
+          address: true,
+          year: true,
+          sem: true,
+          shift: true,
+          dateOfBirth: true,
+          course: true,
+            },
+    },
+    approvedBy: {
+  select: {
+    fullName: true,
+    id: true,
+    email: true,
+  },
+},
+
+    },
+  });
+
+  if (!application) {
+    return res.status(404).json({ message: "Application not found" });
+  }
+
+  return res.json(application);
 }
 
 export async function rejectConcessionApplication(
@@ -154,7 +246,8 @@ export async function rejectConcessionApplication(
       },
     });
 
-    return res.json(updated);
+return res.json(updated);
+
   } catch (error) {
     console.error("Reject concession error:", error);
     return res.status(500).json({ message: "Internal server error" });

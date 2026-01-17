@@ -12,7 +12,7 @@ cron.schedule("5 0 * * *", async () => {
 
       const result = await prisma.concessionApplication.updateMany({
         where: {
-          status: "APPROVED",
+          status: "ISSUED",
           expiryDate: {
             not: null,
             lt: now,

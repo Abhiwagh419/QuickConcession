@@ -66,7 +66,12 @@ const StudentDashboard = () => {
     );
   }
 
-  const activePass = applications.find((a) => a.status === "APPROVED");
+const activePass = applications.find(
+  (a) =>
+    a.status === "ISSUED" &&
+    (!a.expiryDate || new Date(a.expiryDate) > new Date())
+);
+
   const pendingApp = applications.find(
     (a) => a.status === "PENDING"
   );
@@ -159,7 +164,14 @@ const StudentDashboard = () => {
                     <p className="text-sm">
                       {activePass.fromStation} → {activePass.toStation}
                     </p>
-                    <Badge className="mt-2">APPROVED</Badge>
+                    <Badge className="mt-2 bg-success text-white">
+  ISSUED
+</Badge>
+
+<p className="text-xs text-muted-foreground mt-2">
+  Valid till: {new Date(activePass.expiryDate).toLocaleDateString("en-IN")}
+</p>
+
                   </div>
                 ) : pendingApp ? (
                   <div className="p-4 border rounded bg-warning/10">
