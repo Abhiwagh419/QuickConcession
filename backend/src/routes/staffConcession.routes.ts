@@ -6,7 +6,9 @@ import {
   getConcessionApplicationById,
 } from "../controllers/staffConcession.controller";
 
+import { getStaffMe } from "../controllers/staff.controller";
 const router = Router();
+router.get("/me", requireAuth, requireStaff, getStaffMe);
 
 router.get(
   "/concessions",

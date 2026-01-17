@@ -9,7 +9,7 @@ import { startExpiryCron } from "./cron/expireConcessions";
 import staffAuthRoutes from "./routes/staffAuth.routes";
 import staffConcessionRoutes from "./routes/staffConcession.routes";
 const app = express();
-
+import staffRoutes from "./routes/staffConcession.routes";
 app.use(
     cors({
       origin: [
@@ -31,5 +31,5 @@ app.use("/concession", concessionRoutes);
 startExpiryCron();
 app.use("/staff", staffAuthRoutes);
 app.use("/staff", staffConcessionRoutes);
-
+app.use("/staff", staffRoutes);
 export default app;

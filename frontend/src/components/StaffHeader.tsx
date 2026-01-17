@@ -1,18 +1,18 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, LogOut, ChevronRight } from "lucide-react";
-
-const mockStaffData = {
-  name: "Mr. Rajesh Patil",
-  staffId: "STF2024001",
-  department: "Student Section",
-  role: "Authorized Officer",
-};
+import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api";
 
 const StaffHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [staff, setStaff] = useState<any>(null);
+   useEffect(() => {
+    apiFetch("/staff/me")
+      .then(setStaff)
+      .catch(() => {});
+  }, []);
   const handleLogout = () => {
     navigate("/");
   };
@@ -48,8 +48,13 @@ const StaffHeader = () => {
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right text-primary-foreground hidden md:block">
-              <p className="text-sm font-medium">{mockStaffData.name}</p>
-              <p className="text-xs text-primary-foreground/70">Staff ID: {mockStaffData.staffId}</p>
+              <p className="text-sm font-medium">
+  {staff?.fullName}
+</p>
+<p className="text-xs text-primary-foreground/70">
+  Staff ID: {staff?.staffId || staff?.id}
+</p>
+
             </div>
             <Button
               variant="ghost"
@@ -89,5 +94,4 @@ const StaffHeader = () => {
   );
 };
 
-export { mockStaffData };
 export default StaffHeader;
