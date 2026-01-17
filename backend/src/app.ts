@@ -8,8 +8,22 @@ import concessionRoutes from "./routes/concession.routes";
 import { startExpiryCron } from "./cron/expireConcessions";
 import staffAuthRoutes from "./routes/staffAuth.routes";
 import staffConcessionRoutes from "./routes/staffConcession.routes";
-const app = express();
 import staffRoutes from "./routes/staffConcession.routes";
+const app = express();
+app.use(
+  cors({
+    origin: [
+      "https://quick-concession.vercel.app",
+      "https://quick-concession-97e8l7grn-abhisheks-projects-714b9bbf.vercel.app"
+    ],
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+
+
+
 app.use(
     cors({
       origin: [
