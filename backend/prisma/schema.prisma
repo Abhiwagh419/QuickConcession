@@ -27,15 +27,21 @@ model Student {
 
 model OtpVerification {
   id        Int      @id @default(autoincrement())
-  studentId Int
+
+  studentId Int?
+  staffId   Int?
+
   otpHash   String
   expiresAt DateTime
   isUsed    Boolean  @default(false)
   createdAt DateTime @default(now())
-  student   Student  @relation(fields: [studentId], references: [id])
 
-  @@index([studentId, isUsed, expiresAt])
+  student   Student? @relation(fields: [studentId], references: [id])
+  staff     Staff?   @relation(fields: [staffId], references: [id])
+
+  @@index([studentId, staffId, isUsed, expiresAt])
 }
+
 
 model ConcessionApplication {
   id                Int               @id @default(autoincrement())
@@ -65,6 +71,8 @@ model Staff {
   role                 UserRole                @default(STAFF)
   createdAt            DateTime                @default(now())
   approvedApplications ConcessionApplication[] @relation("ApprovedBy")
+
+  otpEntries           OtpVerification[]
 }
 
 enum ApplicationStatus {

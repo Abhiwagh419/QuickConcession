@@ -1,6 +1,6 @@
 import { staffLogin } from "@/api/staffLogin";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -132,9 +132,11 @@ try {
       </Button>
 
       <div className="text-center pt-2">
-        <a href="#" className="text-sm text-accent hover:underline font-medium">
-          Forgot Password?
-        </a>
+        <Link 
+          to="/staff/forgot-password" 
+          className="text-sm text-accent hover:underline font-medium">
+          Forgot password?
+        </Link>
       </div>
     </form>
   );

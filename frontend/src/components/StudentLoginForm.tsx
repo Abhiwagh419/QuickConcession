@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -239,10 +239,12 @@ const StudentLoginForm = () => {
       )}
 
       <div className="text-center pt-2">
-        <a href="#" className="text-sm text-accent hover:underline font-medium">
-          Forgot Password?
-        </a>
-      </div>
+  <Link 
+    to="/forgot-password" 
+    className="text-sm text-accent hover:underline font-medium">
+    Forgot password?
+  </Link>
+</div>
     </form>
   );
 };

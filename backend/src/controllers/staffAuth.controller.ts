@@ -3,7 +3,8 @@ import { prisma } from "../prisma/client";
 import { verifyPassword } from "../utils/password";
 import { signJwt } from "../utils/jwt";
 import jwt from "jsonwebtoken";
-
+import bcrypt from "bcryptjs";
+import { sendStaffPasswordResetOtpMail } from "../utils/mailer";
 export async function staffLogin(req: Request, res: Response) {
   try {
     const { email, password } = req.body;
@@ -56,3 +57,131 @@ export async function staffLogin(req: Request, res: Response) {
     });
   }
 }
+
+
+
+
+
+const OTP_EXPIRY_MINUTES = 10;
+
+/**
+ * POST /auth/staff/forgot-password
+ */
+export const requestStaffPasswordReset = async (
+  req: Request,
+  res: Response
+) => {
+  const { email } = req.body;
+
+  // Enumeration-safe response
+  if (!email) {
+    return res.status(200).json({
+      message:
+        "If the email exists, an OTP has been sent to the registered address.",
+    });
+  }
+
+  const staff = await prisma.staff.findUnique({
+    where: { email },
+  });
+
+  if (!staff) {
+    return res.status(200).json({
+      message:
+        "If the email exists, an OTP has been sent to the registered address.",
+    });
+  }
+
+  // Invalidate previous OTPs
+  await prisma.otpVerification.updateMany({
+    where: {
+      staff: { id: staff.id },
+      isUsed: false,
+      expiresAt: { gt: new Date() },
+    },
+    data: { isUsed: true },
+  });
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const otpHash = await bcrypt.hash(otp, 10);
+
+  await prisma.otpVerification.create({
+    data: {
+      staffId: staff.id,
+      otpHash,
+      expiresAt: new Date(
+        Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000
+      ),
+    },
+  });
+
+  await sendStaffPasswordResetOtpMail(
+    staff.email,
+    otp,
+    staff.fullName
+  );
+
+  return res.status(200).json({
+    message:
+      "If the email exists, an OTP has been sent to the registered address.",
+  });
+};
+
+/**
+ * POST /auth/staff/reset-password
+ */
+export const resetStaffPassword = async (
+  req: Request,
+  res: Response
+) => {
+  const { email, otp, newPassword } = req.body;
+
+  if (!email || !otp || !newPassword) {
+    return res.status(400).json({ message: "Invalid request" });
+  }
+
+  const staff = await prisma.staff.findUnique({
+    where: { email },
+  });
+
+  if (!staff) {
+    return res.status(400).json({ message: "Invalid OTP or expired OTP" });
+  }
+
+  const otpEntry = await prisma.otpVerification.findFirst({
+    where: {
+      staff: { id: staff.id },
+      isUsed: false,
+      expiresAt: { gt: new Date() },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  if (!otpEntry) {
+    return res.status(400).json({ message: "Invalid OTP or expired OTP" });
+  }
+
+  const isValidOtp = await bcrypt.compare(otp, otpEntry.otpHash);
+
+  if (!isValidOtp) {
+    return res.status(400).json({ message: "Invalid OTP or expired OTP" });
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 12);
+
+  await prisma.$transaction([
+    prisma.staff.update({
+      where: { id: staff.id },
+      data: { passwordHash },
+    }),
+    prisma.otpVerification.update({
+      where: { id: otpEntry.id },
+      data: { isUsed: true },
+    }),
+  ]);
+
+  return res.status(200).json({
+    message: "Password reset successful",
+  });
+};
+
