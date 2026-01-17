@@ -14,4 +14,4 @@ ALTER TABLE "ConcessionApplication" ADD COLUMN     "fromLine" TEXT NOT NULL,
 ADD COLUMN     "toLine" TEXT NOT NULL;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ConcessionApplication_studentId_fromLine_toLine_fromStation_key" ON "ConcessionApplication"("studentId", "fromLine", "toLine", "fromStation", "toStation", "startDate");
+CREATE UNIQUE INDEX "ConcessionApplication_studentId_fromLine_toLine_fromStation_key" ON "ConcessionApplication"("studentId", "fromLine", "toLine", "fromStation", "toStation");

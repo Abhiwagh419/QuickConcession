@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../prisma";
 import { generateOtp, hashOtp, verifyOtpHash } from "../utils/otp";
 import { sendOtpMail } from "../utils/mailer";
+import { signJwt } from "../utils/jwt";
 
 const OTP_EXP_MIN = Number(process.env.OTP_EXPIRY_MINUTES || 5);
 
@@ -82,11 +83,11 @@ export const verifyOtp = async (req: Request, res: Response) => {
     data: { isUsed: true },
   });
 
-  const token = jwt.sign(
-    { id: student.id, enrollmentNo: student.enrollmentNo },
-    process.env.JWT_SECRET!,
-    { expiresIn: "1d" }
-  );
+const token = signJwt({
+  sub: student.id,
+  role: "STUDENT",
+});
+
 
   return res.json({ token });
 };

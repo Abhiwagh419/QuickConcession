@@ -1,10 +1,15 @@
-import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useState } from "react";
+import { staffAxios } from "../api/staffAxios";
+import {
+  approveApplication,
+  rejectApplication,
+} from "../api/staffActions";
 import { Separator } from "@/components/ui/separator";
 import {
   AlertDialog,
@@ -30,98 +35,142 @@ import {
   MapPin
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import StaffHeader, { mockStaffData } from "@/components/StaffHeader";
-import { mockStaffApplications, StaffApplication } from "@/data/staffData";
+import StaffHeader from "@/components/StaffHeader";
 
 const ApplicationProcessing = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const application = mockStaffApplications.find(app => app.id === id);
+const [concessionNumber, setConcessionNumber] = useState("");
+const [rejectionReason, setRejectionReason] = useState("");
+const [isProcessing, setIsProcessing] = useState(false);
 
-  const [showRejectDialog, setShowRejectDialog] = useState(false);
-  const [showIssueSection, setShowIssueSection] = useState(application?.status === "Approved");
-  const [rejectionReason, setRejectionReason] = useState("");
-  const [concessionNumber, setConcessionNumber] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
+const [application, setApplication] = useState<any | null>(null);
+const [loading, setLoading] = useState(true);
+const [showRejectDialog, setShowRejectDialog] = useState(false);
+const [showIssueSection, setShowIssueSection] = useState(false);
+useEffect(() => {
+  if (application?.status === "APPROVED") {
+    setShowIssueSection(true);
+  }
+}, [application]);
 
-  if (!application) {
-    return (
-      <div className="min-h-screen bg-background">
-        <StaffHeader />
-        <main className="container mx-auto px-4 py-8">
-          <Card className="border shadow-sm">
-            <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">Application not found</p>
-              <Button variant="outline" className="mt-4" onClick={() => navigate("/staff/railway")}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Management
-              </Button>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
+useEffect(() => {
+  const fetchApplication = async () => {
+    try {
+      const res = await staffAxios.get(`/staff/concessions/${id}`);
+      setApplication(res.data);
+    } catch (err) {
+      console.error("Failed to fetch application", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (id) fetchApplication();
+}, [id]);
+
+if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p>Loading application...</p>
+    </div>
+  );
+}
+
+if (!application) {
+  return (
+    <div className="min-h-screen bg-background">
+      <StaffHeader />
+      <main className="container mx-auto px-4 py-8">
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">Application not found</p>
+            <Button onClick={() => navigate("/staff/railway")} className="mt-4">
+              Back to Management
+            </Button>
+          </CardContent>
+        </Card>
+      </main>
+    </div>
+  );
+}
+
+
+const handleApprove = async () => {
+  try {
+    setIsProcessing(true);
+
+    await staffAxios.post(
+      `/staff/concessions/${application.id}/approve`,
+      {} // no concession number
     );
+
+    const res = await staffAxios.get(`/staff/concessions/${id}`);
+    setApplication(res.data);
+
+    toast({
+      title: "Application Approved",
+      description: "You can now issue the concession.",
+    });
+  } finally {
+    setIsProcessing(false);
+  }
+};
+
+const handleReject = async () => {
+  if (!rejectionReason.trim()) {
+    toast({
+      title: "Rejection reason required",
+      variant: "destructive",
+    });
+    return;
   }
 
-  const handleApprove = () => {
+  try {
     setIsProcessing(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsProcessing(false);
-      setShowIssueSection(true);
-      toast({
-        title: "Application Approved",
-        description: "You can now issue the concession form.",
-      });
-    }, 1000);
-  };
 
-  const handleReject = () => {
-    if (!rejectionReason.trim()) {
-      toast({
-        title: "Rejection Reason Required",
-        description: "Please provide a reason for rejection.",
-        variant: "destructive",
-      });
-      return;
-    }
+    await rejectApplication(application.id, rejectionReason);
 
+    toast({
+      title: "Application Rejected",
+    });
+
+    navigate("/staff/railway");
+  } finally {
+    setIsProcessing(false);
+  }
+};
+
+const handleIssue = async () => {
+  if (!concessionNumber.trim()) {
+    toast({
+      title: "Concession number required",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  try {
     setIsProcessing(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsProcessing(false);
-      setShowRejectDialog(false);
-      toast({
-        title: "Application Rejected",
-        description: "The student will be notified via email.",
-      });
-      navigate("/staff/railway");
-    }, 1000);
-  };
 
-  const handleIssue = () => {
-    if (!concessionNumber.trim()) {
-      toast({
-        title: "Concession Number Required",
-        description: "Please enter the physical form concession number.",
-        variant: "destructive",
-      });
-      return;
-    }
+    await approveApplication(
+      application.id,
+      concessionNumber
+    );
 
-    setIsProcessing(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsProcessing(false);
-      toast({
-        title: "Concession Issued Successfully",
-        description: `Concession ${concessionNumber} issued. Email sent to student.`,
-      });
-      navigate("/staff/railway");
-    }, 1000);
-  };
+    toast({
+      title: "Concession Issued",
+      description: `Pass No: ${concessionNumber}`,
+    });
+
+    navigate("/staff/railway");
+  } finally {
+    setIsProcessing(false);
+  }
+};
+
 
   const formatDate = (dateString?: string | null) => {
     if (!dateString) return "";
@@ -185,11 +234,11 @@ const ApplicationProcessing = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Name</p>
-                  <p className="font-medium text-foreground">{application.studentName}</p>
+                  <p className="font-medium text-foreground">{application.student.fullName}</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Enrollment No</p>
-                  <p className="font-medium text-foreground">{application.enrollmentNo}</p>
+                  <p className="font-medium text-foreground">{application.student.enrollmentNo}</p>
                 </div>
               </div>
 
@@ -204,8 +253,9 @@ const ApplicationProcessing = () => {
                   <span className="text-muted-foreground">Year:</span> {application.year}
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Semester:</span> {application.semester}
+                  <span className="text-muted-foreground">Semester:</span> {application.sem}
                 </div>
+                
               </div>
 
               <Separator />
@@ -217,15 +267,15 @@ const ApplicationProcessing = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span>{application.studentEmail}</span>
+                  <span>{application.email}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-muted-foreground" />
-                  <span>{application.studentPhone}</span>
+                  <span>{application.mobileNumber}</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-                  <span>{application.studentAddress}</span>
+                  <span>{application.address}</span>
                 </div>
               </div>
 
@@ -244,11 +294,11 @@ const ApplicationProcessing = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Application Date</p>
-                  <p className="font-medium text-foreground">{formatDate(application.applicationDate)}</p>
+                  <p className="font-medium text-foreground">{formatDate(application.appliedAt)}</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Period</p>
-                  <p className="font-medium text-foreground">{application.period}</p>
+                  <p className="font-medium text-foreground">{application.duration}</p>
                 </div>
               </div>
 
@@ -285,21 +335,22 @@ const ApplicationProcessing = () => {
                 <p className="font-medium text-foreground">{application.travelClass}</p>
               </div>
 
-              {application.status === "Issued" && (
+              {application.status === "APPROVED" && application.concessionNumber
+ && (
                 <>
                   <Separator />
                   <div className="p-4 bg-success/10 rounded-lg border border-success/30">
                     <p className="text-xs text-success uppercase tracking-wide mb-2">Issued Details</p>
                     <div className="space-y-2 text-sm">
                       <p><span className="text-muted-foreground">Concession No:</span> <span className="font-mono font-medium">{application.concessionNumber}</span></p>
-                      <p><span className="text-muted-foreground">Issue Date:</span> {formatDate(application.issueDate)}</p>
+                      <p><span className="text-muted-foreground">Issue Date:</span> {formatDate(application.approvedAt)}</p>
                       <p><span className="text-muted-foreground">Issued By:</span> {application.issuedBy}</p>
                     </div>
                   </div>
                 </>
               )}
 
-              {application.status === "Rejected" && (
+              {application.status === "REJECTED" && (
                 <>
                   <Separator />
                   <div className="p-4 bg-destructive/10 rounded-lg border border-destructive/30">
@@ -313,7 +364,7 @@ const ApplicationProcessing = () => {
         </div>
 
         {/* Action Section */}
-        {(application.status === "Pending" || application.status === "Approved") && (
+        {(application.status === "PENDING" || application.status === "APPROVED") && (
           <Card className="mt-6 border shadow-sm">
             <CardHeader className="pb-4">
               <CardTitle className="font-heading text-lg">
@@ -402,8 +453,7 @@ const ApplicationProcessing = () => {
               onClick={handleReject}
               className="bg-destructive hover:bg-destructive/90"
               disabled={isProcessing}
-            >
-              Confirm Rejection
+            >Confirm Rejection
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,13 +1,9 @@
-import { Student } from "@prisma/client";
+import { AppJwtPayload } from "../utils/jwt";
 
 declare global {
   namespace Express {
     interface Request {
-      user: {
-        id: number;
-        enrollmentNo: string;
-        email: string;
-      };
+      user?: AppJwtPayload;
     }
   }
 }

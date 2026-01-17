@@ -8,7 +8,7 @@ const router = Router();
  * Get logged-in student profile
  */
 router.get("/me", requireAuth, async (req, res) => {
-    const studentId = req.user.id;
+    const studentId = req.user!.sub;
   
     const student = await prisma.student.findUnique({
       where: { id: studentId },
@@ -34,7 +34,7 @@ router.get("/me", requireAuth, async (req, res) => {
   
   router.put("/me", requireAuth, async (req, res) => {
     try {
-      const studentId = req.user.id;
+      const studentId = req.user!.sub;
   
       const {
         year,

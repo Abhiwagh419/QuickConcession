@@ -1,3 +1,4 @@
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,16 +9,48 @@ import {
   HelpCircle,
   User
 } from "lucide-react";
-import StaffHeader, { mockStaffData } from "@/components/StaffHeader";
-import { mockStaffApplications } from "@/data/staffData";
+import StaffHeader from "@/components/StaffHeader";
+import { useEffect, useState } from "react";
+import { getStaffApplications } from "../api/staffConcessions";
+
 
 const StaffDashboard = () => {
   const navigate = useNavigate();
+  const [applications, setApplications] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem("staffToken");
 
-  const pendingCount = mockStaffApplications.filter(a => a.status === "Pending").length;
-  const approvedCount = mockStaffApplications.filter(a => a.status === "Approved").length;
-  const rejectedCount = mockStaffApplications.filter(a => a.status === "Rejected").length;
-  const issuedCount = mockStaffApplications.filter(a => a.status === "Issued").length;
+const staffInfo = token
+  ? jwtDecode<any>(token)
+  : null;
+
+useEffect(() => {
+  const fetchApplications = async () => {
+    try {
+      const data = await getStaffApplications();
+      setApplications(data);
+    } catch (err) {
+      console.error("Failed to fetch applications", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchApplications();
+}, []);
+
+if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p>Loading dashboard...</p>
+    </div>
+  );
+}
+
+ const pendingCount = applications.filter(a => a.status === "PENDING").length;
+const approvedCount = applications.filter(a => a.status === "APPROVED").length;
+const rejectedCount = applications.filter(a => a.status === "REJECTED").length;
+const issuedCount = applications.filter(a => a.status === "APPROVED").length;
 
   const adminModules = [
     { 
@@ -64,19 +97,19 @@ const StaffDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="p-4 bg-muted/50 rounded-lg border">
                 <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Staff Name</p>
-                <p className="font-medium text-foreground">{mockStaffData.name}</p>
+                <p className="font-medium text-foreground">{staffInfo?.name}</p>
               </div>
               <div className="p-4 bg-muted/50 rounded-lg border">
                 <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Staff ID</p>
-                <p className="font-medium text-foreground">{mockStaffData.staffId}</p>
+                <p className="font-medium text-foreground">{staffInfo?.staffId}</p>
               </div>
               <div className="p-4 bg-muted/50 rounded-lg border">
-                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Department</p>
-                <p className="font-medium text-foreground">{mockStaffData.department}</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Email</p>
+                <p className="font-medium text-foreground">{staffInfo?.email}</p>
               </div>
               <div className="p-4 bg-muted/50 rounded-lg border">
                 <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Role</p>
-                <p className="font-medium text-foreground">{mockStaffData.role}</p>
+                <p className="font-medium text-foreground">{staffInfo?.role}</p>
               </div>
             </div>
           </CardContent>

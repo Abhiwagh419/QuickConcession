@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,16 +13,34 @@ import {
 } from "@/components/ui/table";
 import { Clock, CheckCircle, XCircle, FileCheck, Eye } from "lucide-react";
 import StaffHeader from "@/components/StaffHeader";
-import { mockStaffApplications, StaffApplication } from "@/data/staffData";
+import { useEffect, useState } from "react";
+import { getStaffApplications } from "../api/staffConcessions";
+
 
 const StaffRailwayManagement = () => {
   const navigate = useNavigate();
-  const [applications] = useState<StaffApplication[]>(mockStaffApplications);
+const [applications, setApplications] = useState<any[]>([]);
+const [loading, setLoading] = useState(true);
 
-  const pendingApps = applications.filter(a => a.status === "Pending");
-  const approvedApps = applications.filter(a => a.status === "Approved");
-  const rejectedApps = applications.filter(a => a.status === "Rejected");
-  const issuedApps = applications.filter(a => a.status === "Issued");
+useEffect(() => {
+  const fetchApplications = async () => {
+    try {
+      const data = await getStaffApplications();
+      setApplications(data);
+    } catch (err) {
+      console.error("Failed to load applications", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchApplications();
+}, []);
+
+  const pendingApps = applications.filter(a => a.status === "PENDING");
+  const approvedApps = applications.filter(a => a.status === "APPROVED");
+  const rejectedApps = applications.filter(a => a.status === "REJECTED");
+  const issuedApps = applications.filter(a => a.status === "ISSUED");
 
   const handleProcess = (appId: string) => {
     navigate(`/staff/railway/process/${appId}`);
@@ -35,6 +53,13 @@ const StaffRailwayManagement = () => {
       year: "numeric",
     });
   };
+if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p>Loading applications...</p>
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-background">
@@ -94,13 +119,13 @@ const StaffRailwayManagement = () => {
                         pendingApps.map((app) => (
                           <TableRow key={app.id}>
                             <TableCell className="font-medium">{app.id}</TableCell>
-                            <TableCell>{app.studentName}</TableCell>
-                            <TableCell>{app.enrollmentNo}</TableCell>
+                            <TableCell>{app.student.fullName}</TableCell>
+                            <TableCell>{app.student.enrollmentNo}</TableCell>
                             <TableCell>{app.fromStation}</TableCell>
                             <TableCell>{app.toStation}</TableCell>
                             <TableCell>{app.travelClass}</TableCell>
-                            <TableCell>{app.period}</TableCell>
-                            <TableCell>{formatDate(app.applicationDate)}</TableCell>
+                            <TableCell>{app.duration}</TableCell>
+                            <TableCell>{formatDate(app.appliedAt)}</TableCell>
                             <TableCell className="text-center">
                               <Button
                                 size="sm"
@@ -143,9 +168,9 @@ const StaffRailwayManagement = () => {
                         approvedApps.map((app) => (
                           <TableRow key={app.id}>
                             <TableCell className="font-medium">{app.id}</TableCell>
-                            <TableCell>{app.studentName}</TableCell>
-                            <TableCell>{app.enrollmentNo}</TableCell>
-                            <TableCell>{app.approvedDate ? formatDate(app.approvedDate) : "-"}</TableCell>
+                            <TableCell>{app.student.fullName}</TableCell>
+                            <TableCell>{app.student.enrollmentNo}</TableCell>
+                            <TableCell>{app.approvedAt ? formatDate(app.approvedAt) : "-"}</TableCell>
                             <TableCell className="text-center">
                               <Button
                                 size="sm"
@@ -173,7 +198,7 @@ const StaffRailwayManagement = () => {
                         <TableHead className="font-semibold">Application ID</TableHead>
                         <TableHead className="font-semibold">Student Name</TableHead>
                         <TableHead className="font-semibold">Enrollment No</TableHead>
-                        <TableHead className="font-semibold">Rejection Date</TableHead>
+                        <TableHead className="font-semibold">Application Date</TableHead>
                         <TableHead className="font-semibold">Rejection Reason</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -188,9 +213,9 @@ const StaffRailwayManagement = () => {
                         rejectedApps.map((app) => (
                           <TableRow key={app.id}>
                             <TableCell className="font-medium">{app.id}</TableCell>
-                            <TableCell>{app.studentName}</TableCell>
-                            <TableCell>{app.enrollmentNo}</TableCell>
-                            <TableCell>{app.rejectedDate ? formatDate(app.rejectedDate) : "-"}</TableCell>
+                            <TableCell>{app.student.fullName}</TableCell>
+                            <TableCell>{app.student.enrollmentNo}</TableCell>
+                            <TableCell>{formatDate(app.appliedAt)}</TableCell>
                             <TableCell className="text-destructive">{app.rejectionReason}</TableCell>
                           </TableRow>
                         ))
@@ -225,11 +250,11 @@ const StaffRailwayManagement = () => {
                         issuedApps.map((app) => (
                           <TableRow key={app.id}>
                             <TableCell className="font-medium">{app.id}</TableCell>
-                            <TableCell>{app.studentName}</TableCell>
-                            <TableCell>{app.enrollmentNo}</TableCell>
+                            <TableCell>{app.student.fullName}</TableCell>
+                            <TableCell>{app.student.enrollmentNo}</TableCell>
                             <TableCell className="font-mono text-primary">{app.concessionNumber}</TableCell>
-                            <TableCell>{app.issueDate ? formatDate(app.issueDate) : "-"}</TableCell>
-                            <TableCell>{app.issuedBy}</TableCell>
+                            <TableCell>{app.approvedAt ? formatDate(app.approvedAt) : "-"}</TableCell>
+                            <TableCell>Staff</TableCell>
                           </TableRow>
                         ))
                       )}

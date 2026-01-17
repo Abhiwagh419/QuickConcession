@@ -48,7 +48,6 @@ const NewConcessionApplication = () => {
     fromStation: "",
     toLine: "",
     toStation: "",
-    startDate: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -86,7 +85,6 @@ const NewConcessionApplication = () => {
     if (!formData.fromStation) newErrors.fromStation = "Please select departure station";
     if (!formData.toLine) newErrors.toLine = "Please select arrival line";
     if (!formData.toStation) newErrors.toStation = "Please select arrival station";
-    if (!formData.startDate) newErrors.startDate = "Please select a start date";
     if (formData.fromStation && formData.toStation && formData.fromStation === formData.toStation) {
       newErrors.toStation = "Departure and arrival stations cannot be the same";
     }
@@ -110,7 +108,6 @@ const NewConcessionApplication = () => {
           toStation: formData.toStation,
           travelClass: formData.travelClass,
           duration: formData.period,
-          startDate: formData.startDate, // ✅ THIS LINE
         }),
       });
     
@@ -207,27 +204,8 @@ const NewConcessionApplication = () => {
                   {errors.travelClass && <p className="text-xs text-destructive">{errors.travelClass}</p>}
                 </div>
 
-                {/* Start Date */}
-<div className="space-y-2">
-  <Label htmlFor="startDate">
-    Pass Validity Start Date <span className="text-destructive">*</span>
-  </Label>
-  <input
-    type="date"
-    id="startDate"
-    value={formData.startDate}
-    onChange={(e) => handleChange("startDate", e.target.value)}
-    className={`w-full border rounded-md px-3 py-2 ${
-      errors.startDate ? "border-destructive" : ""
-    }`}
-  />
-  {errors.startDate && (
-    <p className="text-xs text-destructive">{errors.startDate}</p>
-  )}
-</div>
 
-
-                <div className="space-y-2">
+                  <div className="space-y-2">
                   <Label htmlFor="period">Period <span className="text-destructive">*</span></Label>
                   <Select value={formData.period} onValueChange={(v) => handleChange("period", v)}>
                     <SelectTrigger id="period" className={errors.period ? "border-destructive" : ""}>

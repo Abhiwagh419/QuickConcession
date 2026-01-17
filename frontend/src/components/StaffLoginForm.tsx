@@ -1,3 +1,4 @@
+import { staffLogin } from "@/api/staffLogin";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,20 +9,20 @@ import { User, Lock, Loader2 } from "lucide-react";
 
 const StaffLoginForm = () => {
   const navigate = useNavigate();
-  const [staffId, setStaffId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{
-    staffId?: string;
+    email?: string;
     password?: string;
     general?: string;
   }>({});
 
-  const validateStaffId = (value: string) => {
-    if (!value.trim()) return "Staff ID is required";
-    if (value.length < 4) return "Invalid Staff ID";
-    return "";
-  };
+const validateEmail = (value: string) => {
+  if (!value.trim()) return "Email is required";
+  if (!value.includes("@")) return "Invalid email";
+  return "";
+};
 
   const validatePassword = (value: string) => {
     if (!value) return "Password is required";
@@ -32,12 +33,12 @@ const StaffLoginForm = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const staffIdError = validateStaffId(staffId);
+    const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
 
-    if (staffIdError || passwordError) {
+    if (emailError || passwordError) {
       setErrors({
-        staffId: staffIdError,
+        email: emailError,
         password: passwordError,
       });
       return;
@@ -45,21 +46,26 @@ const StaffLoginForm = () => {
 
     setIsLoading(true);
     setErrors({});
+    
+try {
+  const data = await staffLogin(email, password);
 
-    // Simulate login
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+  // store JWT
+  localStorage.setItem("staffToken", data.token);
 
-    // Demo: Accept any valid format credentials
-    if (staffId.length >= 4 && password.length >= 6) {
-      toast({
-        title: "Login Successful",
-        description: "Welcome to QuickConcession Staff Portal.",
-      });
-      navigate("/staff/dashboard");
-    } else {
-      setErrors({ general: "Invalid credentials. Please try again." });
-      setIsLoading(false);
-    }
+  toast({
+    title: "Login Successful",
+    description: "Welcome to QuickConcession Staff Portal.",
+  });
+
+  navigate("/staff/dashboard");
+} catch (err: any) {
+  setErrors({
+    general: "Invalid credentials. Please try again.",
+  });
+  setIsLoading(false);
+}
+
   };
 
   return (
@@ -71,22 +77,22 @@ const StaffLoginForm = () => {
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="staffId" className="text-foreground font-medium">
-          Staff ID
+        <Label htmlFor="email" className="text-foreground font-medium">
+          Email
         </Label>
         <div className="relative">
           <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            id="staffId"
+            id="email"
             type="text"
             placeholder="Enter your Staff ID"
-            value={staffId}
-            onChange={(e) => setStaffId(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="pl-10 form-input"
           />
         </div>
-        {errors.staffId && (
-          <p className="text-sm text-destructive animate-slide-in">{errors.staffId}</p>
+        {errors.email && (
+          <p className="text-sm text-destructive animate-slide-in">{errors.email}</p>
         )}
       </div>
 

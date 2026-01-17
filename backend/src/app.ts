@@ -27,8 +27,16 @@ app.use("/student", studentRoutes);
 import concessionRoutes from "./routes/concession.routes";
 app.use("/concession", concessionRoutes);
 
-import { startConcessionExpiryCron } from "./cron/concessionExpiry.cron";
+import { startExpiryCron } from "./cron/expireConcessions";
 
-startConcessionExpiryCron();
+startExpiryCron();
+
+import staffAuthRoutes from "./routes/staffAuth.routes";
+
+app.use("/staff", staffAuthRoutes);
+
+import staffConcessionRoutes from "./routes/staffConcession.routes";
+
+app.use("/staff", staffConcessionRoutes);
 
 export default app;

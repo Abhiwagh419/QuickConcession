@@ -17,16 +17,34 @@ router.get("/my", requireAuth, async (req, res) => {
     try {
       console.log("REQ.USER =", req.user);
   
-      const studentId = req.user.id;
+  const studentId = req.user!.sub;
+
   
-      const applications = await prisma.concessionApplication.findMany({
-        where: { studentId },
-        orderBy: { appliedAt: "desc" },
-        include: {
-          student: true,
-        },
-      });
-  
+  const applications = await prisma.concessionApplication.findMany({
+  where: { studentId },
+  orderBy: { appliedAt: "desc" },
+  select: {
+  id: true,
+  status: true,
+  fromLine: true, 
+  toLine: true,
+  fromStation: true,
+  toStation: true,
+  duration: true,
+  expiryDate: true,
+  appliedAt: true,
+  rejectionReason: true,
+  travelClass: true,
+  student: {
+    select: {
+      enrollmentNo: true,
+    },
+  },
+  approvedAt: true,        // ✅ Issue Date
+  concessionNumber: true,  // ✅ Pass No.
+},
+});
+
       res.json(applications);
     } catch (err) {
       console.error("ERROR IN /concession/my:", err);

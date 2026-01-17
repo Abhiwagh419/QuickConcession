@@ -207,6 +207,7 @@ const [loading, setLoading] = useState(true);
                     <TableHead className="font-semibold text-foreground">Period</TableHead>
                     <TableHead className="font-semibold text-foreground">Applied On</TableHead>
                     <TableHead className="font-semibold text-foreground">Status</TableHead>
+                    <TableHead className="font-semibold text-foreground">Rejection Reason</TableHead>
                     <TableHead className="font-semibold text-foreground">Pass No</TableHead>
                     <TableHead className="font-semibold text-foreground">Issue Date</TableHead>
                     <TableHead className="font-semibold text-foreground">Expiry Date</TableHead>
@@ -235,8 +236,9 @@ const [loading, setLoading] = useState(true);
                             {app.status}
                           </span>
                         </TableCell>
+                        <TableCell>{app.rejectionReason || "-"}</TableCell>
                         <TableCell>{app.concessionNumber || "-"}</TableCell>
-                        <TableCell>{formatDate(app.issueDate)}</TableCell>
+                        <TableCell>{formatDate(app.approvedAt)}</TableCell>
                         <TableCell>{formatDate(app.expiryDate)}</TableCell>
                       </TableRow>
                     ))

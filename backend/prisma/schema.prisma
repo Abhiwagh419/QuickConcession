@@ -7,6 +7,66 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Student {
+  id           Int                     @id @default(autoincrement())
+  enrollmentNo String                  @unique
+  passwordHash String
+  fullName     String
+  email        String                  @unique
+  mobileNumber String
+  course       String
+  year         Year
+  sem          Semester
+  shift        Shift
+  createdAt    DateTime                @default(now())
+  address      String?
+  dateOfBirth  DateTime?
+  applications ConcessionApplication[]
+  otpEntries   OtpVerification[]
+}
+
+model OtpVerification {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  otpHash   String
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  student   Student  @relation(fields: [studentId], references: [id])
+
+  @@index([studentId, isUsed, expiresAt])
+}
+
+model ConcessionApplication {
+  id                Int               @id @default(autoincrement())
+  studentId         Int
+  fromStation       String
+  toStation         String
+  travelClass       String
+  duration          String
+  status            ApplicationStatus @default(PENDING)
+  appliedAt         DateTime          @default(now())
+  fromLine          String
+  toLine            String
+  expiryDate        DateTime?
+  approvedAt        DateTime?
+  approvedByStaffId Int?
+  rejectionReason   String?
+  concessionNumber  String?           @unique
+  approvedBy        Staff?            @relation("ApprovedBy", fields: [approvedByStaffId], references: [id])
+  student           Student           @relation(fields: [studentId], references: [id])
+}
+
+model Staff {
+  id                   Int                     @id @default(autoincrement())
+  fullName             String
+  email                String                  @unique
+  passwordHash         String
+  role                 UserRole                @default(STAFF)
+  createdAt            DateTime                @default(now())
+  approvedApplications ConcessionApplication[] @relation("ApprovedBy")
+}
+
 enum ApplicationStatus {
   PENDING
   APPROVED
@@ -34,58 +94,7 @@ enum Year {
   TY
 }
 
-model Student {
-  id           Int    @id @default(autoincrement())
-  enrollmentNo String @unique
-  passwordHash String
-  fullName     String
-  email        String @unique
-  mobileNumber String
-  course       String
-
-  year  Year
-  sem   Semester
-  shift Shift
-
-  dateOfBirth DateTime? // ✅ ADD
-  address     String? // ✅ ADD
-
-  createdAt DateTime @default(now())
-
-  applications ConcessionApplication[]
-  otpEntries   OtpVerification[]
+enum UserRole {
+  STAFF
+  ADMIN
 }
-
-model OtpVerification {
-  id        Int      @id @default(autoincrement())
-  studentId Int
-  otpHash   String
-  expiresAt DateTime
-  isUsed    Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
-
-  @@index([studentId, isUsed, expiresAt])
-}
-
-model ConcessionApplication {
-  id          Int               @id @default(autoincrement())
-  studentId   Int
-
-  fromLine    String
-  toLine      String
-  fromStation String
-  toStation   String
-
-  travelClass String
-  duration    String
-  startDate   DateTime
-  expiryDate  DateTime?   // ✅ nullable for now
-
-  status      ApplicationStatus @default(PENDING)
-  appliedAt   DateTime          @default(now())
-
-  student     Student           @relation(fields: [studentId], references: [id], onDelete: Restrict)
-}
-

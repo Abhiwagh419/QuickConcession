@@ -47,7 +47,6 @@ CREATE TABLE "ConcessionApplication" (
     "toStation" TEXT NOT NULL,
     "travelClass" TEXT NOT NULL,
     "duration" TEXT NOT NULL,
-    "startDate" TIMESTAMP(3) NOT NULL,
     "status" "ApplicationStatus" NOT NULL DEFAULT 'PENDING',
     "appliedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -64,7 +63,7 @@ CREATE UNIQUE INDEX "Student_email_key" ON "Student"("email");
 CREATE INDEX "OtpVerification_studentId_isUsed_expiresAt_idx" ON "OtpVerification"("studentId", "isUsed", "expiresAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ConcessionApplication_studentId_fromStation_toStation_start_key" ON "ConcessionApplication"("studentId", "fromStation", "toStation", "startDate");
+CREATE UNIQUE INDEX "ConcessionApplication_studentId_fromStation_toStation_start_key" ON "ConcessionApplication"("studentId", "fromStation", "toStation", "appliedAt");
 
 -- AddForeignKey
 ALTER TABLE "OtpVerification" ADD CONSTRAINT "OtpVerification_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

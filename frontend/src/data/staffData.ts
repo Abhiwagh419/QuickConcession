@@ -4,6 +4,7 @@ export interface StaffApplication {
   id: string;
   studentName: string;
   enrollmentNo: string;
+  travelClass: string;
   department: string;
   year: string;
   semester: string;
@@ -11,11 +12,10 @@ export interface StaffApplication {
   toLine: string;
   fromStation: string;
   toStation: string;
-  travelClass: string;
   period: string;
   applicationDate: string;
   status: StaffApplicationStatus;
-  approvedDate?: string;
+  approvedAt?: string;
   rejectedDate?: string;
   rejectionReason?: string;
   concessionNumber?: string;
@@ -133,7 +133,7 @@ export const mockStaffApplications: StaffApplication[] = [
     period: "Quarterly",
     applicationDate: "2026-01-08",
     status: "Approved",
-    approvedDate: "2026-01-09",
+    approvedAt: "2026-01-09",
     studentEmail: "vikram.singh@gpmumbai.ac.in",
     studentPhone: "9876543214",
     studentAddress: "E-505, Royal Heights, Kalyan West - 421301",
@@ -156,7 +156,7 @@ export const mockStaffApplications: StaffApplication[] = [
     period: "Monthly",
     applicationDate: "2026-01-07",
     status: "Approved",
-    approvedDate: "2026-01-08",
+    approvedAt: "2026-01-08",
     studentEmail: "neha.joshi@gpmumbai.ac.in",
     studentPhone: "9876543215",
     studentAddress: "F-606, Paradise Complex, Andheri West - 400058",
@@ -227,7 +227,7 @@ export const mockStaffApplications: StaffApplication[] = [
     period: "Quarterly",
     applicationDate: "2026-01-02",
     status: "Issued",
-    approvedDate: "2026-01-03",
+    approvedAt: "2026-01-03",
     concessionNumber: "RC2026000001",
     issueDate: "2026-01-04",
     issuedBy: "Mr. Rajesh Patil",
@@ -253,7 +253,7 @@ export const mockStaffApplications: StaffApplication[] = [
     period: "Quarterly",
     applicationDate: "2025-12-28",
     status: "Issued",
-    approvedDate: "2025-12-29",
+    approvedAt: "2025-12-29",
     concessionNumber: "RC2025000156",
     issueDate: "2025-12-30",
     issuedBy: "Mr. Rajesh Patil",
