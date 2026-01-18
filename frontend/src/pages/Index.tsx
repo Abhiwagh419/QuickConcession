@@ -6,6 +6,7 @@ import LoginHeader from "@/components/LoginHeader";
 import LoginFooter from "@/components/LoginFooter";
 import StudentLoginForm from "@/components/StudentLoginForm";
 import StaffLoginForm from "@/components/StaffLoginForm";
+import PageWrapper from "@/components/PageWrapper";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("student");
@@ -14,6 +15,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <LoginHeader />
 
+      <PageWrapper>
       <main className="flex-1 flex items-center justify-center px-4 py-8 md:py-12">
         <div className="w-full max-w-md space-y-6">
           {/* Title Section */}
@@ -80,6 +82,7 @@ const Index = () => {
       </main>
 
       <LoginFooter />
+      </PageWrapper>
     </div>
   );
 };

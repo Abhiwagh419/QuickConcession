@@ -20,6 +20,7 @@ import {
   years,
   semestersByYear,
 } from "@/data/railwayData";
+import PageWrapper from "@/components/PageWrapper";
 
 const StudentProfile = () => {
   const loadProfile = async () => {
@@ -167,6 +168,7 @@ const StudentProfile = () => {
     <div className="min-h-screen bg-background">
       <StudentHeader />
 
+      <PageWrapper>
       <main className="container mx-auto px-4 py-6 max-w-3xl">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -361,6 +363,7 @@ const StudentProfile = () => {
           </p>
         </div>
       </main>
+      </PageWrapper>
     </div>
   );
 };

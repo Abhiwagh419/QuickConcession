@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import StaffHeader from "@/components/StaffHeader";
+import PageWrapper from "@/components/PageWrapper";
 
 const ApplicationProcessing = () => {
   const { id } = useParams<{ id: string }>();
@@ -201,6 +202,7 @@ const handleIssue = async () => {
     <div className="min-h-screen bg-background">
       <StaffHeader />
 
+      <PageWrapper>
       <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -435,7 +437,7 @@ const handleIssue = async () => {
           </Card>
         )}
       </main>
-
+</PageWrapper>
       {/* Reject Dialog */}
       <AlertDialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
         <AlertDialogContent>

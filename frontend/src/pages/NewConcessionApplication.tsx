@@ -21,7 +21,7 @@ import {
 } from "@/data/railwayData";
 import { apiFetch } from "@/lib/api";
 import { useEffect } from "react";
-
+import PageWrapper from "@/components/PageWrapper";
 
 const NewConcessionApplication = () => {
   useEffect(() => {
@@ -148,6 +148,7 @@ const NewConcessionApplication = () => {
     <div className="min-h-screen bg-background">
       <StudentHeader />
 
+      <PageWrapper>
       <main className="container mx-auto px-4 py-6 max-w-3xl">
         <div className="flex items-center gap-3 mb-6">
           <Train className="w-7 h-7 text-primary" />
@@ -354,6 +355,7 @@ const NewConcessionApplication = () => {
           </CardContent>
         </Card>
       </main>
+      </PageWrapper>
     </div>
   );
 };

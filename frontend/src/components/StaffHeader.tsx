@@ -52,7 +52,7 @@ const StaffHeader = () => {
   {staff?.fullName}
 </p>
 <p className="text-xs text-primary-foreground/70">
-  Staff ID: {staff?.staffId || staff?.id}
+  Email Id: {staff?.email}
 </p>
 
             </div>

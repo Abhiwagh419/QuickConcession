@@ -15,7 +15,7 @@ import { Clock, CheckCircle, XCircle, FileCheck, Eye } from "lucide-react";
 import StaffHeader from "@/components/StaffHeader";
 import { useEffect, useState } from "react";
 import { getStaffApplications } from "../api/staffConcessions";
-
+import PageWrapper from "@/components/PageWrapper";
 
 const StaffRailwayManagement = () => {
   const navigate = useNavigate();
@@ -71,6 +71,7 @@ if (loading) {
     <div className="min-h-screen bg-background">
       <StaffHeader />
 
+      <PageWrapper>
       <main className="container mx-auto px-4 py-8">
         <Card className="border shadow-sm">
           <CardHeader>
@@ -272,6 +273,7 @@ if (loading) {
           </CardContent>
         </Card>
       </main>
+      </PageWrapper>
     </div>
   );
 };

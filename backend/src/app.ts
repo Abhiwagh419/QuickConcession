@@ -1,5 +1,5 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
 import helmet from "helmet";
 import authRoutes from "./routes/auth.routes";
 import { expireIssuedConcessions } from "./utils/expireIssuedConcessions";
@@ -10,18 +10,15 @@ import staffAuthRoutes from "./routes/staffAuth.routes";
 import staffConcessionRoutes from "./routes/staffConcession.routes";
 import staffRoutes from "./routes/staffConcession.routes";
 const app = express();
+
 app.use(
   cors({
-    origin: [
-      "https://quick-concession.vercel.app",
-      "https://quick-concession-97e8l7grn-abhisheks-projects-714b9bbf.vercel.app"
-    ],
-    credentials: true,
+    origin: "http://localhost:8080",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.options("*", cors());
 app.use(express.json());
-
 
 app.use(
     cors({

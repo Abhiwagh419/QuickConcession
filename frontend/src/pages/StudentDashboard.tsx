@@ -2,20 +2,24 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import StudentHeader from "@/components/StudentHeader";
 import { apiFetch } from "@/lib/api";
-
+import PageWrapper from "@/components/PageWrapper";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
 import {
   Train,
   FileText,
   CreditCard,
   Award,
+  Ticket,
   User,
   CheckCircle,
   Clock,
   AlertCircle,
+  Globe,
+  UserSquare,
+  FileDown,
+   Landmark
 } from "lucide-react";
 
 const StudentDashboard = () => {
@@ -79,34 +83,65 @@ const activePass = applications.find(
   const services = [
     {
       label: "Railway Concession",
-      icon: Train,
+      icon: Ticket,
       onClick: () => navigate("/student/railway"),
       description: "Apply for railway concession pass",
     },
     {
-      label: "Exam Forms",
-      icon: FileText,
-      onClick: () => {},
-      description: "Fill and submit exam forms",
-    },
+     label: "Download Forms",
+  icon: FileDown,
+  description: "Downloads",
+  onClick: () => {
+    window.open(
+      "https://gpmumbai.ac.in/gpmweb/exam-cell/downloads-qp/",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  },
+} ,
     {
-      label: "Fees & Payments",
-      icon: CreditCard,
-      onClick: () => {},
-      description: "View and pay college fees",
-    },
-    {
-      label: "Certificates",
-      icon: Award,
-      onClick: () => {},
-      description: "Request bonafide and other certificates",
-    },
+  label: "Fees & Payments",
+  icon: Landmark,
+  description: "Pay college fees",
+  onClick: () => {
+    window.open(
+      "https://onlinesbi.sbi.bank.in/sbicollect/icollecthome.htm",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  },
+} ,
+ {
+  label: "Student MIS Portal",
+  icon: UserSquare,
+  description: "Official MIS Portal",
+  onClick: () => {
+    window.open(
+      "https://lssimss.com/GPMMIS/jsp/userlogin.action",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  },
+} ,
+{
+  label: "GPM Website",
+  icon: Globe,
+  description: "gpmumbai.ac.in",
+  onClick: () => {
+    window.open(
+      "https://gpmumbai.ac.in/gpmweb/",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  },
+} ,
   ];
 
   return (
     <div className="min-h-screen bg-background">
       <StudentHeader />
 
+      <PageWrapper>
       <main className="container mx-auto px-4 py-6 max-w-6xl">
         <h1 className="font-heading text-2xl font-bold text-foreground mb-6">
           Student Dashboard
@@ -221,19 +256,22 @@ const activePass = applications.find(
                 ))}
               </CardContent>
             </Card>
-
+</div>
             {/* Quick Info */}
-            <Card className="border shadow-sm bg-secondary/30">
-              <CardContent className="pt-4">
-                <p className="text-xs text-muted-foreground">
-                  <strong className="text-foreground">Notice:</strong> For any issues with the portal, 
-                  please contact the IT Department during office hours (10 AM - 5 PM).
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+            <div className="col-span-3">
+    <Card className="border shadow-sm bg-secondary/30">
+      <CardContent className="pt-4">
+        <p className="text-xs text-muted-foreground">
+          <strong className="text-foreground">Notice:</strong>{" "}
+          For any issues with the portal, please contact the IT Department
+          during office hours (10 AM – 5 PM).
+        </p>
+      </CardContent>
+    </Card>
+  </div>   
         </div>
       </main>
+      </PageWrapper>
     </div>
   );
 };

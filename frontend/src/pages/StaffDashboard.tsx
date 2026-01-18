@@ -12,7 +12,7 @@ import {
 import StaffHeader from "@/components/StaffHeader";
 import { useEffect, useState } from "react";
 import { getStaffApplications } from "../api/staffConcessions";
-
+import PageWrapper from "@/components/PageWrapper";
 
 const StaffDashboard = () => {
   const navigate = useNavigate();
@@ -84,6 +84,7 @@ const issuedCount = applications.filter(a => a.status === "ISSUED").length;
     <div className="min-h-screen bg-background">
       <StaffHeader />
 
+      <PageWrapper>
       <main className="container mx-auto px-4 py-8">
         {/* Staff Profile Section */}
         <Card className="mb-8 border shadow-sm">
@@ -178,6 +179,7 @@ const issuedCount = applications.filter(a => a.status === "ISSUED").length;
           </CardContent>
         </Card>
       </main>
+      </PageWrapper>
     </div>
   );
 };

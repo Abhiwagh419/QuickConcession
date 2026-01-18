@@ -13,7 +13,7 @@ import { Train, Plus, CheckCircle, Clock, XCircle, FileCheck } from "lucide-reac
 import StudentHeader from "@/components/StudentHeader";
 import { useEffect, useState, useMemo } from "react";
 import { apiFetch } from "@/lib/api";
-
+import PageWrapper from "@/components/PageWrapper";
 const RailwayConcessionDashboard = () => {
   useEffect(() => {
     const loadApplications = async () => {
@@ -119,6 +119,7 @@ const [loading, setLoading] = useState(true);
     <div className="min-h-screen bg-background">
       <StudentHeader />
 
+      <PageWrapper>
       <main className="container mx-auto px-4 py-6 max-w-6xl">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -249,6 +250,7 @@ const [loading, setLoading] = useState(true);
           </CardContent>
         </Card>
       </main>
+      </PageWrapper>
     </div>
   );
 };
