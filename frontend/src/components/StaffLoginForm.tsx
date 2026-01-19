@@ -50,7 +50,6 @@ const StaffLoginForm = () => {
     try {
       const data = await staffLogin(email, password);
 
-      // store JWT
       localStorage.setItem("staffToken", data.token);
 
       toast({

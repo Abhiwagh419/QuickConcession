@@ -117,7 +117,7 @@ export async function approveConcessionApplication(
         });
       }
 
-      const issuedAt = new Date(); // not stored, just for logic
+      const issuedAt = new Date(); 
       const expiryDate = calculateExpiryFromApproval(
         application.approvedAt!,
         application.duration,

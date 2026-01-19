@@ -1,18 +1,12 @@
 import { Router } from "express";
 import { applyConcession } from "../controllers/concession.controller";
 import { requireAuth } from "../middleware/auth.middleware";
-import { prisma } from "../prisma"; // adjust path if needed
+import { prisma } from "../prisma";
 
 const router = Router();
 
-/**
- * Apply for concession (student)
- */
 router.post("/apply", requireAuth, applyConcession);
 
-/**
- * Get logged-in student's concession applications
- */
 router.get("/my", requireAuth, async (req, res) => {
   try {
     console.log("REQ.USER =", req.user);

@@ -29,7 +29,7 @@ const StudentProfile = () => {
         enrollmentNo: student.enrollmentNo,
         course: student.course,
         year: student.year,
-        semester: student.sem, // ENUM VALUE
+        semester: student.sem,
         dateOfBirth: student.dateOfBirth ?? "",
         email: student.email,
         phone: student.mobileNumber,
