@@ -2,9 +2,7 @@ import cron from "node-cron";
 import { prisma } from "../prisma/client";
 
 export function startExpiryCron() {
-
-cron.schedule("5 0 * * *", async () => {
-
+  cron.schedule("5 0 * * *", async () => {
     console.log("[CRON] Expiry job triggered at", new Date().toISOString());
 
     try {
@@ -23,9 +21,7 @@ cron.schedule("5 0 * * *", async () => {
         },
       });
 
-      console.log(
-        `[CRON] Expired ${result.count} concession applications`
-      );
+      console.log(`[CRON] Expired ${result.count} concession applications`);
     } catch (error) {
       console.error("[CRON] Expiry job failed:", error);
     }

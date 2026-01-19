@@ -177,12 +177,16 @@ export const semestersByYear: Record<string, string[]> = {
   TY: ["SEM_V", "SEM_VI"],
 };
 
-
 export const concessionClasses = ["First Class", "Second Class"];
 
 export const concessionPeriods = ["Monthly", "Quarterly"];
 
-export type ApplicationStatus = "Submitted" | "Approved" | "Rejected" | "Issued" | "Expired";
+export type ApplicationStatus =
+  | "Submitted"
+  | "Approved"
+  | "Rejected"
+  | "Issued"
+  | "Expired";
 
 export interface ConcessionApplication {
   id: string;

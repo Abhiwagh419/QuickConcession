@@ -5,12 +5,9 @@ import { sendPasswordResetOtpMail } from "../utils/mailer";
 
 const OTP_EXPIRY_MINUTES = 10;
 
-/**
- * POST /auth/student/forgot-password
- */
 export const requestStudentPasswordReset = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   const { enrollmentNo } = req.body;
 
@@ -25,7 +22,6 @@ export const requestStudentPasswordReset = async (
     where: { enrollmentNo },
   });
 
-  // IMPORTANT: Do not reveal existence
   if (!student) {
     return res.status(200).json({
       message:
@@ -33,7 +29,6 @@ export const requestStudentPasswordReset = async (
     });
   }
 
-  // Invalidate previous unused OTPs
   await prisma.otpVerification.updateMany({
     where: {
       studentId: student.id,
@@ -43,13 +38,10 @@ export const requestStudentPasswordReset = async (
     data: { isUsed: true },
   });
 
-  // Generate OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const otpHash = await bcrypt.hash(otp, 10);
 
-  const expiresAt = new Date(
-    Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000
-  );
+  const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
 
   await prisma.otpVerification.create({
     data: {
@@ -59,13 +51,7 @@ export const requestStudentPasswordReset = async (
     },
   });
 
-  // Send email (professional template)
-  await sendPasswordResetOtpMail(
-  student.email,
-  otp,
-  student.fullName
-);
-
+  await sendPasswordResetOtpMail(student.email, otp, student.fullName);
 
   return res.status(200).json({
     message:
@@ -73,13 +59,7 @@ export const requestStudentPasswordReset = async (
   });
 };
 
-/**
- * POST /auth/student/reset-password
- */
-export const resetStudentPassword = async (
-  req: Request,
-  res: Response
-) => {
+export const resetStudentPassword = async (req: Request, res: Response) => {
   const { enrollmentNo, otp, newPassword } = req.body;
 
   if (!enrollmentNo || !otp || !newPassword) {
@@ -113,7 +93,6 @@ export const resetStudentPassword = async (
     return res.status(400).json({ message: "Invalid OTP or expired OTP" });
   }
 
-  // Hash new password
   const passwordHash = await bcrypt.hash(newPassword, 12);
 
   await prisma.$transaction([

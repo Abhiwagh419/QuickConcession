@@ -18,8 +18,6 @@ import ForgotPassword from "./pages/ForgotPassword";
 import StaffForgotPassword from "./pages/StaffForgotPassword";
 
 const queryClient = new QueryClient();
-
-/* 🔹 This component handles animated routes */
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -28,14 +26,26 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
         <Route path="/student/dashboard" element={<StudentDashboard />} />
-        <Route path="/student/railway" element={<RailwayConcessionDashboard />} />
-        <Route path="/student/railway/apply" element={<NewConcessionApplication />} />
+        <Route
+          path="/student/railway"
+          element={<RailwayConcessionDashboard />}
+        />
+        <Route
+          path="/student/railway/apply"
+          element={<NewConcessionApplication />}
+        />
         <Route path="/student/profile" element={<StudentProfile />} />
         <Route path="/staff/dashboard" element={<StaffDashboard />} />
         <Route path="/staff/railway" element={<StaffRailwayManagement />} />
-        <Route path="/staff/railway/process/:id" element={<ApplicationProcessing />} />
+        <Route
+          path="/staff/railway/process/:id"
+          element={<ApplicationProcessing />}
+        />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/staff/forgot-password" element={<StaffForgotPassword />} />
+        <Route
+          path="/staff/forgot-password"
+          element={<StaffForgotPassword />}
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
@@ -52,7 +62,6 @@ const App = () => {
         <BrowserRouter>
           <AnimatedRoutes />
         </BrowserRouter>
-
       </TooltipProvider>
     </QueryClientProvider>
   );

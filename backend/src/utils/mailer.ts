@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 export const sendOtpMail = async (
   to: string,
   otp: string,
-  studentName: string
+  studentName: string,
 ) => {
   await transporter.sendMail({
     from: `"QuickConcession" <${process.env.SMTP_USER}>`,
@@ -48,13 +48,10 @@ export const sendOtpMail = async (
   });
 };
 
-/**
- * ✅ NEW: Forgot password OTP mail
- */
 export const sendPasswordResetOtpMail = async (
   to: string,
   otp: string,
-  studentName: string
+  studentName: string,
 ) => {
   await transporter.sendMail({
     from: `"QuickConcession" <${process.env.SMTP_USER}>`,
@@ -95,7 +92,7 @@ export const sendPasswordResetOtpMail = async (
 export const sendStaffPasswordResetOtpMail = async (
   to: string,
   otp: string,
-  staffName: string
+  staffName: string,
 ) => {
   await transporter.sendMail({
     from: `"QuickConcession" <${process.env.SMTP_USER}>`,

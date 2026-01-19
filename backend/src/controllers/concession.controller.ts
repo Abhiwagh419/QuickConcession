@@ -1,21 +1,11 @@
 import { prisma } from "../prisma";
 import { Request, Response } from "express";
 
-export const applyConcession = async (
-  req: Request,
-  res: Response
-) => {
+export const applyConcession = async (req: Request, res: Response) => {
   const studentId = req.user!.sub;
 
-
-  const {
-    fromLine,
-    toLine,
-    fromStation,
-    toStation,
-    travelClass,
-    duration,
-  } = req.body;
+  const { fromLine, toLine, fromStation, toStation, travelClass, duration } =
+    req.body;
 
   if (
     !fromLine ||
@@ -43,20 +33,16 @@ export const applyConcession = async (
       });
     }
 
-   if (existing.status === "APPROVED") {
-  if (
-    existing.expiryDate &&
-    existing.expiryDate > new Date()
-  ) {
-    return res.status(400).json({
-      message: "Your current concession has not expired yet",
-    });
-  }
-}
-
+    if (existing.status === "APPROVED") {
+      if (existing.expiryDate && existing.expiryDate > new Date()) {
+        return res.status(400).json({
+          message: "Your current concession has not expired yet",
+        });
+      }
+    }
   }
 
- const application = await prisma.concessionApplication.create({
+  const application = await prisma.concessionApplication.create({
     data: {
       studentId,
       fromLine,
@@ -71,4 +57,3 @@ export const applyConcession = async (
 
   return res.status(201).json(application);
 };
-

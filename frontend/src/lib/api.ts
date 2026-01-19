@@ -1,10 +1,9 @@
 const API = import.meta.env.VITE_API_URL;
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
-  const token =
-    path.startsWith("/staff")
-      ? localStorage.getItem("staffToken")
-      : localStorage.getItem("jwt");
+  const token = path.startsWith("/staff")
+    ? localStorage.getItem("staffToken")
+    : localStorage.getItem("jwt");
 
   const res = await fetch(`${API}${path}`, {
     ...options,

@@ -25,10 +25,7 @@ export async function staffLogin(req: Request, res: Response) {
       });
     }
 
-    const isPasswordValid = await verifyPassword(
-      password,
-      staff.passwordHash
-    );
+    const isPasswordValid = await verifyPassword(password, staff.passwordHash);
 
     if (!isPasswordValid) {
       return res.status(401).json({
@@ -36,18 +33,17 @@ export async function staffLogin(req: Request, res: Response) {
       });
     }
 
-  const token = jwt.sign(
-  {
-    sub: staff.id,
-    role: "STAFF",
-    email: staff.email,
-    name: staff.fullName,
-    staffId: staff.id,
-  },
-  process.env.JWT_SECRET!,
-  { expiresIn: "1d" }
-);
-
+    const token = jwt.sign(
+      {
+        sub: staff.id,
+        role: "STAFF",
+        email: staff.email,
+        name: staff.fullName,
+        staffId: staff.id,
+      },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1d" },
+    );
 
     return res.json({ token });
   } catch (error) {
@@ -58,22 +54,14 @@ export async function staffLogin(req: Request, res: Response) {
   }
 }
 
-
-
-
-
 const OTP_EXPIRY_MINUTES = 10;
 
-/**
- * POST /auth/staff/forgot-password
- */
 export const requestStaffPasswordReset = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   const { email } = req.body;
 
-  // Enumeration-safe response
   if (!email) {
     return res.status(200).json({
       message:
@@ -92,7 +80,6 @@ export const requestStaffPasswordReset = async (
     });
   }
 
-  // Invalidate previous OTPs
   await prisma.otpVerification.updateMany({
     where: {
       staff: { id: staff.id },
@@ -109,17 +96,11 @@ export const requestStaffPasswordReset = async (
     data: {
       staffId: staff.id,
       otpHash,
-      expiresAt: new Date(
-        Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000
-      ),
+      expiresAt: new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000),
     },
   });
 
-  await sendStaffPasswordResetOtpMail(
-    staff.email,
-    otp,
-    staff.fullName
-  );
+  await sendStaffPasswordResetOtpMail(staff.email, otp, staff.fullName);
 
   return res.status(200).json({
     message:
@@ -127,13 +108,7 @@ export const requestStaffPasswordReset = async (
   });
 };
 
-/**
- * POST /auth/staff/reset-password
- */
-export const resetStaffPassword = async (
-  req: Request,
-  res: Response
-) => {
+export const resetStaffPassword = async (req: Request, res: Response) => {
   const { email, otp, newPassword } = req.body;
 
   if (!email || !otp || !newPassword) {
@@ -184,4 +159,3 @@ export const resetStaffPassword = async (
     message: "Password reset successful",
   });
 };
-

@@ -3,7 +3,7 @@ import { prisma } from "../prisma/client";
 
 export async function getStaffMe(req: Request, res: Response) {
   try {
-    const staffId = req.user!.sub; // from JWT
+    const staffId = req.user!.sub;
 
     const staff = await prisma.staff.findUnique({
       where: { id: staffId },

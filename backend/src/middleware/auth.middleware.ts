@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 export const requireAuth = (
   req: Request & { user?: any },
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const authHeader = req.headers.authorization;
 

@@ -1,4 +1,8 @@
-export type StaffApplicationStatus = "PENDING" | "APPROVED" | "REJECTED" | "EXPIRED";
+export type StaffApplicationStatus =
+  | "PENDING"
+  | "APPROVED"
+  | "REJECTED"
+  | "EXPIRED";
 
 export interface StaffApplication {
   id: string;

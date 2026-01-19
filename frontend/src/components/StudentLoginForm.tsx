@@ -62,11 +62,12 @@ const StudentLoginForm = () => {
           password,
         }),
       });
-    
+
       setOtpSent(true);
       toast({
         title: "OTP Sent",
-        description: "A one-time password has been sent to your registered email address.",
+        description:
+          "A one-time password has been sent to your registered email address.",
       });
     } catch (err: any) {
       toast({
@@ -75,12 +76,13 @@ const StudentLoginForm = () => {
         variant: "destructive",
       });
     }
-    
+
     setIsSendingOtp(false);
     setOtpSent(true);
     toast({
       title: "OTP Sent",
-      description: "A one-time password has been sent to your registered email address.",
+      description:
+        "A one-time password has been sent to your registered email address.",
     });
   };
 
@@ -111,20 +113,19 @@ const StudentLoginForm = () => {
           otp,
         }),
       });
-    
+
       localStorage.setItem("jwt", res.token);
-    
+
       toast({
         title: "Login Successful",
         description: "Welcome to QuickConcession portal.",
       });
-    
+
       navigate("/student/dashboard");
     } catch (err: any) {
       setErrors({ otp: err.message || "Invalid OTP" });
       setIsLoading(false);
     }
-    
   };
 
   return (
@@ -145,7 +146,9 @@ const StudentLoginForm = () => {
           />
         </div>
         {errors.enrollmentNo && (
-          <p className="text-sm text-destructive animate-slide-in">{errors.enrollmentNo}</p>
+          <p className="text-sm text-destructive animate-slide-in">
+            {errors.enrollmentNo}
+          </p>
         )}
       </div>
 
@@ -165,7 +168,9 @@ const StudentLoginForm = () => {
           />
         </div>
         {errors.password && (
-          <p className="text-sm text-destructive animate-slide-in">{errors.password}</p>
+          <p className="text-sm text-destructive animate-slide-in">
+            {errors.password}
+          </p>
         )}
       </div>
 
@@ -201,13 +206,17 @@ const StudentLoginForm = () => {
                 type="text"
                 placeholder="Enter 6-digit OTP"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                onChange={(e) =>
+                  setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+                }
                 className="pl-10 form-input tracking-widest"
                 maxLength={6}
               />
             </div>
             {errors.otp && (
-              <p className="text-sm text-destructive animate-slide-in">{errors.otp}</p>
+              <p className="text-sm text-destructive animate-slide-in">
+                {errors.otp}
+              </p>
             )}
             <p className="text-xs text-muted-foreground">
               OTP sent to your registered email address.{" "}
@@ -239,12 +248,13 @@ const StudentLoginForm = () => {
       )}
 
       <div className="text-center pt-2">
-  <Link 
-    to="/forgot-password" 
-    className="text-sm text-accent hover:underline font-medium">
-    Forgot password?
-  </Link>
-</div>
+        <Link
+          to="/forgot-password"
+          className="text-sm text-accent hover:underline font-medium"
+        >
+          Forgot password?
+        </Link>
+      </div>
     </form>
   );
 };

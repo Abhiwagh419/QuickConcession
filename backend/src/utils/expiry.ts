@@ -1,6 +1,6 @@
 export function calculateExpiryFromApproval(
   approvedAt: Date,
-  duration: string
+  duration: string,
 ): Date {
   const d = new Date(approvedAt);
 

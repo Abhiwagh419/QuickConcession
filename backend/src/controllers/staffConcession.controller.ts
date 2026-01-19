@@ -4,11 +4,7 @@ import { ApplicationStatus } from "@prisma/client";
 import { calculateExpiryFromApproval } from "../utils/expiry";
 import { sendMail } from "../utils/sendMail";
 
-
-export async function getConcessionApplications(
-  req: Request,
-  res: Response
-) {
+export async function getConcessionApplications(req: Request, res: Response) {
   try {
     const { status } = req.query;
 
@@ -16,9 +12,7 @@ export async function getConcessionApplications(
 
     if (status) {
       if (
-        !Object.values(ApplicationStatus).includes(
-          status as ApplicationStatus
-        )
+        !Object.values(ApplicationStatus).includes(status as ApplicationStatus)
       ) {
         return res.status(400).json({
           message: "Invalid application status",
@@ -30,10 +24,10 @@ export async function getConcessionApplications(
 
     const applications = await prisma.concessionApplication.findMany({
       where: statusFilter
-  ? statusFilter === "ISSUED"
-    ? { status: { in: ["ISSUED", "EXPIRED"] } }
-    : { status: statusFilter }
-  : undefined,
+        ? statusFilter === "ISSUED"
+          ? { status: { in: ["ISSUED", "EXPIRED"] } }
+          : { status: statusFilter }
+        : undefined,
 
       orderBy: {
         appliedAt: "desc",
@@ -62,10 +56,9 @@ export async function getConcessionApplications(
   }
 }
 
-
 export async function approveConcessionApplication(
   req: Request,
-  res: Response
+  res: Response,
 ) {
   try {
     const applicationId = Number(req.params.id);
@@ -84,14 +77,11 @@ export async function approveConcessionApplication(
       return res.status(404).json({ message: "Application not found" });
     }
 
-    /* =========================
-       PENDING → APPROVED
-       ========================= */
     if (application.status === "PENDING") {
       const approvedAt = new Date();
       const expiryDate = calculateExpiryFromApproval(
         approvedAt,
-        application.duration
+        application.duration,
       );
 
       const updated = await prisma.concessionApplication.update({
@@ -103,51 +93,47 @@ export async function approveConcessionApplication(
           approvedByStaffId: staffId,
         },
       });
- 
-return res.json(updated);
+
+      return res.json(updated);
 
       return res.json(updated);
     }
 
-    /* =========================
-       APPROVED → ISSUED
-       ========================= */
     if (application.status === "APPROVED") {
-  if (!concessionNumber || typeof concessionNumber !== "string") {
-    return res.status(400).json({
-      message: "Concession number is required to issue",
-    });
-  }
-if (application.status !== "APPROVED") {
-  return res.status(400).json({
-    message: "Only approved applications can be issued",
-  });
-}
+      if (!concessionNumber || typeof concessionNumber !== "string") {
+        return res.status(400).json({
+          message: "Concession number is required to issue",
+        });
+      }
+      if (application.status !== "APPROVED") {
+        return res.status(400).json({
+          message: "Only approved applications can be issued",
+        });
+      }
 
-  if (application.concessionNumber) {
-    return res.status(400).json({
-      message: "Concession already issued",
-    });
-  }
+      if (application.concessionNumber) {
+        return res.status(400).json({
+          message: "Concession already issued",
+        });
+      }
 
-  const issuedAt = new Date(); // not stored, just for logic
-  const expiryDate = calculateExpiryFromApproval(
-    application.approvedAt!,
-    application.duration
-  );
+      const issuedAt = new Date(); // not stored, just for logic
+      const expiryDate = calculateExpiryFromApproval(
+        application.approvedAt!,
+        application.duration,
+      );
 
-  const updated = await prisma.concessionApplication.update({
-    where: { id: applicationId },
-    data: {
-      status: "ISSUED",
-      concessionNumber,
-      expiryDate,
-    },
-  });
+      const updated = await prisma.concessionApplication.update({
+        where: { id: applicationId },
+        data: {
+          status: "ISSUED",
+          concessionNumber,
+          expiryDate,
+        },
+      });
 
-return res.json(updated);
-}
-
+      return res.json(updated);
+    }
 
     return res.status(400).json({
       message: `Cannot process application in ${application.status} state`,
@@ -158,10 +144,9 @@ return res.json(updated);
   }
 }
 
-
 export async function getConcessionApplicationById(
   req: Request,
-  res: Response
+  res: Response,
 ) {
   const applicationId = Number(req.params.id);
 
@@ -184,16 +169,15 @@ export async function getConcessionApplicationById(
           shift: true,
           dateOfBirth: true,
           course: true,
-            },
-    },
-    approvedBy: {
-  select: {
-    fullName: true,
-    id: true,
-    email: true,
-  },
-},
-
+        },
+      },
+      approvedBy: {
+        select: {
+          fullName: true,
+          id: true,
+          email: true,
+        },
+      },
     },
   });
 
@@ -204,10 +188,7 @@ export async function getConcessionApplicationById(
   return res.json(application);
 }
 
-export async function rejectConcessionApplication(
-  req: Request,
-  res: Response
-) {
+export async function rejectConcessionApplication(req: Request, res: Response) {
   try {
     const applicationId = Number(req.params.id);
     const staffId = req.user!.sub;
@@ -246,11 +227,9 @@ export async function rejectConcessionApplication(
       },
     });
 
-return res.json(updated);
-
+    return res.json(updated);
   } catch (error) {
     console.error("Reject concession error:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 }
-

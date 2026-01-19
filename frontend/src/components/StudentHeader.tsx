@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
 
 const StudentHeader = () => {
-
   const navigate = useNavigate();
   const location = useLocation();
   const [student, setStudent] = useState<any>(null);
@@ -23,17 +22,23 @@ const StudentHeader = () => {
   const getBreadcrumbs = () => {
     const path = location.pathname;
     const breadcrumbs = [{ label: "Dashboard", path: "/student/dashboard" }];
-    
+
     if (path.includes("/railway")) {
-      breadcrumbs.push({ label: "Railway Concession", path: "/student/railway" });
+      breadcrumbs.push({
+        label: "Railway Concession",
+        path: "/student/railway",
+      });
     }
     if (path.includes("/railway/apply")) {
-      breadcrumbs.push({ label: "New Application", path: "/student/railway/apply" });
+      breadcrumbs.push({
+        label: "New Application",
+        path: "/student/railway/apply",
+      });
     }
     if (path.includes("/profile")) {
       breadcrumbs.push({ label: "Profile", path: "/student/profile" });
     }
-    
+
     return breadcrumbs;
   };
 
@@ -48,20 +53,24 @@ const StudentHeader = () => {
               <GraduationCap className="w-5 h-5 text-primary-foreground" />
             </div>
             <div className="text-primary-foreground">
-              <span className="font-heading font-bold text-lg">Government Polytechnic Mumbai</span>
-              <p className="text-xs text-primary-foreground/70">QuickConcession Portal</p>
+              <span className="font-heading font-bold text-lg">
+                Government Polytechnic Mumbai
+              </span>
+              <p className="text-xs text-primary-foreground/70">
+                QuickConcession Portal
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right text-primary-foreground hidden md:block">
-            {student && (
-  <>
-    <p className="text-sm font-medium">{student.fullName}</p>
-    <p className="text-xs text-primary-foreground/70">
-      {student.enrollmentNo}
-    </p>
-  </>
-)}
+              {student && (
+                <>
+                  <p className="text-sm font-medium">{student.fullName}</p>
+                  <p className="text-xs text-primary-foreground/70">
+                    {student.enrollmentNo}
+                  </p>
+                </>
+              )}
             </div>
             <Button
               variant="ghost"
@@ -82,14 +91,16 @@ const StudentHeader = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Breadcrumbs */}
       {breadcrumbs.length > 1 && (
         <div className="px-6 py-2 bg-secondary border-t border-border">
           <nav className="flex items-center gap-1 text-sm">
             {breadcrumbs.map((crumb, index) => (
               <div key={crumb.path} className="flex items-center gap-1">
-                {index > 0 && <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+                {index > 0 && (
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                )}
                 <button
                   onClick={() => navigate(crumb.path)}
                   className={`hover:underline ${

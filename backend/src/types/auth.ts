@@ -1,6 +1,7 @@
 import { Request } from "express";
 
 export interface AuthUser {
+  sub: number;
   id: number;
   enrollmentNo: string;
   email: string;

@@ -8,11 +8,7 @@ export const mailer = nodemailer.createTransport({
   },
 });
 
-export async function sendMail(
-  to: string,
-  subject: string,
-  html: string
-) {
+export async function sendMail(to: string, subject: string, html: string) {
   await mailer.sendMail({
     from: `"QuickConcession" <${process.env.MAIL_USER}>`,
     to,

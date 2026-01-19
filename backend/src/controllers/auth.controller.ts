@@ -83,11 +83,10 @@ export const verifyOtp = async (req: Request, res: Response) => {
     data: { isUsed: true },
   });
 
-const token = signJwt({
-  sub: student.id,
-  role: "STUDENT",
-});
-
+  const token = signJwt({
+    sub: student.id,
+    role: "STUDENT",
+  });
 
   return res.json({ token });
 };

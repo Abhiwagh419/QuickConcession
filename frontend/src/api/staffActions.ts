@@ -2,23 +2,20 @@ import { staffAxios } from "./staffAxios";
 
 export async function approveApplication(
   applicationId: number,
-  concessionNumber: string
+  concessionNumber: string,
 ) {
   const response = await staffAxios.post(
     `/staff/concessions/${applicationId}/approve`,
-    { concessionNumber }
+    { concessionNumber },
   );
 
   return response.data;
 }
 
-export async function rejectApplication(
-  applicationId: number,
-  reason: string
-) {
+export async function rejectApplication(applicationId: number, reason: string) {
   const response = await staffAxios.post(
     `/staff/concessions/${applicationId}/reject`,
-    { reason }
+    { reason },
   );
 
   return response.data;

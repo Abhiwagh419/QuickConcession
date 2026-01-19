@@ -18,11 +18,11 @@ const StaffLoginForm = () => {
     general?: string;
   }>({});
 
-const validateEmail = (value: string) => {
-  if (!value.trim()) return "Email is required";
-  if (!value.includes("@")) return "Invalid email";
-  return "";
-};
+  const validateEmail = (value: string) => {
+    if (!value.trim()) return "Email is required";
+    if (!value.includes("@")) return "Invalid email";
+    return "";
+  };
 
   const validatePassword = (value: string) => {
     if (!value) return "Password is required";
@@ -46,26 +46,25 @@ const validateEmail = (value: string) => {
 
     setIsLoading(true);
     setErrors({});
-    
-try {
-  const data = await staffLogin(email, password);
 
-  // store JWT
-  localStorage.setItem("staffToken", data.token);
+    try {
+      const data = await staffLogin(email, password);
 
-  toast({
-    title: "Login Successful",
-    description: "Welcome to QuickConcession Staff Portal.",
-  });
+      // store JWT
+      localStorage.setItem("staffToken", data.token);
 
-  navigate("/staff/dashboard");
-} catch (err: any) {
-  setErrors({
-    general: "Invalid credentials. Please try again.",
-  });
-  setIsLoading(false);
-}
+      toast({
+        title: "Login Successful",
+        description: "Welcome to QuickConcession Staff Portal.",
+      });
 
+      navigate("/staff/dashboard");
+    } catch (err: any) {
+      setErrors({
+        general: "Invalid credentials. Please try again.",
+      });
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -92,7 +91,9 @@ try {
           />
         </div>
         {errors.email && (
-          <p className="text-sm text-destructive animate-slide-in">{errors.email}</p>
+          <p className="text-sm text-destructive animate-slide-in">
+            {errors.email}
+          </p>
         )}
       </div>
 
@@ -112,7 +113,9 @@ try {
           />
         </div>
         {errors.password && (
-          <p className="text-sm text-destructive animate-slide-in">{errors.password}</p>
+          <p className="text-sm text-destructive animate-slide-in">
+            {errors.password}
+          </p>
         )}
       </div>
 
@@ -132,9 +135,10 @@ try {
       </Button>
 
       <div className="text-center pt-2">
-        <Link 
-          to="/staff/forgot-password" 
-          className="text-sm text-accent hover:underline font-medium">
+        <Link
+          to="/staff/forgot-password"
+          className="text-sm text-accent hover:underline font-medium"
+        >
           Forgot password?
         </Link>
       </div>
