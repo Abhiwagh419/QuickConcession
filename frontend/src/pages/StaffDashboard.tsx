@@ -154,34 +154,37 @@ const issuedCount = applications.filter(
   (a) => a.status === "ISSUED" || a.status === "EXPIRED"
 ).length;
 
-
-  const adminModules = [
-    {
-      label: "Railway Concession Management",
-      icon: Train,
-      path: "/staff/railway",
-      description: "Process student concession applications",
-      badge: pendingCount > 0 ? `${pendingCount} Pending` : null,
-    },
-    {
-      label: "Exam & Records",
-      icon: FileText,
-      path: "#",
-      description: "Manage examination records",
-    },
-    {
-      label: "Certificates",
-      icon: Award,
-      path: "#",
-      description: "Issue and manage certificates",
-    },
-    {
-      label: "Student Queries",
-      icon: HelpCircle,
-      path: "#",
-      description: "Respond to student inquiries",
-    },
-  ];
+const adminModules = [
+  {
+    label: "Railway Concession Management",
+    icon: Train,
+    type: "internal",
+    path: "/staff/railway",
+    description: "Process student concession applications",
+    badge: pendingCount > 0 ? `${pendingCount} Pending` : null,
+  },
+  {
+    label: "Institute Website",
+    icon: FileText,
+    type: "external",
+    url: "https://gpmumbai.ac.in/gpmweb/", 
+    description: "Official Government Polytechnic Mumbai portal",
+  },
+  {
+    label: "MSBTE Portal",
+    icon: Award,
+    type: "external",
+    url: "https://msbte.ac.in/",
+    description: "Board circulars, exam schedules, results",
+  },
+  {
+    label: "Scholarship Portal",
+    icon: HelpCircle,
+    type: "external",
+    url: "https://mahadbt.maharashtra.gov.in/Home/Index",
+    description: "Government scholarships & DBT status",
+  },
+];
 
 const filteredHistory =
   historyFilter === "ALL"
@@ -300,7 +303,7 @@ const filteredHistory =
     />
 
     <p className="text-xs text-muted-foreground mt-2">
-      Search starts automatically after typing
+      Enetr Student Enrollment Number to view details and application history.
     </p>
   </CardContent>
 </Card>
@@ -318,19 +321,20 @@ const filteredHistory =
       <div className="space-y-5">
         {/* HEADER */}
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <User className="w-6 h-6 text-primary" />
-          </div>
+  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+    <User className="w-7 h-7 text-primary" />
+  </div>
 
-          <div>
-            <p className="text-lg font-semibold">
-              {studentSummary.student.fullName}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {studentSummary.student.enrollmentNo}
-            </p>
-          </div>
-        </div>
+  <div>
+    <p className="text-xl font-semibold">
+      {studentSummary.student.fullName}
+    </p>
+    <p className="text-sm text-muted-foreground">
+      {studentSummary.student.enrollmentNo}
+    </p>
+  </div>
+</div>
+
 <Separator />
 
 <div className="grid grid-cols-2 gap-4 text-sm">
@@ -363,34 +367,32 @@ const filteredHistory =
 
         {/* STATS */}
         <div className="grid grid-cols-4 gap-3 text-center">
-          <div className="p-3 rounded-lg bg-muted">
-            <p className="text-xs text-muted-foreground">Pending</p>
-            <p className="text-xl font-semibold">
-              {studentSummary.stats.pending}
-            </p>
-          </div>
+  <div className="rounded-lg bg-warning/10 p-3">
+    <p className="text-xs text-warning">Pending</p>
+    <p className="text-xl font-semibold">{studentSummary.stats.pending}</p>
+  </div>
 
-          <div className="p-3 rounded-lg bg-success/10">
-            <p className="text-xs text-success">Issued</p>
-            <p className="text-xl font-semibold text-success">
-              {studentSummary.stats.issued}
-            </p>
-          </div>
+  <div className="rounded-lg bg-success/10 p-3">
+    <p className="text-xs text-success">Issued</p>
+    <p className="text-xl font-semibold text-success">
+      {studentSummary.stats.issued}
+    </p>
+  </div>
 
-          <div className="p-3 rounded-lg bg-destructive/10">
-            <p className="text-xs text-destructive">Rejected</p>
-            <p className="text-xl font-semibold text-destructive">
-              {studentSummary.stats.rejected}
-            </p>
-          </div>
+  <div className="rounded-lg bg-destructive/10 p-3">
+    <p className="text-xs text-destructive">Rejected</p>
+    <p className="text-xl font-semibold text-destructive">
+      {studentSummary.stats.rejected}
+    </p>
+  </div>
 
-          <div className="p-3 rounded-lg bg-muted">
-            <p className="text-xs text-muted-foreground">Total</p>
-            <p className="text-xl font-semibold">
-              {studentSummary.stats.total}
-            </p>
-          </div>
-        </div>
+  <div className="rounded-lg bg-muted p-3">
+    <p className="text-xs text-muted-foreground">Total</p>
+    <p className="text-xl font-semibold">
+      {studentSummary.stats.total}
+    </p>
+  </div>
+</div>
 
         <Separator />
 
@@ -445,7 +447,7 @@ const filteredHistory =
     }
   }}
 >
-  <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto animate-in slide-in-from-right">
+<DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto animate-fade-up">
     <DialogHeader>
       <DialogTitle>Application History</DialogTitle>
     </DialogHeader>
@@ -468,28 +470,54 @@ const filteredHistory =
   ))}
 </div>
 
-{filteredHistory.map((app) => (
+{filteredHistory.map((app, index) => (
   <Card
-    key={app.id}
-    className="cursor-pointer hover:bg-muted"
-    onClick={() => {
-  if (app.status === "PENDING") {
-    navigate(`/staff/railway/process/${app.id}`);
-  } else {
-    openApplicationDetails(app.id);
-  }
-}}
+  key={app.id}
+  onClick={() => {
+    if (app.status === "PENDING") {
+      navigate(`/staff/railway/process/${app.id}`);
+    } else {
+      openApplicationDetails(app.id);
+    }
+  }}
+  className="
+    cursor-pointer
+    border
+    rounded-lg
+    p-4
+    transition-all
+    hover:shadow-md
+    hover:-translate-y-0.5
+    animate-fade-up
+  "
+>
+  <div className="flex justify-between items-center">
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-semibold
+        ${
+          app.status === "ISSUED"
+            ? "bg-success/20 text-success"
+            : app.status === "EXPIRED"
+            ? "bg-warning/20 text-warning"
+            : app.status === "REJECTED"
+            ? "bg-destructive/20 text-destructive"
+            : "bg-primary/20 text-primary"
+        }
+      `}
+    >
+      {app.status}
+    </span>
 
-  >
-    <CardContent className="pt-4">
-      <p>
-        <strong>Status:</strong> {app.status}
-      </p>
-      <p>
-        {app.fromStation} → {app.toStation}
-      </p>
-    </CardContent>
-  </Card>
+    <span className="text-xs text-muted-foreground">
+      {new Date(app.appliedAt).toLocaleDateString("en-IN")}
+    </span>
+  </div>
+
+  <p className="mt-2 font-medium">
+    {app.fromStation} → {app.toStation}
+  </p>
+</Card>
+
 ))}
 
   </DialogContent>
@@ -497,14 +525,8 @@ const filteredHistory =
 
 {/* Application Details Modal */}
 <Dialog open={openDetails} onOpenChange={setOpenDetails}>
-<DialogContent
-  className="
-    max-w-4xl max-h-[90vh] overflow-y-auto
-    animate-dialog-in
-    backdrop-blur-sm
-    shadow-2xl
-  "
->
+<DialogContent className="max-w-4xl animate-dialog-in shadow-2xl rounded-xl">
+
     <DialogHeader>
       <DialogTitle>Concession Application Details</DialogTitle>
     </DialogHeader>
@@ -514,7 +536,7 @@ const filteredHistory =
     {selectedApp && (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Student Profile */}
-        <div className="space-y-4">
+        <div className="bg-muted/30 rounded-lg p-4 space-y-3">
           <h3 className="font-semibold flex items-center gap-2">
             <User className="w-4 h-4" /> Student Details
           </h3>
@@ -544,7 +566,7 @@ const filteredHistory =
         </div>
 
         {/* Application Details */}
-        <div className="space-y-4">
+        <div className="bg-muted/30 rounded-lg p-4 space-y-3">
           <h3 className="font-semibold flex items-center gap-2">
             <Train className="w-4 h-4" /> Application Details
           </h3>
@@ -616,12 +638,18 @@ const filteredHistory =
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {adminModules.map((module) => (
-                  <Button
+                  <Button 
                     key={module.label}
                     variant="outline"
                     className="h-auto p-4 flex items-start gap-4 justify-start text-left border-2 hover:border-primary/50 hover:bg-secondary/50"
-                    onClick={() => module.path !== "#" && navigate(module.path)}
-                    disabled={module.path === "#"}
+                    onClick={() => {
+  if (module.type === "internal") {
+    navigate(module.path);
+  } else {
+    window.open(module.url, "_blank", "noopener,noreferrer");
+  }
+}}
+
                   >
                     <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <module.icon className="w-6 h-6 text-primary" />
