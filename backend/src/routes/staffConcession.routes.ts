@@ -3,8 +3,9 @@ import { getConcessionApplications } from "../controllers/staffConcession.contro
 import { requireAuth } from "../middleware/requireAuth";
 import { requireStaff } from "../middleware/requireStaff";
 import { getConcessionApplicationById } from "../controllers/staffConcession.controller";
-
 import { getStaffMe } from "../controllers/staff.controller";
+import { getApplicationsByEnrollment } from "../controllers/staffApplications.controller";
+
 const router = Router();
 router.get("/me", requireAuth, requireStaff, getStaffMe);
 
@@ -39,6 +40,22 @@ router.get(
   requireAuth,
   requireStaff,
   getConcessionApplicationById,
+);
+
+router.get(
+  "/applications/by-enrollment/:enrollmentNo",
+  requireAuth,
+  requireStaff,
+  getApplicationsByEnrollment
+);
+
+import { getStudentSummary } from "../controllers/staffStudent.controller";
+
+router.get(
+  "/students/:enrollmentNo/summary",
+  requireAuth,
+  requireStaff,
+  getStudentSummary
 );
 
 export default router;

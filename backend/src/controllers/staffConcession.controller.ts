@@ -95,8 +95,6 @@ export async function approveConcessionApplication(
       });
 
       return res.json(updated);
-
-      return res.json(updated);
     }
 
     if (application.status === "APPROVED") {
@@ -224,6 +222,7 @@ export async function rejectConcessionApplication(req: Request, res: Response) {
         status: "REJECTED",
         rejectionReason: reason,
         approvedByStaffId: staffId,
+        rejectedAt: new Date(),
       },
     });
 

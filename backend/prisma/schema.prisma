@@ -57,6 +57,7 @@ model ConcessionApplication {
   expiryDate        DateTime?
   approvedAt        DateTime?
   approvedByStaffId Int?
+  rejectedAt        DateTime?
   rejectionReason   String?
   concessionNumber  String?           @unique
   approvedBy        Staff?            @relation("ApprovedBy", fields: [approvedByStaffId], references: [id])

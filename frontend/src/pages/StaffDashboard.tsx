@@ -7,14 +7,57 @@ import StaffHeader from "@/components/StaffHeader";
 import { useEffect, useState } from "react";
 import { getStaffApplications } from "../api/staffConcessions";
 import PageWrapper from "@/components/PageWrapper";
+import { apiFetch } from "@/lib/api";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import {
+  GraduationCap,
+  Calendar,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
 
 const StaffDashboard = () => {
+  const [openDetails, setOpenDetails] = useState(false);
+  const [selectedApp, setSelectedApp] = useState<any | null>(null);
+const [detailsLoading, setDetailsLoading] = useState(false);
+const [detailsError, setDetailsError] = useState<string | null>(null);
   const navigate = useNavigate();
   const [applications, setApplications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("staffToken");
+const [enrollmentNo, setEnrollmentNo] = useState("");
+const [history, setHistory] = useState<any[]>([]);
+const [historyLoading, setHistoryLoading] = useState(false);
+const [historyError, setHistoryError] = useState<string | null>(null);
+const [historyFilter, setHistoryFilter] = useState<
+  "ALL" | "PENDING" | "APPROVED" | "EXPIRED" | "REJECTED"
+>("ALL");
 
   const staffInfo = token ? jwtDecode<any>(token) : null;
+const [openStudentDialog, setOpenStudentDialog] = useState(false);
+const [openHistoryPanel, setOpenHistoryPanel] = useState(false);
+
+const [studentSummary, setStudentSummary] = useState<any | null>(null);
+const [summaryLoading, setSummaryLoading] = useState(false);
+
+const openApplicationDetails = async (id: number) => {
+  setOpenDetails(true);
+  setDetailsLoading(true);
+
+  try {
+    const data = await apiFetch(`/staff/concessions/${id}`);
+    setSelectedApp(data);
+  } finally {
+    setDetailsLoading(false);
+  }
+};
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -30,6 +73,64 @@ const StaffDashboard = () => {
 
     fetchApplications();
   }, []);
+
+const handleSearchStudent = async () => {
+  if (!enrollmentNo.trim()) return;
+  if (enrollmentNo.trim().length < 9) return;
+
+  setSummaryLoading(true);
+  setStudentSummary(null);
+
+  try {
+    const data = await apiFetch(
+      `/staff/students/${enrollmentNo}/summary`
+    );
+
+    setStudentSummary(data);
+    setOpenStudentDialog(true);
+  } catch {
+    // ❌ NO alert
+    setStudentSummary(null);
+    setOpenStudentDialog(false);
+  } finally {
+    setSummaryLoading(false);
+  }
+};
+
+const fetchHistory = async () => {
+  if (!enrollmentNo.trim()) return;
+
+  setHistory([]);
+  setSelectedApp(null); // 🔹 add this
+  setHistoryError(null);
+  setHistoryLoading(true);
+
+  try {
+    const data = await apiFetch(
+      `/staff/applications/by-enrollment/${enrollmentNo}`
+    );
+    setHistory(data);
+  } catch (err: any) {
+    setHistoryError(err.message || "Failed to fetch history");
+  } finally {
+    setHistoryLoading(false);
+  }
+};
+
+useEffect(() => {
+  if (!enrollmentNo.trim()) {
+    setHistory([]);
+    setSelectedApp(null);
+    return;
+  }
+
+  const debounceTimer = setTimeout(() => {
+    handleSearchStudent();
+  }, 500); // ⏳ 500ms debounce
+
+  return () => clearTimeout(debounceTimer);
+}, [enrollmentNo]);
+
 
   if (loading) {
     return (
@@ -48,7 +149,11 @@ const StaffDashboard = () => {
   const rejectedCount = applications.filter(
     (a) => a.status === "REJECTED",
   ).length;
-  const issuedCount = applications.filter((a) => a.status === "ISSUED").length;
+  
+const issuedCount = applications.filter(
+  (a) => a.status === "ISSUED" || a.status === "EXPIRED"
+).length;
+
 
   const adminModules = [
     {
@@ -77,6 +182,11 @@ const StaffDashboard = () => {
       description: "Respond to student inquiries",
     },
   ];
+
+const filteredHistory =
+  historyFilter === "ALL"
+    ? history
+    : history.filter((app) => app.status === historyFilter);
 
   return (
     <div className="min-h-screen bg-background">
@@ -173,6 +283,328 @@ const StaffDashboard = () => {
               </CardContent>
             </Card>
           </div>
+         
+         <Card className="mb-8 border shadow-sm">
+  <CardHeader>
+    <CardTitle className="font-heading text-lg">
+      Student Lookup
+    </CardTitle>
+  </CardHeader>
+
+  <CardContent>
+    <input
+      className="w-full md:w-80 border rounded-md px-3 py-2 text-sm"
+      placeholder="Enter Enrollment Number"
+      value={enrollmentNo}
+      onChange={(e) => setEnrollmentNo(e.target.value.toUpperCase())}
+    />
+
+    <p className="text-xs text-muted-foreground mt-2">
+      Search starts automatically after typing
+    </p>
+  </CardContent>
+</Card>
+
+{/* Student Summary Dialog */}
+<Dialog open={openStudentDialog} onOpenChange={setOpenStudentDialog}>
+  <DialogContent className="max-w-xl animate-in fade-in zoom-in-95">
+    <DialogHeader>
+      <DialogTitle>Student Summary</DialogTitle>
+    </DialogHeader>
+
+    {summaryLoading && <p>Loading summary...</p>}
+
+    {studentSummary && (
+      <div className="space-y-5">
+        {/* HEADER */}
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <User className="w-6 h-6 text-primary" />
+          </div>
+
+          <div>
+            <p className="text-lg font-semibold">
+              {studentSummary.student.fullName}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {studentSummary.student.enrollmentNo}
+            </p>
+          </div>
+        </div>
+<Separator />
+
+<div className="grid grid-cols-2 gap-4 text-sm">
+  <p><strong>Course:</strong> {studentSummary.student.course}</p>
+  <p><strong>Year:</strong> {studentSummary.student.year}</p>
+  <p><strong>Semester:</strong> {studentSummary.student.sem}</p>
+  <p><strong>Shift:</strong> {studentSummary.student.shift}</p>
+</div>
+<Separator />
+
+<div className="space-y-1 text-sm">
+  <p><strong>Email:</strong> {studentSummary.student.email}</p>
+  <p><strong>Mobile:</strong> {studentSummary.student.mobileNumber}</p>
+
+  {studentSummary.student.dateOfBirth && (
+    <p>
+      <strong>DOB:</strong>{" "}
+      {new Date(studentSummary.student.dateOfBirth).toLocaleDateString("en-IN")}
+    </p>
+  )}
+
+  {studentSummary.student.address && (
+    <p>
+      <strong>Address:</strong> {studentSummary.student.address}
+    </p>
+  )}
+</div>
+
+        <Separator />
+
+        {/* STATS */}
+        <div className="grid grid-cols-4 gap-3 text-center">
+          <div className="p-3 rounded-lg bg-muted">
+            <p className="text-xs text-muted-foreground">Pending</p>
+            <p className="text-xl font-semibold">
+              {studentSummary.stats.pending}
+            </p>
+          </div>
+
+          <div className="p-3 rounded-lg bg-success/10">
+            <p className="text-xs text-success">Issued</p>
+            <p className="text-xl font-semibold text-success">
+              {studentSummary.stats.issued}
+            </p>
+          </div>
+
+          <div className="p-3 rounded-lg bg-destructive/10">
+            <p className="text-xs text-destructive">Rejected</p>
+            <p className="text-xl font-semibold text-destructive">
+              {studentSummary.stats.rejected}
+            </p>
+          </div>
+
+          <div className="p-3 rounded-lg bg-muted">
+            <p className="text-xs text-muted-foreground">Total</p>
+            <p className="text-xl font-semibold">
+              {studentSummary.stats.total}
+            </p>
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* LATEST APPLICATION */}
+        {studentSummary.latest ? (
+          <div className="space-y-1 text-sm">
+            <p>
+              <strong>Latest Application:</strong>
+            </p>
+            <p>
+              Status: {studentSummary.latest.status} <br />
+              Route: {studentSummary.latest.fromStation} →{" "}
+              {studentSummary.latest.toStation} <br />
+              Applied On:{" "}
+              {new Date(
+                studentSummary.latest.appliedAt,
+              ).toLocaleDateString("en-IN")}
+            </p>
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            No applications found for this student.
+          </p>
+        )}
+
+        <Button
+          className="  w-full mt-2
+  focus:outline-none
+  focus:ring-0
+  focus-visible:outline-none
+  focus-visible:ring-0
+  focus-visible:ring-offset-0"
+          onClick={() => {
+            setOpenStudentDialog(false);
+            setOpenHistoryPanel(true);
+            fetchHistory();
+          }}
+        >
+          View Full Application History
+        </Button>
+      </div>
+    )}
+  </DialogContent>
+</Dialog>
+
+<Dialog
+  open={openHistoryPanel}
+  onOpenChange={(open) => {
+    setOpenHistoryPanel(open);
+    if (open) {
+      setHistoryFilter("ALL"); // ✅ reset filter on open
+    }
+  }}
+>
+  <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto animate-in slide-in-from-right">
+    <DialogHeader>
+      <DialogTitle>Application History</DialogTitle>
+    </DialogHeader>
+
+    {/* 🔹 FILTER BUTTONS */}
+<div className="flex gap-2 mb-4 flex-wrap">
+  {["ALL", "PENDING", "APPROVED", "EXPIRED", "REJECTED"].map((f) => (
+    <Button
+      key={f}
+      size="sm"
+      variant={historyFilter === f ? "default" : "outline"}
+      onClick={() =>
+        setHistoryFilter(
+          f as "ALL" | "PENDING" | "APPROVED" | "EXPIRED" | "REJECTED"
+        )
+      }
+    >
+      {f}
+    </Button>
+  ))}
+</div>
+
+{filteredHistory.map((app) => (
+  <Card
+    key={app.id}
+    className="cursor-pointer hover:bg-muted"
+    onClick={() => {
+  if (app.status === "PENDING") {
+    navigate(`/staff/railway/process/${app.id}`);
+  } else {
+    openApplicationDetails(app.id);
+  }
+}}
+
+  >
+    <CardContent className="pt-4">
+      <p>
+        <strong>Status:</strong> {app.status}
+      </p>
+      <p>
+        {app.fromStation} → {app.toStation}
+      </p>
+    </CardContent>
+  </Card>
+))}
+
+  </DialogContent>
+</Dialog>
+
+{/* Application Details Modal */}
+<Dialog open={openDetails} onOpenChange={setOpenDetails}>
+<DialogContent
+  className="
+    max-w-4xl max-h-[90vh] overflow-y-auto
+    animate-dialog-in
+    backdrop-blur-sm
+    shadow-2xl
+  "
+>
+    <DialogHeader>
+      <DialogTitle>Concession Application Details</DialogTitle>
+    </DialogHeader>
+
+    {detailsLoading && <p>Loading details...</p>}
+
+    {selectedApp && (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Student Profile */}
+        <div className="space-y-4">
+          <h3 className="font-semibold flex items-center gap-2">
+            <User className="w-4 h-4" /> Student Details
+          </h3>
+
+          <p><strong>Name:</strong> {selectedApp.student.fullName}</p>
+          <p><strong>Enrollment:</strong> {selectedApp.student.enrollmentNo}</p>
+
+          <Separator />
+
+          <p className="flex items-center gap-2 text-sm">
+            <GraduationCap className="w-4 h-4" />
+            {selectedApp.student.course} – Sem {selectedApp.student.sem}
+          </p>
+
+          <p className="flex items-center gap-2 text-sm">
+            <Mail className="w-4 h-4" /> {selectedApp.student.email}
+          </p>
+
+          <p className="flex items-center gap-2 text-sm">
+            <Phone className="w-4 h-4" /> {selectedApp.student.mobileNumber}
+          </p>
+
+          <p className="flex items-start gap-2 text-sm">
+            <MapPin className="w-4 h-4 mt-0.5" />
+            {selectedApp.student.address}
+          </p>
+        </div>
+
+        {/* Application Details */}
+        <div className="space-y-4">
+          <h3 className="font-semibold flex items-center gap-2">
+            <Train className="w-4 h-4" /> Application Details
+          </h3>
+
+          <p><strong>Status:</strong> {selectedApp.status}</p>
+          <p><strong>Duration:</strong> {selectedApp.duration}</p>
+          <p><strong>Class:</strong> {selectedApp.travelClass}</p>
+
+          <Separator />
+
+          <p>
+            <strong>Route:</strong><br />
+            {selectedApp.fromStation} → {selectedApp.toStation}
+          </p>
+
+          <p className="flex items-center gap-2 text-sm">
+            <Calendar className="w-4 h-4" />
+            Applied on{" "}
+            {new Date(selectedApp.appliedAt).toLocaleDateString("en-IN")}
+          </p>
+
+          {selectedApp.status === "REJECTED" && (
+            <p className="text-destructive">
+              <strong>Rejected On:</strong>{" "}
+              {new Date(selectedApp.rejectedAt).toLocaleDateString("en-IN")}
+              <br />
+              <strong>Reason:</strong> {selectedApp.rejectionReason}
+            </p>
+          )}
+
+          {(selectedApp.status === "ISSUED" ||
+            selectedApp.status === "EXPIRED") && (
+            <p className="text-success">
+              <strong>Pass No:</strong> {selectedApp.concessionNumber}
+              <br />
+              <strong>
+                {selectedApp.status === "EXPIRED"
+                  ? "Expired On"
+                  : "Expires On"}
+                :
+              </strong>{" "}
+              {new Date(selectedApp.expiryDate).toLocaleDateString("en-IN")}
+            </p>
+          )}
+        </div>
+      </div>
+    )}
+  </DialogContent>
+</Dialog>
+
+
+{detailsLoading && (
+  <p className="text-sm text-muted-foreground">
+    Loading application details...
+  </p>
+)}
+
+{detailsError && (
+  <p className="text-sm text-destructive">{detailsError}</p>
+)}
 
           {/* Administrative Modules */}
           <Card className="border shadow-sm">
