@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Train, FileText, Award, HelpCircle, User } from "lucide-react";
+import { Train, FileText, Award, HelpCircle, User, Globe,Landmark, School} from "lucide-react";
 import StaffHeader from "@/components/StaffHeader";
 import { useEffect, useState } from "react";
 import { getStaffApplications } from "../api/staffConcessions";
@@ -165,21 +165,21 @@ const adminModules = [
   },
   {
     label: "Institute Website",
-    icon: FileText,
+    icon: Landmark,
     type: "external",
     url: "https://gpmumbai.ac.in/gpmweb/", 
     description: "Official Government Polytechnic Mumbai portal",
   },
   {
     label: "MSBTE Portal",
-    icon: Award,
+    icon: School,
     type: "external",
     url: "https://msbte.ac.in/",
     description: "Board circulars, exam schedules, results",
   },
   {
     label: "Scholarship Portal",
-    icon: HelpCircle,
+    icon: GraduationCap,
     type: "external",
     url: "https://mahadbt.maharashtra.gov.in/Home/Index",
     description: "Government scholarships & DBT status",
