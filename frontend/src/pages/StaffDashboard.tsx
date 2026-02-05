@@ -303,7 +303,7 @@ const filteredHistory =
     />
 
     <p className="text-xs text-muted-foreground mt-2">
-      Enetr Student Enrollment Number to view details and application history.
+      Enter Student Enrollment Number to view details and application history.
     </p>
   </CardContent>
 </Card>
