@@ -83,7 +83,7 @@ const StaffLoginForm = () => {
           <Input
             id="email"
             type="text"
-            placeholder="Enter your Staff ID"
+            placeholder="Enter your Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="pl-10 form-input"
