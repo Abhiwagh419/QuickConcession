@@ -1,7 +1,7 @@
 # Editor settings
 .vscode/
 .idea/
-
+node_modules/
 # OS metadata
 Thumbs.db
 .DS_Store
