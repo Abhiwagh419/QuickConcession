@@ -5,6 +5,11 @@ import { requireStaff } from "../middleware/requireStaff";
 import { getConcessionApplicationById } from "../controllers/staffConcession.controller";
 import { getStaffMe } from "../controllers/staff.controller";
 import { getApplicationsByEnrollment } from "../controllers/staffApplications.controller";
+import { exportConcessionsExcel } from "../controllers/staffExport.controller";
+import {
+  approveConcessionApplication,
+  rejectConcessionApplication,
+} from "../controllers/staffConcession.controller";
 
 const router = Router();
 router.get("/me", requireAuth, requireStaff, getStaffMe);
@@ -16,10 +21,12 @@ router.get(
   getConcessionApplications,
 );
 
-import {
-  approveConcessionApplication,
-  rejectConcessionApplication,
-} from "../controllers/staffConcession.controller";
+router.get(
+  "/concessions/export",
+  requireAuth,
+  requireStaff,
+  exportConcessionsExcel,
+);
 
 router.post(
   "/concessions/:id/approve",
@@ -46,7 +53,7 @@ router.get(
   "/applications/by-enrollment/:enrollmentNo",
   requireAuth,
   requireStaff,
-  getApplicationsByEnrollment
+  getApplicationsByEnrollment,
 );
 
 import { getStudentSummary } from "../controllers/staffStudent.controller";
@@ -55,7 +62,7 @@ router.get(
   "/students/:enrollmentNo/summary",
   requireAuth,
   requireStaff,
-  getStudentSummary
+  getStudentSummary,
 );
 
 export default router;

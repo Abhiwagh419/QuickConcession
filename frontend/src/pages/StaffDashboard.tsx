@@ -117,6 +117,51 @@ const fetchHistory = async () => {
   }
 };
 
+const exportExcel = async (range?: string, from?: string, to?: string) => {
+  try {
+    const token = localStorage.getItem("staffToken");
+    if (!token) {
+      alert("Not authenticated");
+      return;
+    }
+
+    let url = `http://localhost:4000/staff/concessions/export`;
+
+    const params = new URLSearchParams();
+    if (range) params.append("range", range);
+    if (from && to) {
+      params.append("from", from);
+      params.append("to", to);
+    }
+
+    const response = await fetch(`${url}?${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to export");
+    }
+
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = "concessions-export.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch (err) {
+    console.error(err);
+    alert("Failed to export Excel");
+  }
+};
+
+
 useEffect(() => {
   if (!enrollmentNo.trim()) {
     setHistory([]);
@@ -126,7 +171,7 @@ useEffect(() => {
 
   const debounceTimer = setTimeout(() => {
     handleSearchStudent();
-  }, 500); // ⏳ 500ms debounce
+  }, 500);
 
   return () => clearTimeout(debounceTimer);
 }, [enrollmentNo]);
@@ -149,7 +194,7 @@ useEffect(() => {
   const rejectedCount = applications.filter(
     (a) => a.status === "REJECTED",
   ).length;
-  
+
 const issuedCount = applications.filter(
   (a) => a.status === "ISSUED" || a.status === "EXPIRED"
 ).length;
@@ -286,6 +331,30 @@ const filteredHistory =
               </CardContent>
             </Card>
           </div>
+
+          {/* Export Concession Records */}
+<Card className="mb-8 border shadow-sm">
+  <CardHeader>
+    <CardTitle className="font-heading text-lg">
+      Export Concession Records
+    </CardTitle>
+  </CardHeader>
+
+  <CardContent className="flex flex-wrap gap-3">
+    <Button onClick={() => exportExcel("1d")}>
+      Last 1 Day
+    </Button>
+    <Button onClick={() => exportExcel("3d")}>
+      Last 3 Days
+    </Button>
+    <Button onClick={() => exportExcel("1m")}>
+      Last 1 Month
+    </Button>
+    <Button onClick={() => exportExcel("6m")}>
+      Last 6 Months
+    </Button>
+  </CardContent>
+</Card>
          
          <Card className="mb-8 border shadow-sm">
   <CardHeader>
@@ -443,7 +512,7 @@ const filteredHistory =
   onOpenChange={(open) => {
     setOpenHistoryPanel(open);
     if (open) {
-      setHistoryFilter("ALL"); // ✅ reset filter on open
+      setHistoryFilter("ALL"); 
     }
   }}
 >
