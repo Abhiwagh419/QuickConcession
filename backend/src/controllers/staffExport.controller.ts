@@ -38,13 +38,13 @@ function addMeta(
   sheet: ExcelJS.Worksheet,
   start: Date,
   end: Date,
-  staffId: number
+  staffId: number,
 ) {
   sheet.insertRow(1, [
     `Exported By Staff ID: ${staffId} | Range: ${start.toLocaleDateString(
-      "en-IN"
+      "en-IN",
     )} to ${end.toLocaleDateString("en-IN")} | Generated: ${new Date().toLocaleString(
-      "en-IN"
+      "en-IN",
     )}`,
   ]);
 
@@ -53,9 +53,7 @@ function addMeta(
 }
 
 export async function exportConcessionsExcel(req: Request, res: Response) {
-
   try {
-
     const { range, from, to } = req.query as {
       range?: string;
       from?: string;
@@ -64,100 +62,99 @@ export async function exportConcessionsExcel(req: Request, res: Response) {
 
     const { start, end } = getDateRange(range, from, to);
 
-const allApplications = await prisma.concessionApplication.findMany({
-  where: {
-    appliedAt: {
-      gte: start,
-      lte: end,
-    },
-  },
-  include: {
-    student: true,
-  },
-  orderBy: {
-    appliedAt: "desc",
-  },
-});
+    const allApplications = await prisma.concessionApplication.findMany({
+      where: {
+        appliedAt: {
+          gte: start,
+          lte: end,
+        },
+      },
+      include: {
+        student: true,
+      },
+      orderBy: {
+        appliedAt: "desc",
+      },
+    });
 
-const approved = await prisma.concessionApplication.findMany({
-  where: {
-    status: { in: ["APPROVED", "ISSUED", "EXPIRED"] },
-    appliedAt: {
-      gte: start,
-      lte: end,
-    },
-  },
-  include: {
-    student: true,
-  },
-  orderBy: { appliedAt: "desc" },
-});
-const rejected = await prisma.concessionApplication.findMany({
-  where: {
-    status: "REJECTED",
-    appliedAt: {
-      gte: start,
-      lte: end,
-    },
-  },
-  include: {
-    student: true,
-  },
-  orderBy: { appliedAt: "desc" },
-});
+    const approved = await prisma.concessionApplication.findMany({
+      where: {
+        status: { in: ["APPROVED", "ISSUED", "EXPIRED"] },
+        appliedAt: {
+          gte: start,
+          lte: end,
+        },
+      },
+      include: {
+        student: true,
+      },
+      orderBy: { appliedAt: "desc" },
+    });
+    const rejected = await prisma.concessionApplication.findMany({
+      where: {
+        status: "REJECTED",
+        appliedAt: {
+          gte: start,
+          lte: end,
+        },
+      },
+      include: {
+        student: true,
+      },
+      orderBy: { appliedAt: "desc" },
+    });
 
     const workbook = new ExcelJS.Workbook();
 
-const allSheet = workbook.addWorksheet("All Applications");
+    const allSheet = workbook.addWorksheet("All Applications");
 
-allSheet.columns = [
-  { header: "Enrollment No", key: "enrollmentNo", width: 18 },
-  { header: "Student Name", key: "name", width: 22 },
-  { header: "Course", key: "course", width: 15 },
-  { header: "Semester", key: "sem", width: 10 },
-  { header: "Shift", key: "shift", width: 10 },
-  { header: "From", key: "from", width: 15 },
-  { header: "To", key: "to", width: 15 },
-  { header: "Class", key: "class", width: 12 },
-  { header: "Duration", key: "duration", width: 12 },
-  { header: "Status", key: "status", width: 12 },
-  { header: "Concession No", key: "concession", width: 20 },
-  { header: "Applied At", key: "appliedAt", width: 18 },
-  { header: "Approved At", key: "approvedAt", width: 18 },
-  { header: "Rejected At", key: "rejectedAt", width: 18 },
-];
-allSheet.views = [{ state: "frozen", ySplit: 1 }];
-allSheet.views = [{ state: "frozen", ySplit: 2 }];
-addMeta(allSheet, start, end, req.user!.sub);
+    allSheet.columns = [
+      { header: "Enrollment No", key: "enrollmentNo", width: 18 },
+      { header: "Student Name", key: "name", width: 22 },
+      { header: "Course", key: "course", width: 15 },
+      { header: "Semester", key: "sem", width: 10 },
+      { header: "Shift", key: "shift", width: 10 },
+      { header: "From", key: "from", width: 15 },
+      { header: "To", key: "to", width: 15 },
+      { header: "Class", key: "class", width: 12 },
+      { header: "Duration", key: "duration", width: 12 },
+      { header: "Status", key: "status", width: 12 },
+      { header: "Concession No", key: "concession", width: 20 },
+      { header: "Applied At", key: "appliedAt", width: 18 },
+      { header: "Approved At", key: "approvedAt", width: 18 },
+      { header: "Rejected At", key: "rejectedAt", width: 18 },
+    ];
+    allSheet.views = [{ state: "frozen", ySplit: 2 }];
+    addMeta(allSheet, start, end, req.user!.sub);
 
-allApplications.forEach((a) => {
-  allSheet.addRow({
-    enrollmentNo: a.student.enrollmentNo,
-    name: a.student.fullName,
-    course: a.student.course,
-    sem: a.student.sem,
-    shift: a.student.shift,
-    from: a.fromStation,
-    to: a.toStation,
-    class: a.travelClass,
-    duration: a.duration,
-    status: a.status,
-    concession: a.concessionNumber ?? "-",
-    appliedAt: a.appliedAt.toLocaleDateString("en-IN"),
-    approvedAt: a.approvedAt
-      ? a.approvedAt.toLocaleDateString("en-IN")
-      : "-",
-    rejectedAt: a.rejectedAt
-      ? a.rejectedAt.toLocaleDateString("en-IN")
-      : "-",
-  });
-});
+    allApplications.forEach((a) => {
+      allSheet.addRow({
+        enrollmentNo: a.student.enrollmentNo,
+        name: a.student.fullName,
+        course: a.student.course,
+        sem: a.student.sem,
+        shift: a.student.shift,
+        from: a.fromStation,
+        to: a.toStation,
+        class: a.travelClass,
+        duration: a.duration,
+        status: a.status,
+        concession: a.concessionNumber ?? "-",
+        appliedAt: a.appliedAt.toLocaleDateString("en-IN"),
+        approvedAt: a.approvedAt
+          ? a.approvedAt.toLocaleDateString("en-IN")
+          : "-",
+        rejectedAt: a.rejectedAt
+          ? a.rejectedAt.toLocaleDateString("en-IN")
+          : "-",
+      });
+    });
 
-allSheet.addRow({});
-allSheet.addRow({
-  enrollmentNo: "TOTAL",
-  name: allApplications.length,
-});
+    allSheet.addRow({});
+    allSheet.addRow({
+      enrollmentNo: "TOTAL",
+      name: allApplications.length,
+    });
 
     const approvedSheet = workbook.addWorksheet("Approved Concessions");
 
@@ -173,9 +170,8 @@ allSheet.addRow({
       { header: "Concession No", key: "concession", width: 20 },
       { header: "Approved At", key: "date", width: 18 },
     ];
-approvedSheet.views = [{ state: "frozen", ySplit: 1 }];
-approvedSheet.views = [{ state: "frozen", ySplit: 2 }];
-addMeta(approvedSheet, start, end, req.user!.sub);
+    approvedSheet.views = [{ state: "frozen", ySplit: 2 }];
+    addMeta(approvedSheet, start, end, req.user!.sub);
 
     approved.forEach((a) => {
       approvedSheet.addRow({
@@ -192,11 +188,11 @@ addMeta(approvedSheet, start, end, req.user!.sub);
       });
     });
 
-approvedSheet.addRow({});
-approvedSheet.addRow({
-  enrollmentNo: "TOTAL",
-  name: approved.length,
-});
+    approvedSheet.addRow({});
+    approvedSheet.addRow({
+      enrollmentNo: "TOTAL",
+      name: approved.length,
+    });
 
     const rejectedSheet = workbook.addWorksheet("Rejected Concessions");
 
@@ -209,9 +205,9 @@ approvedSheet.addRow({
       { header: "Rejected At", key: "date", width: 18 },
       { header: "Reason", key: "reason", width: 30 },
     ];
-rejectedSheet.views = [{ state: "frozen", ySplit: 1 }];
-approvedSheet.views = [{ state: "frozen", ySplit: 2 }];
-addMeta(rejectedSheet, start, end, req.user!.sub);
+
+    rejectedSheet.views = [{ state: "frozen", ySplit: 2 }];
+    addMeta(rejectedSheet, start, end, req.user!.sub);
 
     rejected.forEach((a) => {
       rejectedSheet.addRow({
@@ -225,11 +221,11 @@ addMeta(rejectedSheet, start, end, req.user!.sub);
       });
     });
 
-rejectedSheet.addRow({});
-rejectedSheet.addRow({
-  enrollmentNo: "TOTAL",
-  name: rejected.length,
-});
+    rejectedSheet.addRow({});
+    rejectedSheet.addRow({
+      enrollmentNo: "TOTAL",
+      name: rejected.length,
+    });
 
     res.setHeader(
       "Content-Disposition",
