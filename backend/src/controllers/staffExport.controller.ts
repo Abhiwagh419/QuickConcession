@@ -108,7 +108,6 @@ const rejected = await prisma.concessionApplication.findMany({
 
     const workbook = new ExcelJS.Workbook();
 
-    /* ================= ALL APPLICATIONS SHEET ================= */
 const allSheet = workbook.addWorksheet("All Applications");
 
 allSheet.columns = [
@@ -128,7 +127,7 @@ allSheet.columns = [
   { header: "Rejected At", key: "rejectedAt", width: 18 },
 ];
 allSheet.views = [{ state: "frozen", ySplit: 1 }];
-
+allSheet.views = [{ state: "frozen", ySplit: 2 }];
 addMeta(allSheet, start, end, req.user!.sub);
 
 allApplications.forEach((a) => {
@@ -154,7 +153,12 @@ allApplications.forEach((a) => {
   });
 });
 
-    /* ================= APPROVED SHEET ================= */
+allSheet.addRow({});
+allSheet.addRow({
+  enrollmentNo: "TOTAL",
+  name: allApplications.length,
+});
+
     const approvedSheet = workbook.addWorksheet("Approved Concessions");
 
     approvedSheet.columns = [
@@ -170,7 +174,7 @@ allApplications.forEach((a) => {
       { header: "Approved At", key: "date", width: 18 },
     ];
 approvedSheet.views = [{ state: "frozen", ySplit: 1 }];
-
+approvedSheet.views = [{ state: "frozen", ySplit: 2 }];
 addMeta(approvedSheet, start, end, req.user!.sub);
 
     approved.forEach((a) => {
@@ -187,15 +191,13 @@ addMeta(approvedSheet, start, end, req.user!.sub);
         date: a.approvedAt?.toLocaleDateString("en-IN"),
       });
     });
-    // ✅ Totals row (AFTER all approved rows)
+
 approvedSheet.addRow({});
 approvedSheet.addRow({
   enrollmentNo: "TOTAL",
   name: approved.length,
 });
 
-
-    /* ================= REJECTED SHEET ================= */
     const rejectedSheet = workbook.addWorksheet("Rejected Concessions");
 
     rejectedSheet.columns = [
@@ -208,7 +210,7 @@ approvedSheet.addRow({
       { header: "Reason", key: "reason", width: 30 },
     ];
 rejectedSheet.views = [{ state: "frozen", ySplit: 1 }];
-
+approvedSheet.views = [{ state: "frozen", ySplit: 2 }];
 addMeta(rejectedSheet, start, end, req.user!.sub);
 
     rejected.forEach((a) => {
@@ -222,7 +224,7 @@ addMeta(rejectedSheet, start, end, req.user!.sub);
         reason: a.rejectionReason ?? "-",
       });
     });
-// ✅ Totals row (AFTER all rejected rows)
+
 rejectedSheet.addRow({});
 rejectedSheet.addRow({
   enrollmentNo: "TOTAL",
