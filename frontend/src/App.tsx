@@ -16,6 +16,7 @@ import ApplicationProcessing from "./pages/ApplicationProcessing";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import StaffForgotPassword from "./pages/StaffForgotPassword";
+import StaffChatPage from "@/pages/StaffChatPage";
 
 const queryClient = new QueryClient();
 function AnimatedRoutes() {
@@ -30,6 +31,7 @@ function AnimatedRoutes() {
           path="/student/railway"
           element={<RailwayConcessionDashboard />}
         />
+        <Route path="/staff/chat" element={<StaffChatPage />} />
         <Route
           path="/student/railway/apply"
           element={<NewConcessionApplication />}

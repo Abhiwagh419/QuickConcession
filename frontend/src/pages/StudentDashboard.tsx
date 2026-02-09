@@ -21,6 +21,8 @@ import {
   FileDown,
   Landmark,
 } from "lucide-react";
+import { HelpCircle } from "lucide-react";
+import StudentHelpDialog from "@/components/StudentHelpDialog";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ const StudentDashboard = () => {
   const [applications, setApplications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+const [openHelp, setOpenHelp] = useState(false);
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -136,10 +139,23 @@ const StudentDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <StudentHeader />
+<div className="min-h-screen bg-background">
+  <StudentHeader />
 
-      <PageWrapper>
+  {/* Help Icon */}
+  <div className="flex justify-end px-6 mt-2">
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setOpenHelp(true)}
+      aria-label="Help"
+    >
+      <HelpCircle className="w-5 h-5" />
+    </Button>
+  </div>
+
+  <PageWrapper>
+
         <main className="container mx-auto px-4 py-6 max-w-6xl">
           <h1 className="font-heading text-2xl font-bold text-foreground mb-6">
             Student Dashboard
@@ -276,8 +292,14 @@ const StudentDashboard = () => {
           </div>
         </main>
       </PageWrapper>
-    </div>
-  );
+        {/* ✅ MOVE StudentHelpDialog HERE */}
+    <StudentHelpDialog
+      open={openHelp}
+      onOpenChange={setOpenHelp}
+      enrollmentNo={student.enrollmentNo}
+    />
+  </div>
+);
 };
 
 export default StudentDashboard;

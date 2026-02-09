@@ -697,6 +697,29 @@ const filteredHistory =
   <p className="text-sm text-destructive">{detailsError}</p>
 )}
 
+<Card className="mb-8 border shadow-sm">
+  <CardHeader>
+    <CardTitle className="font-heading text-lg flex items-center gap-2">
+      <HelpCircle className="w-5 h-5 text-primary" />
+      Help & Support
+    </CardTitle>
+  </CardHeader>
+
+  <CardContent>
+    <Button
+      onClick={() => navigate("/staff/chat")}
+      className="flex items-center gap-2"
+    >
+      <FileText className="w-4 h-4" />
+      Help & Student Chats
+    </Button>
+
+    <p className="text-xs text-muted-foreground mt-2">
+      View and respond to student queries in real time.
+    </p>
+  </CardContent>
+</Card>
+
           {/* Administrative Modules */}
           <Card className="border shadow-sm">
             <CardHeader>
