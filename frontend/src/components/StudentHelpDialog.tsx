@@ -1,7 +1,15 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import ChatWindow from "@/features/chat/ChatWindow";
 import { useState } from "react";
+import FAQAccordion from "@/components/FAQAccordion";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
 export default function StudentHelpDialog({
   open,
@@ -25,12 +33,7 @@ export default function StudentHelpDialog({
           <div className="space-y-4">
             <div>
               <p className="font-semibold mb-2">Frequently Asked Questions</p>
-              <ul className="text-sm space-y-1 text-muted-foreground">
-                <li>• How long does approval take?</li>
-                <li>• Why was my application rejected?</li>
-                <li>• When will my concession expire?</li>
-                <li>• How to reapply for concession?</li>
-              </ul>
+              <FAQAccordion />
             </div>
 
             <Button onClick={() => setOpenChat(true)} className="w-full">
@@ -38,11 +41,14 @@ export default function StudentHelpDialog({
             </Button>
           </div>
         ) : (
-          <ChatWindow
-            chatId={enrollmentNo}
-            userId={enrollmentNo}
-            role="STUDENT"
-          />
+          <div className="h-[420px] flex flex-col">
+  <ChatWindow
+    chatId={enrollmentNo}
+    userId={enrollmentNo}
+    role="STUDENT"
+    variant="modal"
+  />
+</div>
         )}
       </DialogContent>
     </Dialog>

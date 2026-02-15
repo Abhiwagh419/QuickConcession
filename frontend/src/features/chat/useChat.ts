@@ -8,12 +8,14 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  increment,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export function useChat(chatId: string) {
   const [messages, setMessages] = useState<any[]>([]);
 
+  // 🔹 Listen to messages
   useEffect(() => {
     const messagesRef = collection(db, "chats", chatId, "messages");
     const q = query(messagesRef, orderBy("createdAt", "asc"));
@@ -30,6 +32,7 @@ export function useChat(chatId: string) {
     return () => unsub();
   }, [chatId]);
 
+  // 🔹 Send message
   const sendMessage = async (
     text: string,
     senderId: string,
@@ -38,9 +41,17 @@ export function useChat(chatId: string) {
     if (!text.trim()) return;
 
     const chatRef = doc(db, "chats", chatId);
-    const messagesRef = collection(chatRef, "messages");
 
-    // ✅ THIS CREATES / UPDATES THE CHAT DOCUMENT (CRITICAL)
+    // 1️⃣ Create message
+    await addDoc(collection(chatRef, "messages"), {
+      text,
+      senderId,
+      senderRole: role,
+      createdAt: serverTimestamp(),
+      read: role === "STAFF", // staff messages are auto-read
+    });
+
+    // 2️⃣ Update chat metadata
     await setDoc(
       chatRef,
       {
@@ -51,15 +62,7 @@ export function useChat(chatId: string) {
       },
       { merge: true }
     );
-
-    // ✅ THIS CREATES THE MESSAGE
-    await addDoc(messagesRef, {
-      text,
-      senderId,
-      role,
-      createdAt: serverTimestamp(),
-    });
   };
 
-  return { messages, sendMessage };
+  return { messages, sendMessage};
 }
