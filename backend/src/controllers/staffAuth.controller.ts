@@ -4,7 +4,13 @@ import { verifyPassword } from "../utils/password";
 import { signJwt } from "../utils/jwt";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { sendStaffPasswordResetOtpMail } from "../utils/mailer";
+import {
+  sendStaffLoginOtpMail,
+  sendStaffPasswordResetOtpMail,
+} from "../utils/mailer";
+
+const OTP_EXPIRY_MINUTES = 10;
+
 export async function staffLogin(req: Request, res: Response) {
   try {
     const { email, password } = req.body;
@@ -33,10 +39,103 @@ export async function staffLogin(req: Request, res: Response) {
       });
     }
 
+    // Invalidate previous OTPs
+    await prisma.otpVerification.updateMany({
+      where: {
+        staffId: staff.id,
+        isUsed: false,
+        expiresAt: { gt: new Date() },
+      },
+      data: { isUsed: true },
+    });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpHash = await bcrypt.hash(otp, 10);
+
+    await prisma.otpVerification.create({
+      data: {
+        staffId: staff.id,
+        otpHash,
+        expiresAt: new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000),
+      },
+    });
+
+    const ip = req.ip || "Unknown IP";
+
+    const device =
+      typeof req.headers["user-agent"] === "string"
+        ? req.headers["user-agent"]
+        : "Unknown Device";
+
+    const time = new Date().toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
+    await sendStaffLoginOtpMail(
+      staff.email,
+      otp,
+      staff.fullName,
+      ip,
+      device,
+      time,
+    );
+
+    return res.json({
+      message: "OTP sent to registered email",
+    });
+  } catch (error) {
+    console.error("Staff login error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+}
+
+export async function verifyStaffOtp(req: Request, res: Response) {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
+
+    const staff = await prisma.staff.findUnique({
+      where: { email },
+    });
+
+    if (!staff) {
+      return res.status(400).json({ message: "Invalid OTP or expired OTP" });
+    }
+
+    const otpEntry = await prisma.otpVerification.findFirst({
+      where: {
+        staffId: staff.id,
+        isUsed: false,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!otpEntry) {
+      return res.status(400).json({ message: "Invalid OTP or expired OTP" });
+    }
+
+    const isValidOtp = await bcrypt.compare(otp, otpEntry.otpHash);
+
+    if (!isValidOtp) {
+      return res.status(400).json({ message: "Invalid OTP or expired OTP" });
+    }
+
+    await prisma.otpVerification.update({
+      where: { id: otpEntry.id },
+      data: { isUsed: true },
+    });
+
     const token = jwt.sign(
       {
         sub: staff.id,
-        role: "STAFF",
+        role: staff.role, // STAFF or ADMIN
         email: staff.email,
         name: staff.fullName,
         staffId: staff.id,
@@ -47,14 +146,12 @@ export async function staffLogin(req: Request, res: Response) {
 
     return res.json({ token });
   } catch (error) {
-    console.error("Staff login error:", error);
+    console.error("Verify staff OTP error:", error);
     return res.status(500).json({
       message: "Internal server error",
     });
   }
 }
-
-const OTP_EXPIRY_MINUTES = 10;
 
 export const requestStaffPasswordReset = async (
   req: Request,
@@ -82,7 +179,7 @@ export const requestStaffPasswordReset = async (
 
   await prisma.otpVerification.updateMany({
     where: {
-      staff: { id: staff.id },
+      staffId: staff.id,
       isUsed: false,
       expiresAt: { gt: new Date() },
     },
@@ -100,7 +197,26 @@ export const requestStaffPasswordReset = async (
     },
   });
 
-  await sendStaffPasswordResetOtpMail(staff.email, otp, staff.fullName);
+  const ip = req.ip || "Unknown IP";
+
+  const device =
+    typeof req.headers["user-agent"] === "string"
+      ? req.headers["user-agent"]
+      : "Unknown Device";
+
+  const time = new Date().toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  await sendStaffPasswordResetOtpMail(
+    staff.email,
+    otp,
+    staff.fullName,
+    ip,
+    device,
+    time,
+  );
 
   return res.status(200).json({
     message:
@@ -125,7 +241,7 @@ export const resetStaffPassword = async (req: Request, res: Response) => {
 
   const otpEntry = await prisma.otpVerification.findFirst({
     where: {
-      staff: { id: staff.id },
+      staffId: staff.id,
       isUsed: false,
       expiresAt: { gt: new Date() },
     },

@@ -5,6 +5,7 @@ import { prisma } from "../prisma";
 import { generateOtp, hashOtp, verifyOtpHash } from "../utils/otp";
 import { sendOtpMail } from "../utils/mailer";
 import { signJwt } from "../utils/jwt";
+import { time } from "console";
 
 const OTP_EXP_MIN = Number(process.env.OTP_EXPIRY_MINUTES || 5);
 
@@ -31,7 +32,12 @@ export const login = async (req: Request, res: Response) => {
   const otp = generateOtp();
   const otpHash = await hashOtp(otp);
   const expiresAt = new Date(Date.now() + OTP_EXP_MIN * 60 * 1000);
-
+  const ip = req.ip || "Unknown IP";
+  const device = req.headers["user-agent"] || "Unknown Device";
+  const time = new Date().toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
   await prisma.otpVerification.create({
     data: {
       studentId: student.id,
@@ -40,7 +46,7 @@ export const login = async (req: Request, res: Response) => {
     },
   });
 
-  await sendOtpMail(student.email, otp, student.fullName);
+  await sendOtpMail(student.email, otp, student.fullName, ip, device, time);
 
   return res.json({ message: "OTP sent to registered email" });
 };

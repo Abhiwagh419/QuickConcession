@@ -1,13 +1,19 @@
-import { Request } from "express";
+import { UserRole } from "@prisma/client";
+
+export type AuthRole = UserRole | "STUDENT";
 
 export interface AuthUser {
   sub: number;
   id: number;
-  enrollmentNo: string;
-  email: string;
-  role: "STUDENT" | "STAFF";
+  enrollmentNo?: string;
+  email?: string;
+  role: AuthRole;
 }
 
-export interface AuthRequest extends Request {
-  user: AuthUser;
+declare global {
+  namespace Express {
+    interface Request {
+      user?: AuthUser;
+    }
+  }
 }
