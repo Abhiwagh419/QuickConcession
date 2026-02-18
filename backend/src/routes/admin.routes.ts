@@ -10,8 +10,10 @@ router.get("/students", requireAuth, async (req: any, res) => {
     return res.status(403).json({ message: "Forbidden" });
   }
 
-  const students = await prisma.student.findMany({
-  where: { isDeleted: false }, 
+const showDeleted = req.query.deleted === "true";
+
+const students = await prisma.student.findMany({
+  where: { isDeleted: showDeleted },
 
     orderBy: { createdAt: "desc" },
     select: {
@@ -135,6 +137,92 @@ router.patch("/students/:id/delete", requireAuth, async (req: any, res) => {
   });
 
   res.json({ message: "Student deleted successfully" });
+});
+
+/*
+  RESTORE DELETED STUDENT
+*/
+router.patch("/students/:id/restore", requireAuth, async (req: any, res) => {
+  if (req.user.role !== "ADMIN") {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  const studentId = Number(req.params.id);
+
+  const student = await prisma.student.findUnique({
+    where: { id: studentId },
+  });
+
+  if (!student) {
+    return res.status(404).json({ message: "Student not found" });
+  }
+
+  await prisma.student.update({
+    where: { id: studentId },
+    data: { isDeleted: false },
+  });
+
+  res.json({ message: "Student restored successfully" });
+});
+
+/*
+  GET STUDENT DETAILS BY ID (ADMIN)
+*/
+router.get("/students/:id", requireAuth, async (req: any, res) => {
+  if (req.user.role !== "ADMIN") {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  const studentId = Number(req.params.id);
+
+  const student = await prisma.student.findUnique({
+    where: { id: studentId },
+    select: {
+      id: true,
+      enrollmentNo: true,
+      fullName: true,
+      email: true,
+      mobileNumber: true,
+      course: true,
+      year: true,
+      sem: true,
+      shift: true,
+      address: true,
+      dateOfBirth: true,
+    },
+  });
+
+  if (!student) {
+    return res.status(404).json({ message: "Student not found" });
+  }
+
+  res.json(student);
+});
+
+/*
+  GET STUDENT WITH APPLICATIONS (ADMIN)
+*/
+router.get("/students/:id/full", requireAuth, async (req: any, res) => {
+  if (req.user.role !== "ADMIN") {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  const studentId = Number(req.params.id);
+
+  const student = await prisma.student.findUnique({
+    where: { id: studentId },
+    include: {
+      applications: {
+        orderBy: { appliedAt: "desc" },
+      },
+    },
+  });
+
+  if (!student) {
+    return res.status(404).json({ message: "Student not found" });
+  }
+
+  res.json(student);
 });
 
 export default router;
