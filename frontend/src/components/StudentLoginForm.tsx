@@ -39,52 +39,48 @@ const StudentLoginForm = () => {
     return "";
   };
 
-  const handleSendOtp = async () => {
-    const enrollmentError = validateEnrollmentNo(enrollmentNo);
-    const passwordError = validatePassword(password);
+const handleSendOtp = async () => {
+  const enrollmentError = validateEnrollmentNo(enrollmentNo);
+  const passwordError = validatePassword(password);
 
-    if (enrollmentError || passwordError) {
-      setErrors({
-        enrollmentNo: enrollmentError,
-        password: passwordError,
-      });
-      return;
-    }
+  if (enrollmentError || passwordError) {
+    setErrors({
+      enrollmentNo: enrollmentError,
+      password: passwordError,
+    });
+    return;
+  }
 
-    setIsSendingOtp(true);
-    setErrors({});
+  setIsSendingOtp(true);
+  setErrors({});
 
-    try {
-      await apiFetch("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({
-          enrollmentNo,
-          password,
-        }),
-      });
+  try {
+    await apiFetch("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        enrollmentNo,
+        password,
+      }),
+    });
 
-      setOtpSent(true);
-      toast({
-        title: "OTP Sent",
-        description:
-          "A one-time password has been sent to your registered email address.",
-      });
-    } catch (err: any) {
-      toast({
-        title: "Login Failed",
-        description: err.message || "Invalid credentials",
-        variant: "destructive",
-      });
-    }
-
-    setIsSendingOtp(false);
     setOtpSent(true);
+
     toast({
       title: "OTP Sent",
       description:
         "A one-time password has been sent to your registered email address.",
     });
-  };
+
+  } catch (err: any) {
+    toast({
+      title: "Login Failed",
+      description: err.message,
+      variant: "destructive",
+    });
+  } finally {
+    setIsSendingOtp(false);
+  }
+};
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,7 +125,17 @@ const StudentLoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleLogin} className="space-y-5 animate-fade-in">
+    <form
+      onSubmit={
+        otpSent
+          ? handleLogin
+          : (e) => {
+              e.preventDefault();
+              handleSendOtp();
+            }
+      }
+      className="space-y-5 animate-fade-in"
+    >
       <div className="space-y-2">
         <Label htmlFor="enrollmentNo" className="text-foreground font-medium">
           Enrollment Number
@@ -176,7 +182,7 @@ const StudentLoginForm = () => {
 
       {!otpSent ? (
         <Button
-          type="button"
+          type="submit"
           onClick={handleSendOtp}
           disabled={isSendingOtp}
           className="w-full btn-accent h-11"

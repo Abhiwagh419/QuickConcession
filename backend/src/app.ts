@@ -9,12 +9,14 @@ import { startExpiryCron } from "./cron/expireConcessions";
 import staffAuthRoutes from "./routes/staffAuth.routes";
 import staffConcessionRoutes from "./routes/staffConcession.routes";
 import staffRoutes from "./routes/staffConcession.routes";
+import adminRoutes from "./routes/admin.routes";
+
 const app = express();
 
 app.use(
   cors({
     origin: "http://localhost:8080",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
@@ -39,4 +41,6 @@ startExpiryCron();
 app.use("/staff", staffAuthRoutes);
 app.use("/staff", staffConcessionRoutes);
 app.use("/staff", staffRoutes);
+app.use("/admin", adminRoutes);
+
 export default app;

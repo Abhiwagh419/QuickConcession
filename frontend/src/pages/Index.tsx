@@ -13,6 +13,7 @@ import LoginFooter from "@/components/LoginFooter";
 import StudentLoginForm from "@/components/StudentLoginForm";
 import StaffLoginForm from "@/components/StaffLoginForm";
 import PageWrapper from "@/components/PageWrapper";
+import AdminLoginForm from "@/components/AdminLoginForm";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("student");
@@ -53,7 +54,7 @@ const Index = () => {
                   onValueChange={setActiveTab}
                   className="w-full"
                 >
-                  <TabsList className="grid w-full grid-cols-2 mb-6 bg-muted h-12">
+                  <TabsList className="grid w-full grid-cols-3 mb-6 bg-muted h-12">
                     <TabsTrigger
                       value="student"
                       className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 font-medium"
@@ -68,6 +69,13 @@ const Index = () => {
                       <Users className="w-4 h-4" />
                       Staff
                     </TabsTrigger>
+                    <TabsTrigger
+                      value="admin"
+                      className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground h-10 font-medium"
+                    >
+                      <Users className="w-4 h-4" />
+                      Admin
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="student" className="mt-0">
@@ -77,6 +85,11 @@ const Index = () => {
                   <TabsContent value="staff" className="mt-0">
                     <StaffLoginForm />
                   </TabsContent>
+
+                  <TabsContent value="admin">
+                    <AdminLoginForm />
+                  </TabsContent>
+
                 </Tabs>
               </CardContent>
             </Card>

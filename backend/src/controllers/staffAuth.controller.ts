@@ -135,7 +135,8 @@ export async function verifyStaffOtp(req: Request, res: Response) {
     const token = jwt.sign(
       {
         sub: staff.id,
-        role: staff.role, // STAFF or ADMIN
+         id: staff.id,
+        role: staff.role,
         email: staff.email,
         name: staff.fullName,
         staffId: staff.id,

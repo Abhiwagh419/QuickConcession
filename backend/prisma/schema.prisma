@@ -23,6 +23,8 @@ model Student {
   dateOfBirth  DateTime?
   applications ConcessionApplication[]
   otpEntries   OtpVerification[]
+  active Boolean @default(true)
+   isDeleted    Boolean  @default(false) 
 }
 
 model OtpVerification {

@@ -17,6 +17,10 @@ import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import StaffForgotPassword from "./pages/StaffForgotPassword";
 import StaffChatPage from "@/pages/StaffChatPage";
+import AdminDashboard from "@/pages/AdminDashboard";
+import RequireAdmin from "./components/RequireAdmin";
+import AdminStudents from "@/pages/AdminStudents";
+import AddStudent from "@/pages/AddStudent";
 
 const queryClient = new QueryClient();
 function AnimatedRoutes() {
@@ -48,7 +52,17 @@ function AnimatedRoutes() {
           path="/staff/forgot-password"
           element={<StaffForgotPassword />}
         />
+        <Route path="/admin/students" element={<AdminStudents />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/admin/students/add" element={<AddStudent />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <RequireAdmin>
+              <AdminDashboard />
+            </RequireAdmin>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );

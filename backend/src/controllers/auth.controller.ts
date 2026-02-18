@@ -4,8 +4,6 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../prisma";
 import { generateOtp, hashOtp, verifyOtpHash } from "../utils/otp";
 import { sendOtpMail } from "../utils/mailer";
-import { signJwt } from "../utils/jwt";
-import { time } from "console";
 
 const OTP_EXP_MIN = Number(process.env.OTP_EXPIRY_MINUTES || 5);
 
@@ -20,9 +18,21 @@ export const login = async (req: Request, res: Response) => {
     where: { enrollmentNo },
   });
 
-  if (!student) {
-    return res.status(401).json({ message: "Invalid credentials" });
-  }
+if (!student) {
+  return res.status(401).json({ message: "Invalid credentials" });
+}
+
+if (student.isDeleted) {
+  return res.status(403).json({
+    message: "Your account has been removed from the system.",
+  });
+}
+
+if (!student.active) {
+  return res.status(403).json({
+    message: "Your account has been deactivated. Please contact administration.",
+  });
+}
 
   const ok = await bcrypt.compare(password, student.passwordHash);
   if (!ok) {
@@ -62,9 +72,21 @@ export const verifyOtp = async (req: Request, res: Response) => {
     where: { enrollmentNo },
   });
 
-  if (!student) {
-    return res.status(401).json({ message: "Invalid request" });
-  }
+if (!student) {
+  return res.status(401).json({ message: "Invalid request" });
+}
+
+if (student.isDeleted) {
+  return res.status(403).json({
+    message: "Your account has been removed from the system.",
+  });
+}
+
+if (!student.active) {
+  return res.status(403).json({
+    message: "Your account has been deactivated. Please contact administration.",
+  });
+}
 
   const record = await prisma.otpVerification.findFirst({
     where: {
@@ -89,10 +111,17 @@ export const verifyOtp = async (req: Request, res: Response) => {
     data: { isUsed: true },
   });
 
-  const token = signJwt({
-    sub: student.id,
-    role: "STUDENT",
-  });
+  const token = jwt.sign(
+    {
+      sub: student.id,
+      id: student.id,
+      role: "STUDENT",
+      email: student.email,
+      name: student.fullName,
+    },
+    process.env.JWT_SECRET!,
+    { expiresIn: "1d" },
+  );
 
   return res.json({ token });
 };

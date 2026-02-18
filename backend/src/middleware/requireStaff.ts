@@ -7,11 +7,9 @@ export function requireStaff(req: Request, res: Response, next: NextFunction) {
     });
   }
 
-  if (req.user.role !== "STAFF") {
-    return res.status(403).json({
-      message: "Staff access required",
-    });
-  }
+if (req.user.role !== "STAFF" && req.user.role !== "ADMIN") {
+  return res.status(403).json({ message: "Staff access required" });
+}
 
   next();
 }

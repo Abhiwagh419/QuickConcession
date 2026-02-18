@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { User, Lock, KeyRound, Mail, Loader2 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 interface DecodedToken {
   role: "STAFF" | "ADMIN";
@@ -138,11 +138,19 @@ const StaffLoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleLogin} className="space-y-5 animate-fade-in">
+    <form
+      onSubmit={
+        otpSent
+          ? handleLogin
+          : (e) => {
+              e.preventDefault();
+              handleSendOtp();
+            }
+      }
+      className="space-y-5 animate-fade-in"
+    >
       <div className="space-y-2">
-        <Label className="text-foreground font-medium">
-          Email
-        </Label>
+        <Label className="text-foreground font-medium">Email</Label>
         <div className="relative">
           <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
@@ -161,9 +169,7 @@ const StaffLoginForm = () => {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-foreground font-medium">
-          Password
-        </Label>
+        <Label className="text-foreground font-medium">Password</Label>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
@@ -183,8 +189,7 @@ const StaffLoginForm = () => {
 
       {!otpSent ? (
         <Button
-          type="button"
-          onClick={handleSendOtp}
+          type="submit" 
           disabled={isSendingOtp}
           className="w-full btn-accent h-11"
         >
@@ -253,14 +258,13 @@ const StaffLoginForm = () => {
         </>
       )}
       <div className="text-center pt-2">
-  <Link
-    to="/staff/forgot-password"
-    className="text-sm text-accent hover:underline font-medium"
-  >
-    Forgot password?
-  </Link>
-</div>
-
+        <Link
+          to="/staff/forgot-password"
+          className="text-sm text-accent hover:underline font-medium"
+        >
+          Forgot password?
+        </Link>
+      </div>
     </form>
   );
 };
