@@ -392,4 +392,62 @@ router.post(
   }
 );
 
+/*
+  ADMIN DASHBOARD STATS
+*/
+router.get("/dashboard", requireAuth, async (req: any, res) => {
+  if (req.user.role !== "ADMIN") {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  try {
+    const totalStudents = await prisma.student.count({
+      where: { isDeleted: false },
+    });
+
+    const totalStaff = await prisma.staff.count();
+
+    const totalApplications = await prisma.concessionApplication.count();
+
+    const grouped = await prisma.concessionApplication.groupBy({
+      by: ["status"],
+      _count: true,
+    });
+
+    let pendingApplications = 0;
+    let rejectedApplications = 0;
+    let approvedApplications = 0;
+
+    grouped.forEach((g) => {
+      if (g.status === "PENDING") {
+        pendingApplications = g._count;
+      }
+
+      if (g.status === "REJECTED") {
+        rejectedApplications = g._count;
+      }
+
+      if (
+        g.status === "APPROVED" ||
+        g.status === "ISSUED" ||
+        g.status === "EXPIRED"
+      ) {
+        approvedApplications += g._count;
+      }
+    });
+
+    res.json({
+      totalStudents,
+      totalStaff,
+      totalApplications,
+      pendingApplications,
+      approvedApplications,
+      rejectedApplications,
+    });
+  } catch (error) {
+    console.error("Admin dashboard error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 export default router;

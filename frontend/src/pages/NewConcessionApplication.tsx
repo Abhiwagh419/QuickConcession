@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -10,7 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Train, AlertTriangle, Loader2 } from "lucide-react";
+import {
+  Train,
+  AlertTriangle,
+  Loader2,
+  MapPin,
+  ArrowRight,
+} from "lucide-react";
 import StudentHeader from "@/components/StudentHeader";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -20,8 +27,93 @@ import {
   concessionPeriods,
 } from "@/data/railwayData";
 import { apiFetch } from "@/lib/api";
-import { useEffect } from "react";
 import PageWrapper from "@/components/PageWrapper";
+import { motion } from "framer-motion";
+
+// ─── Animation helpers ────────────────────────────────────────────────────────
+
+type CubicBezier = [number, number, number, number];
+const EASE_OUT: CubicBezier = [0.16, 1, 0.3, 1];
+
+const fadeIn = (delay: number = 0) => ({
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.38, ease: EASE_OUT, delay },
+});
+
+// ─── FormField helper ─────────────────────────────────────────────────────────
+
+function FormField({
+  label,
+  required,
+  error,
+  children,
+}: {
+  label: string;
+  required?: boolean;
+  error?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-[12px] font-semibold text-foreground">
+        {label}{" "}
+        {required && <span className="text-destructive">*</span>}
+      </Label>
+      {children}
+      {error && (
+        <p className="text-[11px] text-destructive">{error}</p>
+      )}
+    </div>
+  );
+}
+
+// ─── InfoField helper ─────────────────────────────────────────────────────────
+
+function InfoField({ label, value }: { label: string; value?: string }) {
+  return (
+    <div className="space-y-0.5">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </p>
+      <p className="text-sm font-medium text-foreground">{value || "—"}</p>
+    </div>
+  );
+}
+
+// ─── Skeleton loader ──────────────────────────────────────────────────────────
+
+function StudentInfoSkeleton() {
+  return (
+    <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+      <div className="border-b border-border bg-muted/20 px-6 py-4">
+        <div className="h-4 w-32 rounded bg-muted animate-pulse" />
+      </div>
+      <CardContent className="px-6 py-5">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="space-y-1.5">
+              <div className="h-3 w-16 rounded bg-muted animate-pulse" />
+              <div className="h-4 w-24 rounded bg-muted animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// ─── Section heading ──────────────────────────────────────────────────────────
+
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground pl-0.5">
+      {children}
+    </p>
+  );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 
 const NewConcessionApplication = () => {
   useEffect(() => {
@@ -33,7 +125,6 @@ const NewConcessionApplication = () => {
         console.error("Failed to load student", err);
       }
     };
-
     loadStudent();
   }, []);
 
@@ -62,17 +153,10 @@ const NewConcessionApplication = () => {
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => {
       const updated = { ...prev, [field]: value };
-
-      if (field === "fromLine") {
-        updated.fromStation = "";
-      }
-      if (field === "toLine") {
-        updated.toStation = "";
-      }
-
+      if (field === "fromLine") updated.fromStation = "";
+      if (field === "toLine") updated.toStation = "";
       return updated;
     });
-
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
@@ -80,15 +164,12 @@ const NewConcessionApplication = () => {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
     if (!formData.travelClass) newErrors.travelClass = "Please select a class";
     if (!formData.period) newErrors.period = "Please select a period";
     if (!formData.fromLine) newErrors.fromLine = "Please select departure line";
-    if (!formData.fromStation)
-      newErrors.fromStation = "Please select departure station";
+    if (!formData.fromStation) newErrors.fromStation = "Please select departure station";
     if (!formData.toLine) newErrors.toLine = "Please select arrival line";
-    if (!formData.toStation)
-      newErrors.toStation = "Please select arrival station";
+    if (!formData.toStation) newErrors.toStation = "Please select arrival station";
     if (
       formData.fromStation &&
       formData.toStation &&
@@ -96,7 +177,6 @@ const NewConcessionApplication = () => {
     ) {
       newErrors.toStation = "Departure and arrival stations cannot be the same";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -105,7 +185,6 @@ const NewConcessionApplication = () => {
     e.preventDefault();
     if (!validateForm()) return;
     setIsSubmitting(true);
-
     try {
       await apiFetch("/concession/apply", {
         method: "POST",
@@ -118,13 +197,11 @@ const NewConcessionApplication = () => {
           duration: formData.period,
         }),
       });
-
       toast({
         title: "Application Submitted",
         description:
           "Your railway concession application has been submitted successfully.",
       });
-
       navigate("/student/railway");
     } catch (err: any) {
       toast({
@@ -144,342 +221,315 @@ const NewConcessionApplication = () => {
     return railwayLines.find((l) => l.id === lineId)?.name || lineId;
   };
 
-  if (!student) {
-    return (
-      <div className="min-h-screen bg-background">
-        <StudentHeader />
-        <div className="p-6">Loading student information…</div>
-      </div>
-    );
-  }
+  const selectTriggerClass = (field: string) =>
+    `h-9 rounded-lg border-border bg-background text-sm ${
+      errors[field] ? "border-destructive" : ""
+    }`;
+
+  const disabledTriggerClass = (field: string) =>
+    `h-9 rounded-lg border-border bg-muted/40 text-sm ${
+      errors[field] ? "border-destructive" : ""
+    }`;
 
   return (
     <div className="min-h-screen bg-background">
       <StudentHeader />
 
       <PageWrapper>
-        <main className="container mx-auto px-4 py-6 max-w-3xl">
-          <div className="flex items-center gap-3 mb-6">
-            <Train className="w-7 h-7 text-primary" />
-            <h1 className="font-heading text-2xl font-bold text-foreground">
-              Apply for Railway Concession
-            </h1>
-          </div>
+        <main className="container mx-auto max-w-3xl space-y-6 px-4 py-8">
 
-          {/* Student Info Card */}
-          <Card className="border shadow-sm mb-6 bg-secondary/30">
-            <CardContent className="pt-4">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase">
-                    Enrollment No
-                  </p>
-                  <p className="font-medium">{student.enrollmentNo}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase">
-                    Name
-                  </p>
-                  <p className="font-medium">{student.fullName}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase">
-                    Department
-                  </p>
-                  <p className="font-medium">{student.course}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase">
-                    Year/Semester
-                  </p>
-                  <p className="font-medium">
-                    {student.year} / {student.sem}
-                  </p>
-                </div>
+          {/* ── Page Header ──────────────────────────────────────────── */}
+          <motion.div {...fadeIn(0)}>
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+                <Train className="h-4 w-4 text-primary-foreground" />
               </div>
-            </CardContent>
-          </Card>
+              <h1 className="text-xl font-bold tracking-tight text-foreground">
+                Apply for Railway Concession
+              </h1>
+            </div>
+            <p className="mt-1 pl-10 text-[13px] text-muted-foreground">
+              Government Polytechnic Mumbai &mdash; Student Portal
+            </p>
+          </motion.div>
 
-          {/* Application Form */}
-          <Card className="border shadow-sm">
-            <CardHeader className="pb-3 border-b bg-muted/30">
-              <CardTitle className="text-lg font-heading">
-                Concession Details
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Class and Period Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="travelClass">
-                      Class <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={formData.travelClass}
-                      onValueChange={(v) => handleChange("travelClass", v)}
-                    >
-                      <SelectTrigger
-                        id="travelClass"
-                        className={
-                          errors.travelClass ? "border-destructive" : ""
-                        }
-                      >
-                        <SelectValue placeholder="Select class" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-card">
-                        {concessionClasses.map((cls) => (
-                          <SelectItem key={cls} value={cls}>
-                            {cls}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {errors.travelClass && (
-                      <p className="text-xs text-destructive">
-                        {errors.travelClass}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="period">
-                      Period <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={formData.period}
-                      onValueChange={(v) => handleChange("period", v)}
-                    >
-                      <SelectTrigger
-                        id="period"
-                        className={errors.period ? "border-destructive" : ""}
-                      >
-                        <SelectValue placeholder="Select period" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-card">
-                        {concessionPeriods.map((p) => (
-                          <SelectItem key={p} value={p}>
-                            {p}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {errors.period && (
-                      <p className="text-xs text-destructive">
-                        {errors.period}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* From Section */}
-                <div className="space-y-4">
-                  <h3 className="font-medium text-foreground border-b pb-2">
-                    Departure Details
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="fromLine">
-                        From Line <span className="text-destructive">*</span>
-                      </Label>
-                      <Select
-                        value={formData.fromLine}
-                        onValueChange={(v) => handleChange("fromLine", v)}
-                      >
-                        <SelectTrigger
-                          id="fromLine"
-                          className={
-                            errors.fromLine ? "border-destructive" : ""
-                          }
-                        >
-                          <SelectValue placeholder="Select railway line" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-card">
-                          {railwayLines.map((line) => (
-                            <SelectItem key={line.id} value={line.id}>
-                              {line.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {errors.fromLine && (
-                        <p className="text-xs text-destructive">
-                          {errors.fromLine}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="fromStation">
-                        From Station <span className="text-destructive">*</span>
-                      </Label>
-                      <Select
-                        value={formData.fromStation}
-                        onValueChange={(v) => handleChange("fromStation", v)}
-                        disabled={!formData.fromLine}
-                      >
-                        <SelectTrigger
-                          id="fromStation"
-                          className={
-                            errors.fromStation ? "border-destructive" : ""
-                          }
-                        >
-                          <SelectValue
-                            placeholder={
-                              formData.fromLine
-                                ? "Select station"
-                                : "Select line first"
-                            }
-                          />
-                        </SelectTrigger>
-                        <SelectContent className="bg-card max-h-60">
-                          {fromStations.map((station) => (
-                            <SelectItem key={station} value={station}>
-                              {station}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {errors.fromStation && (
-                        <p className="text-xs text-destructive">
-                          {errors.fromStation}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* To Section */}
-                <div className="space-y-4">
-                  <h3 className="font-medium text-foreground border-b pb-2">
-                    Arrival Details
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="toLine">
-                        To Line <span className="text-destructive">*</span>
-                      </Label>
-                      <Select
-                        value={formData.toLine}
-                        onValueChange={(v) => handleChange("toLine", v)}
-                      >
-                        <SelectTrigger
-                          id="toLine"
-                          className={errors.toLine ? "border-destructive" : ""}
-                        >
-                          <SelectValue placeholder="Select railway line" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-card">
-                          {railwayLines.map((line) => (
-                            <SelectItem key={line.id} value={line.id}>
-                              {line.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {errors.toLine && (
-                        <p className="text-xs text-destructive">
-                          {errors.toLine}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="toStation">
-                        To Station <span className="text-destructive">*</span>
-                      </Label>
-                      <Select
-                        value={formData.toStation}
-                        onValueChange={(v) => handleChange("toStation", v)}
-                        disabled={!formData.toLine}
-                      >
-                        <SelectTrigger
-                          id="toStation"
-                          className={
-                            errors.toStation ? "border-destructive" : ""
-                          }
-                        >
-                          <SelectValue
-                            placeholder={
-                              formData.toLine
-                                ? "Select station"
-                                : "Select line first"
-                            }
-                          />
-                        </SelectTrigger>
-                        <SelectContent className="bg-card max-h-60">
-                          {toStations.map((station) => (
-                            <SelectItem key={station} value={station}>
-                              {station}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {errors.toStation && (
-                        <p className="text-xs text-destructive">
-                          {errors.toStation}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Summary */}
-                {formData.fromStation && formData.toStation && (
-                  <div className="p-4 bg-secondary/50 rounded-lg border">
-                    <p className="text-sm font-medium text-foreground mb-1">
-                      Route Summary:
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {formData.fromStation} ({getLineName(formData.fromLine)})
-                      → {formData.toStation} ({getLineName(formData.toLine)})
-                    </p>
-                    {formData.travelClass && formData.period && (
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {formData.travelClass} • {formData.period} Pass
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                {/* Notes */}
-                <div className="p-4 bg-warning/10 border border-warning/30 rounded-lg flex gap-3">
-                  <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-foreground">
-                    <strong>Important:</strong> Applications may be rejected if
-                    incorrect information is provided. Please verify all details
-                    before submitting.
+          {/* ── Student Info Card ─────────────────────────────────────── */}
+          {!student ? (
+            <motion.div {...fadeIn(0.06)}>
+              <StudentInfoSkeleton />
+            </motion.div>
+          ) : (
+            <motion.div {...fadeIn(0.06)}>
+              <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+                <div className="border-b border-border bg-muted/20 px-6 py-4">
+                  <p className="text-sm font-semibold text-foreground">
+                    Applicant Details
                   </p>
                 </div>
+                <CardContent className="px-6 py-5">
+                  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                    <InfoField label="Enrollment No"  value={student.enrollmentNo} />
+                    <InfoField label="Name"           value={student.fullName} />
+                    <InfoField label="Department"     value={student.course} />
+                    <InfoField label="Year / Semester" value={`${student.year} / ${student.sem}`} />
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
-                {/* Buttons */}
-                <div className="flex gap-4 pt-4">
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="flex-1"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Submitting...
-                      </>
-                    ) : (
-                      "Submit Application"
-                    )}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleCancel}
-                    className="flex-1"
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+          {/* ── Application Form Card ─────────────────────────────────── */}
+          <motion.div {...fadeIn(0.11)}>
+            <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+              <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
+                <CardTitle className="text-sm font-semibold text-foreground">
+                  Concession Details
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent className="px-6 py-6">
+                <form onSubmit={handleSubmit} className="space-y-7">
+
+                  {/* ── Class & Period ─────────────────────────────────── */}
+                  <div className="space-y-3">
+                    <SectionHeading>Travel Preferences</SectionHeading>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <FormField label="Class" required error={errors.travelClass}>
+                        <Select
+                          value={formData.travelClass}
+                          onValueChange={(v) => handleChange("travelClass", v)}
+                        >
+                          <SelectTrigger id="travelClass" className={selectTriggerClass("travelClass")}>
+                            <SelectValue placeholder="Select class" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-card">
+                            {concessionClasses.map((cls) => (
+                              <SelectItem key={cls} value={cls}>{cls}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+
+                      <FormField label="Period" required error={errors.period}>
+                        <Select
+                          value={formData.period}
+                          onValueChange={(v) => handleChange("period", v)}
+                        >
+                          <SelectTrigger id="period" className={selectTriggerClass("period")}>
+                            <SelectValue placeholder="Select period" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-card">
+                            {concessionPeriods.map((p) => (
+                              <SelectItem key={p} value={p}>{p}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* ── Departure ──────────────────────────────────────── */}
+                  <div className="space-y-3">
+                    <SectionHeading>Departure Details</SectionHeading>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <FormField label="From Line" required error={errors.fromLine}>
+                        <Select
+                          value={formData.fromLine}
+                          onValueChange={(v) => handleChange("fromLine", v)}
+                        >
+                          <SelectTrigger id="fromLine" className={selectTriggerClass("fromLine")}>
+                            <SelectValue placeholder="Select railway line" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-card">
+                            {railwayLines.map((line) => (
+                              <SelectItem key={line.id} value={line.id}>
+                                {line.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+
+                      <FormField label="From Station" required error={errors.fromStation}>
+                        <Select
+                          value={formData.fromStation}
+                          onValueChange={(v) => handleChange("fromStation", v)}
+                          disabled={!formData.fromLine}
+                        >
+                          <SelectTrigger
+                            id="fromStation"
+                            className={
+                              !formData.fromLine
+                                ? disabledTriggerClass("fromStation")
+                                : selectTriggerClass("fromStation")
+                            }
+                          >
+                            <SelectValue
+                              placeholder={
+                                formData.fromLine ? "Select station" : "Select line first"
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent className="bg-card max-h-60">
+                            {fromStations.map((station) => (
+                              <SelectItem key={station} value={station}>
+                                {station}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* ── Arrival ────────────────────────────────────────── */}
+                  <div className="space-y-3">
+                    <SectionHeading>Arrival Details</SectionHeading>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                      <FormField label="To Line" required error={errors.toLine}>
+                        <Select
+                          value={formData.toLine}
+                          onValueChange={(v) => handleChange("toLine", v)}
+                        >
+                          <SelectTrigger id="toLine" className={selectTriggerClass("toLine")}>
+                            <SelectValue placeholder="Select railway line" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-card">
+                            {railwayLines.map((line) => (
+                              <SelectItem key={line.id} value={line.id}>
+                                {line.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+
+                      <FormField label="To Station" required error={errors.toStation}>
+                        <Select
+                          value={formData.toStation}
+                          onValueChange={(v) => handleChange("toStation", v)}
+                          disabled={!formData.toLine}
+                        >
+                          <SelectTrigger
+                            id="toStation"
+                            className={
+                              !formData.toLine
+                                ? disabledTriggerClass("toStation")
+                                : selectTriggerClass("toStation")
+                            }
+                          >
+                            <SelectValue
+                              placeholder={
+                                formData.toLine ? "Select station" : "Select line first"
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent className="bg-card max-h-60">
+                            {toStations.map((station) => (
+                              <SelectItem key={station} value={station}>
+                                {station}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormField>
+                    </div>
+                  </div>
+
+                  {/* ── Route Summary ──────────────────────────────────── */}
+                  {formData.fromStation && formData.toStation && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, ease: EASE_OUT }}
+                    >
+                      <div className="rounded-xl border border-border bg-muted/30 px-5 py-4 space-y-2">
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          Route Summary
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2 text-sm font-medium text-foreground">
+                          <div className="flex items-center gap-1.5">
+                            <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
+                            <span>{formData.fromStation}</span>
+                            <span className="text-[11px] text-muted-foreground font-normal">
+                              ({getLineName(formData.fromLine)})
+                            </span>
+                          </div>
+                          <ArrowRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                          <div className="flex items-center gap-1.5">
+                            <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
+                            <span>{formData.toStation}</span>
+                            <span className="text-[11px] text-muted-foreground font-normal">
+                              ({getLineName(formData.toLine)})
+                            </span>
+                          </div>
+                        </div>
+                        {formData.travelClass && formData.period && (
+                          <p className="text-[12px] text-muted-foreground">
+                            {formData.travelClass} &nbsp;&bull;&nbsp; {formData.period} Pass
+                          </p>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* ── Warning Panel ──────────────────────────────────── */}
+                  <div className="flex items-start gap-2.5 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3.5">
+                    <AlertTriangle className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+                    <p className="text-[12px] leading-relaxed text-foreground">
+                      <span className="font-semibold">Important:</span>{" "}
+                      Applications may be rejected if incorrect information is
+                      provided. Please verify all details before submitting.
+                    </p>
+                  </div>
+
+                  {/* ── Action Buttons ─────────────────────────────────── */}
+                  <div className="flex flex-col gap-3 pt-1 sm:flex-row">
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="flex-1 h-9 rounded-lg text-sm font-semibold disabled:opacity-50 transition-colors duration-150 flex items-center justify-center gap-2"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Submitting…
+                        </>
+                      ) : (
+                        "Submit Application"
+                      )}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleCancel}
+                      className="flex-1 h-9 rounded-lg text-sm font-semibold border-border hover:bg-muted hover:border-primary/40 transition-all duration-150"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* ── Footer ───────────────────────────────────────────────── */}
+          <motion.div
+            {...fadeIn(0.18)}
+            className="flex items-center gap-3 pb-6"
+          >
+            <div className="h-px flex-1 bg-border" />
+            <p className="whitespace-nowrap px-3 text-[11px] text-muted-foreground">
+              Railway Concession Management System &mdash; Government Polytechnic Mumbai
+            </p>
+            <div className="h-px flex-1 bg-border" />
+          </motion.div>
+
         </main>
       </PageWrapper>
     </div>

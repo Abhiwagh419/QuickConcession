@@ -1,27 +1,22 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ShieldCheck, LogOut, ChevronRight } from "lucide-react";
+import { ShieldCheck, LogOut, ChevronRight, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
-import { apiFetch } from "@/lib/api";
 
 const AdminHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [admin, setAdmin] = useState<any>(null);
 
-useEffect(() => {
-  console.log("staffToken:", localStorage.getItem("staffToken"));
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
 
-  apiFetch("/staff/me")
-    .then(data => {
-      console.log("Admin data:", data);
-      setAdmin(data);
-    })
-    .catch(err => {
-      console.error("Failed to fetch admin:", err);
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    setAdmin({
+      fullName: payload.name,
+      email: payload.email,
     });
-}, []);
-
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -33,108 +28,137 @@ useEffect(() => {
     const breadcrumbs = [{ label: "Dashboard", path: "/admin/dashboard" }];
 
     if (path.includes("/students")) {
-      breadcrumbs.push({
-        label: "Student Management",
-        path: "/admin/students",
-      });
+      breadcrumbs.push({ label: "Student Management", path: "/admin/students" });
     }
-
     if (path.includes("/staff")) {
-      breadcrumbs.push({
-        label: "Staff Management",
-        path: "/admin/staff",
-      });
+      breadcrumbs.push({ label: "Staff Management", path: "/admin/staff" });
     }
-
     if (path.includes("/applications")) {
-      breadcrumbs.push({
-        label: "Applications",
-        path: "/admin/applications",
-      });
+      breadcrumbs.push({ label: "Applications", path: "/admin/applications" });
     }
-
     if (path.includes("/settings")) {
-      breadcrumbs.push({
-        label: "System Settings",
-        path: "/admin/settings",
-      });
+      breadcrumbs.push({ label: "System Settings", path: "/admin/settings" });
     }
 
     return breadcrumbs;
   };
 
   const breadcrumbs = getBreadcrumbs();
+  const currentPage = breadcrumbs[breadcrumbs.length - 1]?.label;
+
+  const initials = admin
+    ? (admin.fullName ?? "A")
+        .split(" ")
+        .map((w: string) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : null;
 
   return (
-    <header className="bg-primary border-b border-primary/20">
-      <div className="px-6 py-3">
-        <div className="flex items-center justify-between">
-          {/* LEFT SIDE */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center border border-primary-foreground/30">
-              <ShieldCheck className="w-5 h-5 text-primary-foreground" />
+    <div className="px-5 pt-5">
+      <header className="relative rounded-xl bg-header-surface shadow-header border border-header-border backdrop-blur-sm">
+        {/* Main bar */}
+        <div className="flex items-center justify-between px-6 h-[72px]">
+          {/* LEFT — Brand identity */}
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+              <ShieldCheck className="h-[18px] w-[18px]" />
+              <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[hsl(var(--header-status))] border-2 border-header-surface" />
             </div>
-            <div className="text-primary-foreground">
-              <span className="font-heading font-bold text-lg">
-                Government Polytechnic Mumbai
-              </span>
-              <p className="text-xs text-primary-foreground/70">
-                Admin Portal - QuickConcession
+
+            <div className="min-w-0">
+              <h1 className="text-[15px] font-semibold tracking-[-0.01em] text-foreground truncate leading-tight">
+                QuickConcession
+              </h1>
+              <p className="text-[11px] font-medium text-muted-foreground tracking-wide uppercase mt-0.5">
+                Admin Portal
               </p>
             </div>
           </div>
 
-          {/* RIGHT SIDE */}
-          <div className="flex items-center gap-4">
-            <div className="text-right text-primary-foreground hidden md:block">
-             <p className="text-sm font-medium">
-  {admin?.fullName}
-  <span className="ml-2 px-2 py-0.5 text-xs rounded bg-primary-foreground/20">
-    ADMIN
-  </span>
-</p>
-              <p className="text-xs text-primary-foreground/70">
-                Email Id: {admin?.email}
-              </p>
-            </div>
-
-            <Button
-              variant="ghost"
-              onClick={handleLogout}
-              className="text-primary-foreground hover:bg-primary-foreground/10"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Breadcrumbs */}
-      {breadcrumbs.length > 1 && (
-        <div className="px-6 py-2 bg-secondary border-t border-border">
-          <nav className="flex items-center gap-1 text-sm">
+          {/* CENTER — Navigation context */}
+          <div className="hidden lg:flex items-center gap-3">
             {breadcrumbs.map((crumb, index) => (
-              <div key={crumb.path} className="flex items-center gap-1">
+              <div key={crumb.path} className="flex items-center gap-3">
                 {index > 0 && (
-                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                  <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
                 )}
                 <button
                   onClick={() => navigate(crumb.path)}
-                  className={`hover:underline ${
+                  className={`text-[13px] font-medium transition-colors duration-150 ${
                     index === breadcrumbs.length - 1
-                      ? "text-foreground font-medium"
-                      : "text-muted-foreground"
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {crumb.label}
                 </button>
               </div>
             ))}
-          </nav>
+          </div>
+
+          {/* RIGHT — User controls */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Admin identity */}
+            <div className="flex items-center gap-3">
+              {admin ? (
+                <>
+                  <div className="text-right hidden md:block">
+                    <div className="flex items-center justify-end gap-2">
+                      <p className="text-[13px] font-medium text-foreground leading-tight">
+                        {admin.fullName}
+                      </p>
+                      <span className="px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded bg-primary/[0.08] text-primary">
+                        Admin
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      {admin.email}
+                    </p>
+                  </div>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/[0.08] text-primary text-[12px] font-semibold tracking-wide">
+                    {initials}
+                  </div>
+                </>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <div className="hidden md:flex flex-col items-end gap-1.5">
+                    <div className="h-3 w-24 animate-pulse bg-muted rounded" />
+                    <div className="h-2.5 w-32 animate-pulse bg-muted rounded" />
+                  </div>
+                  <div className="h-9 w-9 animate-pulse bg-muted rounded-lg" />
+                </div>
+              )}
+            </div>
+
+            {/* Divider */}
+            <div className="h-8 w-px bg-header-divider mx-1" />
+
+            {/* Logout */}
+            <button
+              onClick={handleLogout}
+              className="group flex items-center gap-2 px-3.5 py-2 text-[13px] font-medium text-muted-foreground rounded-lg transition-all duration-150 hover:bg-destructive/[0.06] hover:text-destructive"
+            >
+              <LogOut className="h-[15px] w-[15px] transition-transform duration-150 group-hover:-translate-x-0.5" />
+              <span className="hidden sm:inline">Sign out</span>
+            </button>
+          </div>
         </div>
-      )}
-    </header>
+
+        {/* Bottom context strip — only on deeper pages */}
+        {breadcrumbs.length > 1 && (
+          <div className="border-t border-header-divider px-6 h-10 flex items-center">
+            <div className="flex items-center gap-2">
+              <Settings className="h-3.5 w-3.5 text-muted-foreground/50" />
+              <span className="text-[12px] font-medium text-muted-foreground">
+                {currentPage}
+              </span>
+            </div>
+          </div>
+        )}
+      </header>
+    </div>
   );
 };
 
