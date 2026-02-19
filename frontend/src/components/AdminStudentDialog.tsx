@@ -14,17 +14,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import {
-  User,
-  Train,
-} from "lucide-react";
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { User, Train } from "lucide-react";
 import { toast } from "sonner";
 
 interface Props {
@@ -35,7 +26,6 @@ interface Props {
 }
 
 const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
-
   /* ================= STATES ================= */
 
   const [activeTab, setActiveTab] = useState("profile");
@@ -59,8 +49,12 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
   const [newPassword, setNewPassword] = useState("");
 
   const [openAppDetails, setOpenAppDetails] = useState(false);
-  const [selectedApplication, setSelectedApplication] = useState<any | null>(null);
+  const [selectedApplication, setSelectedApplication] = useState<any | null>(
+    null,
+  );
   const [appDetailsLoading, setAppDetailsLoading] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [showRejectBox, setShowRejectBox] = useState(false);
 
   /* ================= MEMO ================= */
 
@@ -96,9 +90,7 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
         sem: data.sem || "",
         shift: data.shift || "",
         address: data.address || "",
-        dateOfBirth: data.dateOfBirth
-          ? data.dateOfBirth.slice(0, 10)
-          : "",
+        dateOfBirth: data.dateOfBirth ? data.dateOfBirth.slice(0, 10) : "",
       };
       setForm(formatted);
       setOriginal(formatted);
@@ -184,7 +176,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
     <>
       <Dialog open={open} onOpenChange={onClose}>
         <DialogContent className="max-w-6xl rounded-2xl shadow-2xl">
-
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
               Student Management Panel
@@ -193,11 +184,13 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="mb-6 bg-muted p-1 rounded-xl">
-              {["profile","edit","analytics","applications","controls"].map(tab => (
-                <TabsTrigger key={tab} value={tab}>
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </TabsTrigger>
-              ))}
+              {["profile", "edit", "analytics", "applications", "controls"].map(
+                (tab) => (
+                  <TabsTrigger key={tab} value={tab}>
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </TabsTrigger>
+                ),
+              )}
             </TabsList>
 
             <AnimatePresence mode="wait">
@@ -207,7 +200,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-
                 {/* ================= PROFILE ================= */}
                 {activeTab === "profile" && (
                   <div className="space-y-6">
@@ -224,17 +216,38 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                     <Separator />
 
                     <div className="grid grid-cols-2 gap-4 text-sm">
-                      <p><strong>Enrollment:</strong> {data.enrollmentNo}</p>
-                      <p><strong>Email:</strong> {data.email}</p>
-                      <p><strong>Mobile:</strong> {data.mobileNumber}</p>
-                      <p><strong>Course:</strong> {data.course}</p>
-                      <p><strong>Year:</strong> {data.year}</p>
-                      <p><strong>Semester:</strong> {data.sem}</p>
-                      <p><strong>Shift:</strong> {data.shift}</p>
-                      <p><strong>Address:</strong> {data.address || "-"}</p>
-                      <p><strong>DOB:</strong> {data.dateOfBirth
-                        ? new Date(data.dateOfBirth).toLocaleDateString("en-IN")
-                        : "-"}</p>
+                      <p>
+                        <strong>Enrollment:</strong> {data.enrollmentNo}
+                      </p>
+                      <p>
+                        <strong>Email:</strong> {data.email}
+                      </p>
+                      <p>
+                        <strong>Mobile:</strong> {data.mobileNumber}
+                      </p>
+                      <p>
+                        <strong>Course:</strong> {data.course}
+                      </p>
+                      <p>
+                        <strong>Year:</strong> {data.year}
+                      </p>
+                      <p>
+                        <strong>Semester:</strong> {data.sem}
+                      </p>
+                      <p>
+                        <strong>Shift:</strong> {data.shift}
+                      </p>
+                      <p>
+                        <strong>Address:</strong> {data.address || "-"}
+                      </p>
+                      <p>
+                        <strong>DOB:</strong>{" "}
+                        {data.dateOfBirth
+                          ? new Date(data.dateOfBirth).toLocaleDateString(
+                              "en-IN",
+                            )
+                          : "-"}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -242,7 +255,7 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                 {/* ================= EDIT ================= */}
                 {activeTab === "edit" && (
                   <div className="space-y-4">
-                    {Object.entries(form).map(([key,value]) => (
+                    {Object.entries(form).map(([key, value]) => (
                       <div key={key}>
                         <Label className="capitalize">{key}</Label>
                         <Input
@@ -259,7 +272,11 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                       disabled={!isChanged || isSaving}
                       className="w-full"
                     >
-                      {isSaving ? "Saving..." : isChanged ? "Save Changes" : "Saved"}
+                      {isSaving
+                        ? "Saving..."
+                        : isChanged
+                          ? "Save Changes"
+                          : "Saved"}
                     </Button>
                   </div>
                 )}
@@ -275,7 +292,9 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                         </p>
                       </div>
                       <div className="p-4 border rounded-xl">
-                        <p className="text-xs text-muted-foreground">Approved</p>
+                        <p className="text-xs text-muted-foreground">
+                          Approved
+                        </p>
                         <p className="text-xl font-semibold">
                           {data.analytics?.approved || 0}
                         </p>
@@ -287,7 +306,9 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                         </p>
                       </div>
                       <div className="p-4 border rounded-xl">
-                        <p className="text-xs text-muted-foreground">Rejected</p>
+                        <p className="text-xs text-muted-foreground">
+                          Rejected
+                        </p>
                         <p className="text-xl font-semibold">
                           {data.analytics?.rejected || 0}
                         </p>
@@ -307,18 +328,21 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                 {/* ================= APPLICATIONS ================= */}
                 {activeTab === "applications" && (
                   <div className="space-y-3 max-h-[400px] overflow-y-auto">
-                    {data.applications?.map((app:any)=>(
+                    {data.applications?.map((app: any) => (
                       <div
                         key={app.id}
                         onClick={() => openApplicationDetails(app.id)}
                         className="cursor-pointer border rounded-lg p-4 hover:shadow-md transition"
                       >
                         <div className="flex justify-between">
-                          <span>{app.fromStation} → {app.toStation}</span>
+                          <span>
+                            {app.fromStation} → {app.toStation}
+                          </span>
                           <Badge>{app.status}</Badge>
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Applied: {new Date(app.appliedAt).toLocaleDateString("en-IN")}
+                          Applied:{" "}
+                          {new Date(app.appliedAt).toLocaleDateString("en-IN")}
                         </p>
                       </div>
                     ))}
@@ -328,7 +352,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                 {/* ================= CONTROLS ================= */}
                 {activeTab === "controls" && (
                   <div className="space-y-6">
-
                     <Button
                       variant="outline"
                       onClick={toggleActive}
@@ -359,13 +382,16 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                         Restore Student
                       </Button>
                     ) : (
-                      <Button variant="destructive" onClick={softDelete} className="w-full">
+                      <Button
+                        variant="destructive"
+                        onClick={softDelete}
+                        className="w-full"
+                      >
                         Soft Delete Student
                       </Button>
                     )}
                   </div>
                 )}
-
               </motion.div>
             </AnimatePresence>
           </Tabs>
@@ -374,7 +400,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
       {/* ================= FULL APPLICATION DETAILS ================= */}
       <Dialog open={openAppDetails} onOpenChange={setOpenAppDetails}>
         <DialogContent className="max-w-6xl rounded-2xl shadow-2xl">
-
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold flex items-center gap-2">
               <Train className="w-5 h-5 text-primary" />
@@ -390,7 +415,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
 
           {selectedApplication && (
             <div className="space-y-8">
-
               {/* ================= STATUS BAR ================= */}
               <div className="flex justify-between items-center bg-muted/40 border rounded-xl p-4">
                 <div>
@@ -406,15 +430,16 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                   <Badge
                     className={`
                       px-4 py-1 text-sm
-                      ${selectedApplication.status === "ISSUED"
-                        ? "bg-green-100 text-green-700"
-                        : selectedApplication.status === "APPROVED"
-                        ? "bg-blue-100 text-blue-700"
-                        : selectedApplication.status === "REJECTED"
-                        ? "bg-red-100 text-red-700"
-                        : selectedApplication.status === "EXPIRED"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-gray-100 text-gray-700"
+                      ${
+                        selectedApplication.status === "ISSUED"
+                          ? "bg-green-100 text-green-700"
+                          : selectedApplication.status === "APPROVED"
+                            ? "bg-blue-100 text-blue-700"
+                            : selectedApplication.status === "REJECTED"
+                              ? "bg-red-100 text-red-700"
+                              : selectedApplication.status === "EXPIRED"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : "bg-gray-100 text-gray-700"
                       }
                     `}
                   >
@@ -433,93 +458,145 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
 
               {/* ================= PROGRESS STEPS ================= */}
               <div className="flex items-center justify-between relative">
+                {["APPLIED", "APPROVED", "ISSUED", "EXPIRED"].map(
+                  (step, index) => {
+                    const statusOrder = {
+                      APPLIED: 0,
+                      PENDING: 0,
+                      APPROVED: 1,
+                      ISSUED: 2,
+                      EXPIRED: 3,
+                    };
 
-                {["APPLIED","APPROVED","ISSUED","EXPIRED"].map((step, index) => {
+                    const currentIndex =
+                      statusOrder[
+                        selectedApplication.status as keyof typeof statusOrder
+                      ] ?? 0;
 
-                  const statusOrder = {
-                    APPLIED: 0,
-                    PENDING: 0,
-                    APPROVED: 1,
-                    ISSUED: 2,
-                    EXPIRED: 3,
-                  };
+                    const active = index <= currentIndex;
 
-                  const currentIndex =
-                    statusOrder[selectedApplication.status as keyof typeof statusOrder] ?? 0;
-
-                  const active = index <= currentIndex;
-
-                  return (
-                    <div key={step} className="flex-1 flex flex-col items-center relative">
-
+                    return (
                       <div
-                        className={`
+                        key={step}
+                        className="flex-1 flex flex-col items-center relative"
+                      >
+                        <div
+                          className={`
                           w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold
                           ${active ? "bg-primary text-white" : "bg-muted text-muted-foreground"}
                         `}
-                      >
-                        {index + 1}
-                      </div>
+                        >
+                          {index + 1}
+                        </div>
 
-                      <p className="text-xs mt-2">{step}</p>
+                        <p className="text-xs mt-2">{step}</p>
 
-                      {index < 3 && (
-                        <div
-                          className={`
+                        {index < 3 && (
+                          <div
+                            className={`
                             absolute top-4 left-1/2 w-full h-1 -z-10
                             ${active ? "bg-primary" : "bg-muted"}
                           `}
-                        />
-                      )}
-                    </div>
-                  );
-                })}
+                          />
+                        )}
+                      </div>
+                    );
+                  },
+                )}
               </div>
 
               {/* ================= MAIN GRID ================= */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
                 {/* STUDENT PANEL */}
                 <div className="rounded-2xl border p-6 bg-card shadow-sm space-y-4">
-
                   <h3 className="font-semibold text-lg">Student Information</h3>
                   <Separator />
 
                   <div className="space-y-2 text-sm">
-                    <p><strong>Name:</strong> {selectedApplication.student.fullName}</p>
-                    <p><strong>Enrollment:</strong> {selectedApplication.student.enrollmentNo}</p>
-                    <p><strong>Email:</strong> {selectedApplication.student.email}</p>
-                    <p><strong>Mobile:</strong> {selectedApplication.student.mobileNumber}</p>
-                    <p><strong>Course:</strong> {selectedApplication.student.course}</p>
-                    <p><strong>Year:</strong> {selectedApplication.student.year}</p>
-                    <p><strong>Semester:</strong> {selectedApplication.student.sem}</p>
-                    <p><strong>Shift:</strong> {selectedApplication.student.shift}</p>
-                    <p><strong>Address:</strong> {selectedApplication.student.address}</p>
+                    <p>
+                      <strong>Name:</strong>{" "}
+                      {selectedApplication.student.fullName}
+                    </p>
+                    <p>
+                      <strong>Enrollment:</strong>{" "}
+                      {selectedApplication.student.enrollmentNo}
+                    </p>
+                    <p>
+                      <strong>Email:</strong>{" "}
+                      {selectedApplication.student.email}
+                    </p>
+                    <p>
+                      <strong>Mobile:</strong>{" "}
+                      {selectedApplication.student.mobileNumber}
+                    </p>
+                    <p>
+                      <strong>Course:</strong>{" "}
+                      {selectedApplication.student.course}
+                    </p>
+                    <p>
+                      <strong>Year:</strong> {selectedApplication.student.year}
+                    </p>
+                    <p>
+                      <strong>Semester:</strong>{" "}
+                      {selectedApplication.student.sem}
+                    </p>
+                    <p>
+                      <strong>Shift:</strong>{" "}
+                      {selectedApplication.student.shift}
+                    </p>
+                    <p>
+                      <strong>Address:</strong>{" "}
+                      {selectedApplication.student.address}
+                    </p>
                   </div>
                 </div>
 
                 {/* APPLICATION PANEL */}
                 <div className="rounded-2xl border p-6 bg-card shadow-sm space-y-4">
-
                   <h3 className="font-semibold text-lg">Application Details</h3>
                   <Separator />
 
                   <div className="space-y-2 text-sm">
-                    <p><strong>From:</strong> {selectedApplication.fromStation}</p>
-                    <p><strong>To:</strong> {selectedApplication.toStation}</p>
-                    <p><strong>From Line:</strong> {selectedApplication.fromLine}</p>
-                    <p><strong>To Line:</strong> {selectedApplication.toLine}</p>
-                    <p><strong>Class:</strong> {selectedApplication.travelClass}</p>
-                    <p><strong>Duration:</strong> {selectedApplication.duration}</p>
-                    <p><strong>Applied On:</strong> {new Date(selectedApplication.appliedAt).toLocaleString("en-IN")}</p>
+                    <p>
+                      <strong>From:</strong> {selectedApplication.fromStation}
+                    </p>
+                    <p>
+                      <strong>To:</strong> {selectedApplication.toStation}
+                    </p>
+                    <p>
+                      <strong>From Line:</strong> {selectedApplication.fromLine}
+                    </p>
+                    <p>
+                      <strong>To Line:</strong> {selectedApplication.toLine}
+                    </p>
+                    <p>
+                      <strong>Class:</strong> {selectedApplication.travelClass}
+                    </p>
+                    <p>
+                      <strong>Duration:</strong> {selectedApplication.duration}
+                    </p>
+                    <p>
+                      <strong>Applied On:</strong>{" "}
+                      {new Date(selectedApplication.appliedAt).toLocaleString(
+                        "en-IN",
+                      )}
+                    </p>
 
                     {selectedApplication.approvedAt && (
-                      <p><strong>Approved At:</strong> {new Date(selectedApplication.approvedAt).toLocaleString("en-IN")}</p>
+                      <p>
+                        <strong>Approved At:</strong>{" "}
+                        {new Date(
+                          selectedApplication.approvedAt,
+                        ).toLocaleString("en-IN")}
+                      </p>
                     )}
 
                     {selectedApplication.rejectedAt && (
                       <p className="text-destructive">
-                        <strong>Rejected At:</strong> {new Date(selectedApplication.rejectedAt).toLocaleString("en-IN")}
+                        <strong>Rejected At:</strong>{" "}
+                        {new Date(
+                          selectedApplication.rejectedAt,
+                        ).toLocaleString("en-IN")}
                       </p>
                     )}
 
@@ -546,7 +623,12 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                     )}
 
                     {selectedApplication.expiryDate && (
-                      <p><strong>Expiry:</strong> {new Date(selectedApplication.expiryDate).toLocaleDateString("en-IN")}</p>
+                      <p>
+                        <strong>Expiry:</strong>{" "}
+                        {new Date(
+                          selectedApplication.expiryDate,
+                        ).toLocaleDateString("en-IN")}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -554,27 +636,68 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
 
               {/* ================= ADMIN ACTIONS ================= */}
               <div className="flex gap-4 justify-end border-t pt-6">
-
                 {selectedApplication.status === "PENDING" && (
                   <>
-                    <Button
-                      variant="destructive"
-                      onClick={async () => {
-                        await apiFetch(`/admin/applications/${selectedApplication.id}/reject`, {
-                          method: "PATCH",
-                        });
-                        setOpenAppDetails(false);
-                        refresh();
-                      }}
-                    >
-                      Reject
-                    </Button>
+                    {!showRejectBox ? (
+                      <Button
+                        variant="destructive"
+                        onClick={() => setShowRejectBox(true)}
+                      >
+                        Reject
+                      </Button>
+                    ) : (
+                      <div className="flex flex-col gap-3 w-full max-w-sm">
+                        <textarea
+                          className="border rounded-lg p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-destructive"
+                          placeholder="Enter rejection reason..."
+                          value={rejectReason}
+                          onChange={(e) => setRejectReason(e.target.value)}
+                        />
 
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setShowRejectBox(false);
+                              setRejectReason("");
+                            }}
+                          >
+                            Cancel
+                          </Button>
+
+                          <Button
+                            variant="destructive"
+                            disabled={!rejectReason.trim()}
+                            onClick={async () => {
+                              await apiFetch(
+                                `/admin/applications/${selectedApplication.id}/reject`,
+                                {
+                                  method: "POST",
+                                  body: JSON.stringify({
+                                    reason: rejectReason,
+                                  }),
+                                },
+                              );
+
+                              setRejectReason("");
+                              setShowRejectBox(false);
+                              setOpenAppDetails(false);
+                              refresh();
+                            }}
+                          >
+                            Confirm Reject
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                     <Button
                       onClick={async () => {
-                        await apiFetch(`/admin/applications/${selectedApplication.id}/approve`, {
-                          method: "PATCH",
-                        });
+                        await apiFetch(
+                          `/admin/applications/${selectedApplication.id}/approve`,
+                          {
+                            method: "POST",
+                          },
+                        );
                         setOpenAppDetails(false);
                         refresh();
                       }}
@@ -583,14 +706,12 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                     </Button>
                   </>
                 )}
-
               </div>
-
             </div>
           )}
         </DialogContent>
       </Dialog>
- </>
+    </>
   );
 };
 

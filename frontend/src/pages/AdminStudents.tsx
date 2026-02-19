@@ -244,7 +244,16 @@ const AdminStudents = () => {
             open={dialogOpen}
             onClose={() => setDialogOpen(false)}
             data={selectedStudent}
-            refresh={loadStudents}
+            refresh={async () => {
+              await loadStudents();
+
+              if (selectedStudent) {
+                const full = await apiFetch(
+                  `/admin/students/${selectedStudent.id}/full`,
+                );
+                setSelectedStudent(full);
+              }
+            }}
           />
         </main>
       </PageWrapper>

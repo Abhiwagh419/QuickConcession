@@ -2,6 +2,10 @@ import { Router } from "express";
 import { prisma } from "../prisma/client";
 import { requireAuth } from "../middleware/requireAuth";
 import bcrypt from "bcryptjs";
+import {
+  approveConcessionApplication,
+  rejectConcessionApplication,
+} from "../controllers/staffConcession.controller";
 
 const router = Router();
 
@@ -356,5 +360,36 @@ router.get("/students/:id/full", requireAuth, async (req: any, res) => {
     },
   });
 });
+
+/*
+  ADMIN APPROVE APPLICATION
+*/
+router.post(
+  "/applications/:id/approve",
+  requireAuth,
+  async (req: any, res, next) => {
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    // reuse staff controller
+    return approveConcessionApplication(req, res);
+  }
+);
+
+/*
+  ADMIN REJECT APPLICATION
+*/
+router.post(
+  "/applications/:id/reject",
+  requireAuth,
+  async (req: any, res, next) => {
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    return rejectConcessionApplication(req, res);
+  }
+);
 
 export default router;
