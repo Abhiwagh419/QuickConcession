@@ -22,82 +22,77 @@ interface Student {
 
 const AdminStudents = () => {
   const navigate = useNavigate();
+
   const [students, setStudents] = useState<Student[]>([]);
   const [search, setSearch] = useState("");
   const [showDeleted, setShowDeleted] = useState(false);
-const [openDialog, setOpenDialog] = useState(false);
-const [selectedStudent, setSelectedStudent] = useState<any | null>(null);
-const [detailsLoading, setDetailsLoading] = useState(false);
+
+  const [selectedStudent, setSelectedStudent] = useState<any | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  // ================= LOAD STUDENTS =================
+
   const loadStudents = async () => {
     try {
       const data = await apiFetch(
-        showDeleted
-          ? "/admin/students?deleted=true"
-          : "/admin/students"
+        showDeleted ? "/admin/students?deleted=true" : "/admin/students",
       );
       setStudents(data);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Failed to load students:", err);
     }
   };
-
-const openStudentDetails = async (id: number) => {
-  try {
-    const data = await apiFetch(`/admin/students/${id}/full`);
-    setSelectedStudent(data);
-    setOpenDialog(true);
-  } catch (err) {
-    console.error("Failed to fetch details");
-  }
-};
 
   useEffect(() => {
     loadStudents();
   }, [showDeleted]);
 
-  const handleToggleActive = async (id: number) => {
+  // ================= OPEN DETAILS =================
+
+  const openStudentDetails = async (id: number) => {
     try {
-      await apiFetch(`/admin/students/${id}/toggle`, {
-        method: "PATCH",
-      });
-      loadStudents();
+      const fullData = await apiFetch(`/admin/students/${id}/full`);
+      setSelectedStudent(fullData);
+      setDialogOpen(true);
     } catch (err) {
-      console.error("Toggle failed", err);
+      console.error("Failed to fetch student details:", err);
     }
+  };
+
+  // ================= ACTIONS =================
+
+  const handleToggleActive = async (id: number) => {
+    await apiFetch(`/admin/students/${id}/toggle`, {
+      method: "PATCH",
+    });
+    loadStudents();
   };
 
   const handleDelete = async (id: number) => {
-    const confirmDelete = confirm(
-      "Are you sure you want to delete this student?"
-    );
-    if (!confirmDelete) return;
+    if (!confirm("Are you sure you want to delete this student?")) return;
 
-    try {
-      await apiFetch(`/admin/students/${id}/delete`, {
-        method: "PATCH",
-      });
-      loadStudents();
-    } catch (err) {
-      console.error("Delete failed", err);
-    }
+    await apiFetch(`/admin/students/${id}/delete`, {
+      method: "PATCH",
+    });
+    loadStudents();
   };
 
   const handleRestore = async (id: number) => {
-    try {
-      await apiFetch(`/admin/students/${id}/restore`, {
-        method: "PATCH",
-      });
-      loadStudents();
-    } catch (err) {
-      console.error("Restore failed", err);
-    }
+    await apiFetch(`/admin/students/${id}/restore`, {
+      method: "PATCH",
+    });
+    loadStudents();
   };
+
+  // ================= FILTER =================
 
   const filteredStudents = students.filter(
     (s) =>
       s.fullName.toLowerCase().includes(search.toLowerCase()) ||
-      s.enrollmentNo.toLowerCase().includes(search.toLowerCase())
+      s.enrollmentNo.toLowerCase().includes(search.toLowerCase()),
   );
+
+  // ================= UI =================
 
   return (
     <div className="min-h-screen bg-background">
@@ -105,10 +100,9 @@ const openStudentDetails = async (id: number) => {
 
       <PageWrapper>
         <main className="container mx-auto px-4 py-6 max-w-7xl">
-
-          {/* Title Section */}
+          {/* TITLE */}
           <div className="flex items-center justify-between mb-6">
-            <h1 className="font-heading text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2">
               <Users className="w-6 h-6 text-primary" />
               Student Management
             </h1>
@@ -121,17 +115,14 @@ const openStudentDetails = async (id: number) => {
                 {showDeleted ? "View Active Students" : "View Deleted Students"}
               </Button>
 
-              <Button
-                onClick={() => navigate("/admin/students/add")}
-                className="btn-primary-gradient"
-              >
+              <Button onClick={() => navigate("/admin/students/add")}>
                 <Plus className="w-4 h-4 mr-2" />
                 Add Student
               </Button>
             </div>
           </div>
 
-          {/* Search */}
+          {/* SEARCH */}
           <Card className="mb-6">
             <CardContent className="p-4 flex items-center gap-4">
               <Search className="w-5 h-5 text-muted-foreground" />
@@ -143,7 +134,7 @@ const openStudentDetails = async (id: number) => {
             </CardContent>
           </Card>
 
-          {/* Table */}
+          {/* TABLE */}
           <Card>
             <CardHeader>
               <CardTitle>
@@ -167,13 +158,17 @@ const openStudentDetails = async (id: number) => {
 
                 <tbody>
                   {filteredStudents.map((student) => (
-                    <tr
-  key={student.id}
-  onClick={() => openStudentDetails(student.id)}
-  className="border-b hover:bg-muted/50 cursor-pointer"
->
+                    <tr key={student.id} className="border-b hover:bg-muted/50">
                       <td className="py-3">{student.enrollmentNo}</td>
-                      <td>{student.fullName}</td>
+
+                      {/* NAME CLICK ONLY */}
+                      <td
+                        onClick={() => openStudentDetails(student.id)}
+                        className="cursor-pointer hover:text-primary font-medium"
+                      >
+                        {student.fullName}
+                      </td>
+
                       <td>{student.course}</td>
                       <td>{student.sem}</td>
                       <td>{student.shift}</td>
@@ -181,7 +176,10 @@ const openStudentDetails = async (id: number) => {
                       <td>
                         {!showDeleted && (
                           <button
-                            onClick={() => handleToggleActive(student.id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleToggleActive(student.id);
+                            }}
                             className={`px-3 py-1 rounded text-xs font-medium ${
                               student.active
                                 ? "bg-green-100 text-green-700"
@@ -191,11 +189,8 @@ const openStudentDetails = async (id: number) => {
                             {student.active ? "Active" : "Inactive"}
                           </button>
                         )}
-                        {showDeleted && (
-                          <Badge className="bg-muted text-muted-foreground">
-                            Deleted
-                          </Badge>
-                        )}
+
+                        {showDeleted && <Badge>Deleted</Badge>}
                       </td>
 
                       <td className="text-right space-x-2">
@@ -204,9 +199,10 @@ const openStudentDetails = async (id: number) => {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() =>
-                                navigate(`/admin/students/edit/${student.id}`)
-                              }
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openStudentDetails(student.id);
+                              }}
                             >
                               <Edit className="w-4 h-4" />
                             </Button>
@@ -214,7 +210,10 @@ const openStudentDetails = async (id: number) => {
                             <Button
                               size="sm"
                               variant="destructive"
-                              onClick={() => handleDelete(student.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(student.id);
+                              }}
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -223,7 +222,10 @@ const openStudentDetails = async (id: number) => {
                           <Button
                             size="sm"
                             variant="secondary"
-                            onClick={() => handleRestore(student.id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRestore(student.id);
+                            }}
                           >
                             <RotateCcw className="w-4 h-4 mr-1" />
                             Restore
@@ -232,29 +234,18 @@ const openStudentDetails = async (id: number) => {
                       </td>
                     </tr>
                   ))}
-
-                  {filteredStudents.length === 0 && (
-                    <tr>
-                      <td
-                        colSpan={7}
-                        className="text-center py-6 text-muted-foreground"
-                      >
-                        No students found
-                      </td>
-                    </tr>
-                  )}
                 </tbody>
               </table>
             </CardContent>
           </Card>
 
-<AdminStudentDialog
-  open={openDialog}
-  onClose={() => setOpenDialog(false)}
-  data={selectedStudent}
-  refresh={loadStudents}
-/>
-
+          {/* DIALOG */}
+          <AdminStudentDialog
+            open={dialogOpen}
+            onClose={() => setDialogOpen(false)}
+            data={selectedStudent}
+            refresh={loadStudents}
+          />
         </main>
       </PageWrapper>
     </div>

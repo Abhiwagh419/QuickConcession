@@ -55,6 +55,7 @@ function AnimatedRoutes() {
         <Route path="/admin/students" element={<AdminStudents />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/admin/students/add" element={<AddStudent />} />
+        
         <Route
           path="/admin/dashboard"
           element={

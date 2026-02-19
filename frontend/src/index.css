@@ -221,3 +221,18 @@
 .animate-slide-in-left {
   animation: slide-in-left 0.25s ease-out;
 }
+/* Remove Radix / shadcn blue focus ring */
+[data-radix-collection-item]:focus,
+button:focus,
+button:focus-visible,
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.1) !important;
+}

@@ -164,6 +164,82 @@ router.patch("/students/:id/restore", requireAuth, async (req: any, res) => {
 
   res.json({ message: "Student restored successfully" });
 });
+/*
+  ADMIN SET STUDENT PASSWORD
+*/
+router.post("/students/:id/reset-password", requireAuth, async (req: any, res) => {
+  if (req.user.role !== "ADMIN") {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  const studentId = Number(req.params.id);
+  const { newPassword } = req.body;
+
+  if (!newPassword || newPassword.length < 6) {
+    return res.status(400).json({
+      message: "Password must be at least 6 characters",
+    });
+  }
+
+  const student = await prisma.student.findUnique({
+    where: { id: studentId },
+  });
+
+  if (!student) {
+    return res.status(404).json({ message: "Student not found" });
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 12);
+
+  await prisma.student.update({
+    where: { id: studentId },
+    data: { passwordHash },
+  });
+
+  res.json({ message: "Password updated successfully" });
+});
+
+/*
+  UPDATE STUDENT (ADMIN INLINE EDIT)
+*/
+router.patch("/students/:id", requireAuth, async (req: any, res) => {
+  if (req.user.role !== "ADMIN") {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  const studentId = Number(req.params.id);
+
+  const {
+    fullName,
+    email,
+    mobileNumber,
+    course,
+    year,
+    sem,
+    shift,
+    address,
+    dateOfBirth,
+  } = req.body;
+
+  const updated = await prisma.student.update({
+    where: { id: studentId },
+    data: {
+      fullName,
+      email,
+      mobileNumber,
+      course,
+      year,
+      sem,
+      shift,
+      address,
+      dateOfBirth: dateOfBirth
+        ? new Date(dateOfBirth)
+        : null,
+    },
+  });
+
+  res.json(updated);
+});
 
 /*
   GET STUDENT DETAILS BY ID (ADMIN)
@@ -199,6 +275,30 @@ router.get("/students/:id", requireAuth, async (req: any, res) => {
   res.json(student);
 });
 
+// GET APPLICATION DETAILS BY ID (ADMIN)
+router.get("/applications/:id", requireAuth, async (req: any, res) => {
+  if (req.user.role !== "ADMIN") {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  const id = Number(req.params.id);
+
+  const application = await prisma.concessionApplication.findUnique({
+    where: { id },
+    include: {
+      student: true,
+      approvedBy: true,
+    },
+  });
+
+  if (!application) {
+    return res.status(404).json({ message: "Application not found" });
+  }
+
+  res.json(application);
+});
+
+
 /*
   GET STUDENT WITH APPLICATIONS (ADMIN)
 */
@@ -222,7 +322,39 @@ router.get("/students/:id/full", requireAuth, async (req: any, res) => {
     return res.status(404).json({ message: "Student not found" });
   }
 
-  res.json(student);
+  // ---------- ANALYTICS ----------
+  const total = student.applications.length;
+
+  const approved = student.applications.filter(
+    a => a.status === "APPROVED"
+  ).length;
+
+  const rejected = student.applications.filter(
+    a => a.status === "REJECTED"
+  ).length;
+
+  const issued = student.applications.filter(
+    a => a.status === "ISSUED" || a.status === "EXPIRED"
+  ).length;
+
+  const pending = student.applications.filter(
+    a => a.status === "PENDING"
+  ).length;
+
+  const approvalRate =
+    total === 0 ? 0 : Math.round(((approved + issued) / total) * 100);
+
+  res.json({
+    ...student,
+    analytics: {
+      total,
+      approved,
+      rejected,
+      issued,
+      pending,
+      approvalRate,
+    },
+  });
 });
 
 export default router;
