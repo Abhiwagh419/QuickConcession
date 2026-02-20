@@ -6,20 +6,38 @@ import {
   approveConcessionApplication,
   rejectConcessionApplication,
 } from "../controllers/staffConcession.controller";
+import { upload } from "../middleware/upload";
+import { parse } from "csv-parse/sync";
+import { UserRole } from "@prisma/client";
+import { exportAdminExcel } from "../controllers/adminExport.controller";
 
 const router = Router();
 
-router.get("/students", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
+/* =========================================================
+   COMMON ADMIN CHECK
+========================================================= */
+
+function ensureAdmin(req: any, res: any) {
+  if (!req.user || req.user.role !== "ADMIN") {
+    res.status(403).json({ message: "Forbidden" });
+    return false;
   }
+  return true;
+}
+
+/* =========================================================
+   STUDENT ROUTES
+========================================================= */
+
+/* GET STUDENTS */
+router.get("/students", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
 
   const showDeleted = req.query.deleted === "true";
 
   const students = await prisma.student.findMany({
     where: { isDeleted: showDeleted },
-
-    orderBy: { createdAt: "desc" },
+    orderBy: { id: "asc" },
     select: {
       id: true,
       enrollmentNo: true,
@@ -37,13 +55,9 @@ router.get("/students", requireAuth, async (req: any, res) => {
   res.json(students);
 });
 
-/*
-  CREATE STUDENT
-*/
+/* CREATE STUDENT */
 router.post("/students", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
-  }
+  if (!ensureAdmin(req, res)) return;
 
   const {
     enrollmentNo,
@@ -64,15 +78,13 @@ router.post("/students", requireAuth, async (req: any, res) => {
   }
 
   const existing = await prisma.student.findFirst({
-    where: {
-      OR: [{ enrollmentNo }, { email }],
-    },
+    where: { OR: [{ enrollmentNo }, { email }] },
   });
 
   if (existing) {
-    return res.status(400).json({
-      message: "Enrollment number or email already exists",
-    });
+    return res
+      .status(400)
+      .json({ message: "Enrollment number or email already exists" });
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
@@ -96,13 +108,9 @@ router.post("/students", requireAuth, async (req: any, res) => {
   res.status(201).json(student);
 });
 
-/*
-  TOGGLE STUDENT ACTIVE STATUS
-*/
+/* TOGGLE STUDENT ACTIVE STATUS */
 router.patch("/students/:id/toggle", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
-  }
+  if (!ensureAdmin(req, res)) return;
 
   const studentId = Number(req.params.id);
 
@@ -125,13 +133,9 @@ router.patch("/students/:id/toggle", requireAuth, async (req: any, res) => {
   });
 });
 
-/*
-  SOFT DELETE STUDENT
-*/
+/* SOFT DELETE STUDENT */
 router.patch("/students/:id/delete", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
-  }
+  if (!ensureAdmin(req, res)) return;
 
   const studentId = Number(req.params.id);
 
@@ -143,13 +147,9 @@ router.patch("/students/:id/delete", requireAuth, async (req: any, res) => {
   res.json({ message: "Student deleted successfully" });
 });
 
-/*
-  RESTORE DELETED STUDENT
-*/
+/* RESTORE STUDENT */
 router.patch("/students/:id/restore", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
-  }
+  if (!ensureAdmin(req, res)) return;
 
   const studentId = Number(req.params.id);
 
@@ -168,24 +168,21 @@ router.patch("/students/:id/restore", requireAuth, async (req: any, res) => {
 
   res.json({ message: "Student restored successfully" });
 });
-/*
-  ADMIN SET STUDENT PASSWORD
-*/
+
+/* RESET STUDENT PASSWORD */
 router.post(
   "/students/:id/reset-password",
   requireAuth,
   async (req: any, res) => {
-    if (req.user.role !== "ADMIN") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
+    if (!ensureAdmin(req, res)) return;
 
     const studentId = Number(req.params.id);
     const { newPassword } = req.body;
 
     if (!newPassword || newPassword.length < 6) {
-      return res.status(400).json({
-        message: "Password must be at least 6 characters",
-      });
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters" });
     }
 
     const student = await prisma.student.findUnique({
@@ -207,13 +204,9 @@ router.post(
   },
 );
 
-/*
-  UPDATE STUDENT (ADMIN INLINE EDIT)
-*/
+/* UPDATE STUDENT */
 router.patch("/students/:id", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
-  }
+  if (!ensureAdmin(req, res)) return;
 
   const studentId = Number(req.params.id);
 
@@ -247,13 +240,9 @@ router.patch("/students/:id", requireAuth, async (req: any, res) => {
   res.json(updated);
 });
 
-/*
-  GET STUDENT DETAILS BY ID (ADMIN)
-*/
+/* GET STUDENT DETAILS */
 router.get("/students/:id", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
-  }
+  if (!ensureAdmin(req, res)) return;
 
   const studentId = Number(req.params.id);
 
@@ -281,36 +270,8 @@ router.get("/students/:id", requireAuth, async (req: any, res) => {
   res.json(student);
 });
 
-// GET APPLICATION DETAILS BY ID (ADMIN)
-router.get("/applications/:id", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
-  }
-
-  const id = Number(req.params.id);
-
-  const application = await prisma.concessionApplication.findUnique({
-    where: { id },
-    include: {
-      student: true,
-      approvedBy: true,
-    },
-  });
-
-  if (!application) {
-    return res.status(404).json({ message: "Application not found" });
-  }
-
-  res.json(application);
-});
-
-/*
-  GET STUDENT WITH APPLICATIONS (ADMIN)
-*/
 router.get("/students/:id/full", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
-  }
+  if (!ensureAdmin(req, res)) return;
 
   const studentId = Number(req.params.id);
 
@@ -327,7 +288,6 @@ router.get("/students/:id/full", requireAuth, async (req: any, res) => {
     return res.status(404).json({ message: "Student not found" });
   }
 
-  // ---------- ANALYTICS ----------
   const total = student.applications.length;
 
   const approved = student.applications.filter(
@@ -362,44 +322,46 @@ router.get("/students/:id/full", requireAuth, async (req: any, res) => {
   });
 });
 
-/*
-  ADMIN APPROVE APPLICATION
-*/
+router.get("/applications/:id", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const id = Number(req.params.id);
+
+  const application = await prisma.concessionApplication.findUnique({
+    where: { id },
+    include: {
+      student: true,
+      approvedBy: true,
+    },
+  });
+
+  if (!application) {
+    return res.status(404).json({ message: "Application not found" });
+  }
+
+  res.json(application);
+});
+
 router.post(
   "/applications/:id/approve",
   requireAuth,
-  async (req: any, res, next) => {
-    if (req.user.role !== "ADMIN") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-
-    // reuse staff controller
+  async (req: any, res) => {
+    if (!ensureAdmin(req, res)) return;
     return approveConcessionApplication(req, res);
   },
 );
 
-/*
-  ADMIN REJECT APPLICATION
-*/
 router.post(
   "/applications/:id/reject",
   requireAuth,
-  async (req: any, res, next) => {
-    if (req.user.role !== "ADMIN") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-
+  async (req: any, res) => {
+    if (!ensureAdmin(req, res)) return;
     return rejectConcessionApplication(req, res);
   },
 );
 
-/*
-  ADMIN DASHBOARD STATS
-*/
 router.get("/dashboard", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
-  }
+  if (!ensureAdmin(req, res)) return;
 
   try {
     const totalStudents = await prisma.student.count({
@@ -420,13 +382,8 @@ router.get("/dashboard", requireAuth, async (req: any, res) => {
     let approvedApplications = 0;
 
     grouped.forEach((g) => {
-      if (g.status === "PENDING") {
-        pendingApplications = g._count;
-      }
-
-      if (g.status === "REJECTED") {
-        rejectedApplications = g._count;
-      }
+      if (g.status === "PENDING") pendingApplications = g._count;
+      if (g.status === "REJECTED") rejectedApplications = g._count;
 
       if (
         g.status === "APPROVED" ||
@@ -449,6 +406,216 @@ router.get("/dashboard", requireAuth, async (req: any, res) => {
     console.error("Admin dashboard error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
+});
+
+router.get("/staff", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const showDeleted = req.query.deleted === "true";
+
+  const staff = await prisma.staff.findMany({
+    where: {
+      role: UserRole.STAFF,
+      isDeleted: showDeleted,
+    },
+    orderBy: { id: "asc" },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      active: true,
+      isDeleted: true,
+    },
+  });
+
+  res.json(staff);
+});
+
+router.patch("/staff/:id", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const id = Number(req.params.id);
+  const { fullName, email } = req.body;
+
+  const updated = await prisma.staff.update({
+    where: { id },
+    data: { fullName, email },
+  });
+
+  res.json(updated);
+});
+
+router.patch("/staff/:id/toggle", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const id = Number(req.params.id);
+
+  const staff = await prisma.staff.findUnique({
+    where: { id },
+  });
+
+  if (!staff) {
+    return res.status(404).json({ message: "Staff not found" });
+  }
+
+  const updated = await prisma.staff.update({
+    where: { id },
+    data: { active: !staff.active },
+  });
+
+  res.json(updated);
+});
+
+router.patch("/staff/:id/delete", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const id = Number(req.params.id);
+
+  await prisma.staff.update({
+    where: { id },
+    data: { isDeleted: true },
+  });
+
+  res.json({ message: "Staff deleted successfully" });
+});
+
+router.patch("/staff/:id/restore", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const id = Number(req.params.id);
+
+  await prisma.staff.update({
+    where: { id },
+    data: { isDeleted: false },
+  });
+
+  res.json({ message: "Staff restored successfully" });
+});
+
+router.post("/staff/:id/reset-password", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const id = Number(req.params.id);
+  const { newPassword } = req.body;
+
+  if (!newPassword || newPassword.length < 6) {
+    return res
+      .status(400)
+      .json({ message: "Password must be at least 6 characters" });
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, 12);
+
+  await prisma.staff.update({
+    where: { id },
+    data: { passwordHash },
+  });
+
+  res.json({ message: "Password updated successfully" });
+});
+
+router.post(
+  "/staff/bulk/preview",
+  requireAuth,
+  upload.single("file"),
+  async (req: any, res) => {
+    if (!ensureAdmin(req, res)) return;
+
+    if (!req.file) {
+      return res.status(400).json({ message: "CSV file required" });
+    }
+
+    const csvString = req.file.buffer.toString();
+
+    const records = parse(csvString, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: true,
+    });
+
+    const validStaff: any[] = [];
+    const errors: any[] = [];
+
+    const existingStaff = await prisma.staff.findMany({
+      select: { email: true },
+    });
+
+    const emailSet = new Set(existingStaff.map((s) => s.email));
+
+    for (let i = 0; i < records.length; i++) {
+      const row: any = records[i];
+      const rowNumber = i + 2;
+
+      if (!row.fullName || !row.email || !row.password) {
+        errors.push({
+          row: rowNumber,
+          data: row,
+          reason: "Missing required fields",
+        });
+        continue;
+      }
+
+      if (emailSet.has(row.email)) {
+        errors.push({
+          row: rowNumber,
+          data: row,
+          reason: "Duplicate email in DB",
+        });
+        continue;
+      }
+
+      validStaff.push(row);
+    }
+
+    res.json({
+      totalRows: records.length,
+      validCount: validStaff.length,
+      invalidCount: errors.length,
+      validStaff,
+      errors,
+    });
+  },
+);
+
+router.post("/staff/bulk/confirm", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const { staff } = req.body;
+
+  if (!Array.isArray(staff)) {
+    return res.status(400).json({ message: "Invalid payload" });
+  }
+
+  const finalData = [];
+
+  for (const s of staff) {
+    const passwordHash = await bcrypt.hash(s.password, 12);
+
+    finalData.push({
+      fullName: s.fullName,
+      email: s.email,
+      passwordHash,
+      role: UserRole.STAFF,
+    });
+  }
+
+  const result = await prisma.staff.createMany({
+    data: finalData,
+    skipDuplicates: true,
+  });
+
+  res.json({
+    message: "Staff imported successfully",
+    inserted: result.count,
+  });
+});
+
+router.get("/export/excel", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  return exportAdminExcel(req, res);
 });
 
 export default router;

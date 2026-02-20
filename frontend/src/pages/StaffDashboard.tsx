@@ -135,7 +135,8 @@ const StaffDashboard = () => {
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [applications, setApplications] = useState<any[]>([]);
+  const [pendingApps, setPendingApps] = useState<any[]>([]);
+  const [personalApps, setPersonalApps] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("staffToken");
   const [enrollmentNo, setEnrollmentNo] = useState("");
@@ -167,7 +168,8 @@ const StaffDashboard = () => {
     const fetchApplications = async () => {
       try {
         const data = await getStaffApplications();
-        setApplications(data);
+        setPendingApps(data.pending);
+        setPersonalApps(data.personal);
       } catch (err) {
         console.error("Failed to fetch applications", err);
       } finally {
@@ -271,16 +273,17 @@ const StaffDashboard = () => {
     );
   }
 
-  const pendingCount = applications.filter(
-    (a) => a.status === "PENDING",
-  ).length;
-  const approvedCount = applications.filter(
+  const pendingCount = pendingApps.length;
+
+  const approvedCount = personalApps.filter(
     (a) => a.status === "APPROVED",
   ).length;
-  const rejectedCount = applications.filter(
+
+  const rejectedCount = personalApps.filter(
     (a) => a.status === "REJECTED",
   ).length;
-  const issuedCount = applications.filter(
+
+  const issuedCount = personalApps.filter(
     (a) => a.status === "ISSUED" || a.status === "EXPIRED",
   ).length;
 

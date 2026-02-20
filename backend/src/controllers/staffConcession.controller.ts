@@ -4,31 +4,15 @@ import { ApplicationStatus } from "@prisma/client";
 import { calculateExpiryFromApproval } from "../utils/expiry";
 import { sendMail } from "../utils/sendMail";
 
-export async function getConcessionApplications(req: Request, res: Response) {
+export async function getConcessionApplications(req: any, res: Response) {
   try {
-    const { status } = req.query;
+    const staffId = req.user.sub; // 🔥 IMPORTANT
 
-    let statusFilter: ApplicationStatus | undefined;
-
-    if (status) {
-      if (
-        !Object.values(ApplicationStatus).includes(status as ApplicationStatus)
-      ) {
-        return res.status(400).json({
-          message: "Invalid application status",
-        });
-      }
-
-      statusFilter = status as ApplicationStatus;
-    }
-
-    const applications = await prisma.concessionApplication.findMany({
-      where: statusFilter
-        ? statusFilter === "ISSUED"
-          ? { status: { in: ["ISSUED", "EXPIRED"] } }
-          : { status: statusFilter }
-        : undefined,
-
+    // 1️⃣ Global Pending (visible to all staff)
+    const pendingApps = await prisma.concessionApplication.findMany({
+      where: {
+        status: "PENDING",
+      },
       orderBy: {
         appliedAt: "desc",
       },
@@ -47,7 +31,33 @@ export async function getConcessionApplications(req: Request, res: Response) {
       },
     });
 
-    return res.json(applications);
+    // 2️⃣ Personal Applications (processed by this staff)
+    const personalApps = await prisma.concessionApplication.findMany({
+      where: {
+        approvedByStaffId: staffId,
+      },
+      orderBy: {
+        appliedAt: "desc",
+      },
+      include: {
+        student: {
+          select: {
+            id: true,
+            fullName: true,
+            enrollmentNo: true,
+            year: true,
+            sem: true,
+            shift: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    return res.json({
+      pending: pendingApps,
+      personal: personalApps,
+    });
   } catch (error) {
     console.error("Fetch staff concessions error:", error);
     return res.status(500).json({

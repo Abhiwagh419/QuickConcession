@@ -299,6 +299,41 @@ const AdminDashboard = () => {
     }
   };
 
+const exportExcel = async () => {
+  try {
+    const response = await fetch(
+      "http://localhost:4000/admin/export/excel",
+      {
+        headers: {
+          Authorization: `Bearer ${
+            localStorage.getItem("staffToken") ||
+            localStorage.getItem("jwt")
+          }`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error(text);
+      alert("Export failed");
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "admin-export.xlsx";
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
   useEffect(() => {
     fetchStats();
   }, []);
@@ -336,22 +371,34 @@ const AdminDashboard = () => {
               </p>
             </div>
 
-            <button
-              onClick={fetchStats}
-              disabled={refreshing}
-              className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-[13px] text-slate-500 shadow-sm transition-all duration-200 hover:border-slate-300 hover:text-slate-700 disabled:opacity-50"
-            >
-              <RefreshCw
-                className={`h-3.5 w-3.5 ${
-                  refreshing ? "animate-spin text-blue-500" : ""
-                }`}
-              />
-              Refreshed at{" "}
-              {lastRefreshed.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </button>
+            <div className="flex items-center gap-3 flex-wrap">
+              {/* Export Excel Button */}
+              <button
+                onClick={exportExcel}
+                className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-[13px] font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700"
+              >
+                <FileText className="h-4 w-4" />
+                Export Full System Excel
+              </button>
+
+              {/* Refresh Button */}
+              <button
+                onClick={fetchStats}
+                disabled={refreshing}
+                className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-[13px] text-slate-500 shadow-sm transition-all duration-200 hover:border-slate-300 hover:text-slate-700 disabled:opacity-50"
+              >
+                <RefreshCw
+                  className={`h-3.5 w-3.5 ${
+                    refreshing ? "animate-spin text-blue-500" : ""
+                  }`}
+                />
+                Refreshed at{" "}
+                {lastRefreshed.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </button>
+            </div>
           </motion.div>
 
           {/* ── Overview Stats ──────────────────────────────────────── */}
@@ -410,8 +457,7 @@ const AdminDashboard = () => {
                     <div className="flex flex-wrap items-center gap-3">
                       <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-700">
                         <CheckCircle2 className="h-3.5 w-3.5" />
-                        Approved / Issued / Expired:{" "}
-                        {stats.approvedApplications}
+                        Approved: {stats.approvedApplications}
                       </span>
                       <span className="text-slate-300">|</span>
                       <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-amber-600">
@@ -428,7 +474,7 @@ const AdminDashboard = () => {
 
                   <div className="space-y-5">
                     <StatusBar
-                      label="Approved / Issued / Expired"
+                      label="Approved"
                       count={stats.approvedApplications}
                       total={stats.totalApplications}
                       barClass="bg-emerald-500"

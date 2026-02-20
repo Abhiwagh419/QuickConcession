@@ -1,15 +1,23 @@
 const API = import.meta.env.VITE_API_URL;
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
-const token =
-  localStorage.getItem("staffToken") ||
-  localStorage.getItem("jwt");
+  const token =
+    localStorage.getItem("staffToken") ||
+    localStorage.getItem("jwt");
+
+  const headers: Record<string, string> = {
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
+  // Only set JSON header if body is NOT FormData
+  if (!(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
 
   const res = await fetch(`${API}${path}`, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...headers,
       ...(options.headers || {}),
     },
   });
@@ -20,4 +28,11 @@ const token =
   }
 
   return res.json();
+}
+
+export function getAuthToken() {
+  return (
+    localStorage.getItem("jwt") ||
+    localStorage.getItem("staffToken")
+  );
 }

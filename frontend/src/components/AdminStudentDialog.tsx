@@ -175,7 +175,7 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
   return (
     <>
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="max-w-6xl rounded-2xl shadow-2xl">
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
               Student Management Panel
@@ -399,7 +399,7 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
       </Dialog>
       {/* ================= FULL APPLICATION DETAILS ================= */}
       <Dialog open={openAppDetails} onOpenChange={setOpenAppDetails}>
-        <DialogContent className="max-w-6xl rounded-2xl shadow-2xl">
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold flex items-center gap-2">
               <Train className="w-5 h-5 text-primary" />

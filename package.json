@@ -1,5 +1,10 @@
 {
   "dependencies": {
-    "firebase": "^12.9.0"
+    "csv-parse": "^6.1.0",
+    "firebase": "^12.9.0",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/multer": "^2.0.0"
   }
 }

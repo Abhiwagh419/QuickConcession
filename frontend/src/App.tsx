@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-
+import ImportStudents from "@/pages/ImportStudents";
 import Index from "./pages/Index";
 import StudentDashboard from "./pages/StudentDashboard";
 import RailwayConcessionDashboard from "./pages/RailwayConcessionDashboard";
@@ -21,6 +21,9 @@ import AdminDashboard from "@/pages/AdminDashboard";
 import RequireAdmin from "./components/RequireAdmin";
 import AdminStudents from "@/pages/AdminStudents";
 import AddStudent from "@/pages/AddStudent";
+import AdminStaff from "@/pages/AdminStaff";
+import AddStaff from "@/pages/AddStaff";
+import ImportStaff from "@/pages/ImportStaff";
 
 const queryClient = new QueryClient();
 function AnimatedRoutes() {
@@ -52,15 +55,67 @@ function AnimatedRoutes() {
           path="/staff/forgot-password"
           element={<StaffForgotPassword />}
         />
-        <Route path="/admin/students" element={<AdminStudents />} />
+        <Route
+          path="/admin/students"
+          element={
+            <RequireAdmin>
+              <AdminStudents />
+            </RequireAdmin>
+          }
+        />
+
+        <Route
+          path="/admin/students/add"
+          element={
+            <RequireAdmin>
+              <AddStudent />
+            </RequireAdmin>
+          }
+        />
+
+        <Route
+          path="/admin/students/import"
+          element={
+            <RequireAdmin>
+              <ImportStudents />
+            </RequireAdmin>
+          }
+        />
+
+        <Route
+          path="/admin/staff"
+          element={
+            <RequireAdmin>
+              <AdminStaff />
+            </RequireAdmin>
+          }
+        />
+
         <Route path="*" element={<NotFound />} />
-        <Route path="/admin/students/add" element={<AddStudent />} />
 
         <Route
           path="/admin/dashboard"
           element={
             <RequireAdmin>
               <AdminDashboard />
+            </RequireAdmin>
+          }
+        />
+
+        <Route
+          path="/admin/staff/add"
+          element={
+            <RequireAdmin>
+              <AddStaff />
+            </RequireAdmin>
+          }
+        />
+
+        <Route
+          path="/admin/staff/import"
+          element={
+            <RequireAdmin>
+              <ImportStaff />
             </RequireAdmin>
           }
         />

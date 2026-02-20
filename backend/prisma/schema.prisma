@@ -74,7 +74,8 @@ model Staff {
   role                 UserRole                @default(STAFF)
   createdAt            DateTime                @default(now())
   approvedApplications ConcessionApplication[] @relation("ApprovedBy")
-
+active               Boolean                 @default(true)
+  isDeleted            Boolean                 @default(false)
   otpEntries           OtpVerification[]
 }
 
