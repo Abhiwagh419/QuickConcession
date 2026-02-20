@@ -11,7 +11,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Clock, CheckCircle, XCircle, FileCheck, Eye, Train } from "lucide-react";
+import {
+  Clock,
+  CheckCircle,
+  XCircle,
+  FileCheck,
+  Eye,
+  Train,
+} from "lucide-react";
 import StaffHeader from "@/components/StaffHeader";
 import { useEffect, useState } from "react";
 import { getStaffApplications } from "../api/staffConcessions";
@@ -29,7 +36,8 @@ const fadeIn = (delay: number = 0) => ({
 
 // ─── Shared table head style ──────────────────────────────────────────────────
 
-const TH = "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground whitespace-nowrap";
+const TH =
+  "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground whitespace-nowrap";
 
 // ─── Empty state ──────────────────────────────────────────────────────────────
 
@@ -67,10 +75,12 @@ const StaffRailwayManagement = () => {
     fetchApplications();
   }, []);
 
-  const pendingApps  = applications.filter((a) => a.status === "PENDING");
-  const approvedApps = applications.filter((a) => a.status === "APPROVED" && !a.concessionNumber);
+  const pendingApps = applications.filter((a) => a.status === "PENDING");
+  const approvedApps = applications.filter(
+    (a) => a.status === "APPROVED" && !a.concessionNumber,
+  );
   const rejectedApps = applications.filter((a) => a.status === "REJECTED");
-  const issuedApps   = applications.filter((a) => Boolean(a.concessionNumber));
+  const issuedApps = applications.filter((a) => Boolean(a.concessionNumber));
 
   const handleProcess = (appId: string) => {
     navigate(`/staff/railway/process/${appId}`);
@@ -91,7 +101,9 @@ const StaffRailwayManagement = () => {
         <div className="flex h-[60vh] items-center justify-center">
           <div className="text-center space-y-2">
             <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            <p className="text-sm text-muted-foreground">Loading applications…</p>
+            <p className="text-sm text-muted-foreground">
+              Loading applications…
+            </p>
           </div>
         </div>
       </div>
@@ -104,7 +116,6 @@ const StaffRailwayManagement = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
-
           {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0)}
@@ -136,7 +147,6 @@ const StaffRailwayManagement = () => {
 
               <CardContent className="px-6 py-6">
                 <Tabs defaultValue="pending" className="w-full">
-
                   {/* ── Tab Bar ────────────────────────────────────────── */}
                   <TabsList className="grid w-full grid-cols-4 mb-6 h-10 rounded-lg bg-muted p-0.5 gap-0.5">
                     <TabsTrigger
@@ -151,7 +161,9 @@ const StaffRailwayManagement = () => {
                     >
                       <Clock className="h-3.5 w-3.5 shrink-0" />
                       Pending
-                      <span className="ml-0.5 tabular-nums">({pendingApps.length})</span>
+                      <span className="ml-0.5 tabular-nums">
+                        ({pendingApps.length})
+                      </span>
                     </TabsTrigger>
 
                     <TabsTrigger
@@ -166,7 +178,9 @@ const StaffRailwayManagement = () => {
                     >
                       <CheckCircle className="h-3.5 w-3.5 shrink-0" />
                       Approved
-                      <span className="ml-0.5 tabular-nums">({approvedApps.length})</span>
+                      <span className="ml-0.5 tabular-nums">
+                        ({approvedApps.length})
+                      </span>
                     </TabsTrigger>
 
                     <TabsTrigger
@@ -181,7 +195,9 @@ const StaffRailwayManagement = () => {
                     >
                       <XCircle className="h-3.5 w-3.5 shrink-0" />
                       Rejected
-                      <span className="ml-0.5 tabular-nums">({rejectedApps.length})</span>
+                      <span className="ml-0.5 tabular-nums">
+                        ({rejectedApps.length})
+                      </span>
                     </TabsTrigger>
 
                     <TabsTrigger
@@ -196,7 +212,9 @@ const StaffRailwayManagement = () => {
                     >
                       <FileCheck className="h-3.5 w-3.5 shrink-0" />
                       Issued
-                      <span className="ml-0.5 tabular-nums">({issuedApps.length})</span>
+                      <span className="ml-0.5 tabular-nums">
+                        ({issuedApps.length})
+                      </span>
                     </TabsTrigger>
                   </TabsList>
 
@@ -214,12 +232,17 @@ const StaffRailwayManagement = () => {
                             <TableHead className={TH}>Class</TableHead>
                             <TableHead className={TH}>Period</TableHead>
                             <TableHead className={TH}>Applied On</TableHead>
-                            <TableHead className={`${TH} text-center`}>Action</TableHead>
+                            <TableHead className={`${TH} text-center`}>
+                              Action
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {pendingApps.length === 0 ? (
-                            <EmptyRow colSpan={9} message="No pending applications" />
+                            <EmptyRow
+                              colSpan={9}
+                              message="No pending applications"
+                            />
                           ) : (
                             pendingApps.map((app) => (
                               <TableRow
@@ -278,12 +301,17 @@ const StaffRailwayManagement = () => {
                             <TableHead className={TH}>Student Name</TableHead>
                             <TableHead className={TH}>Enrollment No</TableHead>
                             <TableHead className={TH}>Approved Date</TableHead>
-                            <TableHead className={`${TH} text-center`}>Action</TableHead>
+                            <TableHead className={`${TH} text-center`}>
+                              Action
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {approvedApps.length === 0 ? (
-                            <EmptyRow colSpan={5} message="No approved applications pending issuance" />
+                            <EmptyRow
+                              colSpan={5}
+                              message="No approved applications pending issuance"
+                            />
                           ) : (
                             approvedApps.map((app) => (
                               <TableRow
@@ -300,7 +328,9 @@ const StaffRailwayManagement = () => {
                                   {app.student.enrollmentNo}
                                 </TableCell>
                                 <TableCell className="text-[13px] text-muted-foreground whitespace-nowrap">
-                                  {app.approvedAt ? formatDate(app.approvedAt) : "-"}
+                                  {app.approvedAt
+                                    ? formatDate(app.approvedAt)
+                                    : "-"}
                                 </TableCell>
                                 <TableCell className="text-center">
                                   <Button
@@ -329,13 +359,20 @@ const StaffRailwayManagement = () => {
                             <TableHead className={TH}>App ID</TableHead>
                             <TableHead className={TH}>Student Name</TableHead>
                             <TableHead className={TH}>Enrollment No</TableHead>
-                            <TableHead className={TH}>Application Date</TableHead>
-                            <TableHead className={TH}>Rejection Reason</TableHead>
+                            <TableHead className={TH}>
+                              Application Date
+                            </TableHead>
+                            <TableHead className={TH}>
+                              Rejection Reason
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {rejectedApps.length === 0 ? (
-                            <EmptyRow colSpan={5} message="No rejected applications" />
+                            <EmptyRow
+                              colSpan={5}
+                              message="No rejected applications"
+                            />
                           ) : (
                             rejectedApps.map((app) => (
                               <TableRow
@@ -374,14 +411,19 @@ const StaffRailwayManagement = () => {
                             <TableHead className={TH}>App ID</TableHead>
                             <TableHead className={TH}>Student Name</TableHead>
                             <TableHead className={TH}>Enrollment No</TableHead>
-                            <TableHead className={TH}>Concession Number</TableHead>
+                            <TableHead className={TH}>
+                              Concession Number
+                            </TableHead>
                             <TableHead className={TH}>Issue Date</TableHead>
                             <TableHead className={TH}>Issued By</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {issuedApps.length === 0 ? (
-                            <EmptyRow colSpan={6} message="No issued concessions" />
+                            <EmptyRow
+                              colSpan={6}
+                              message="No issued concessions"
+                            />
                           ) : (
                             issuedApps.map((app) => (
                               <TableRow
@@ -401,7 +443,9 @@ const StaffRailwayManagement = () => {
                                   {app.concessionNumber}
                                 </TableCell>
                                 <TableCell className="text-[13px] text-muted-foreground whitespace-nowrap">
-                                  {app.approvedAt ? formatDate(app.approvedAt) : "-"}
+                                  {app.approvedAt
+                                    ? formatDate(app.approvedAt)
+                                    : "-"}
                                 </TableCell>
                                 <TableCell className="text-[13px] text-muted-foreground">
                                   Staff
@@ -413,7 +457,6 @@ const StaffRailwayManagement = () => {
                       </Table>
                     </div>
                   </TabsContent>
-
                 </Tabs>
               </CardContent>
             </Card>
@@ -426,11 +469,11 @@ const StaffRailwayManagement = () => {
           >
             <div className="h-px flex-1 bg-border" />
             <p className="whitespace-nowrap px-3 text-[11px] text-muted-foreground">
-              Railway Concession Management System &mdash; Government Polytechnic Mumbai &mdash; Staff Portal
+              Railway Concession Management System &mdash; Government
+              Polytechnic Mumbai &mdash; Staff Portal
             </p>
             <div className="h-px flex-1 bg-border" />
           </motion.div>
-
         </main>
       </PageWrapper>
     </div>

@@ -7,7 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Train, Users, GraduationCap, ShieldCheck, AlertCircle } from "lucide-react";
+import {
+  Train,
+  Users,
+  GraduationCap,
+  ShieldCheck,
+  AlertCircle,
+} from "lucide-react";
 import LoginHeader from "@/components/LoginHeader";
 import LoginFooter from "@/components/LoginFooter";
 import StudentLoginForm from "@/components/StudentLoginForm";
@@ -34,7 +40,6 @@ const Index = () => {
             transition={{ duration: 0.42, ease: EASE_OUT }}
             className="w-full max-w-md space-y-5"
           >
-
             {/* ── Branding ───────────────────────────────────────────── */}
             <div className="text-center space-y-2">
               <div className="flex items-center justify-center mb-3">
@@ -135,11 +140,12 @@ const Index = () => {
                 <span className="font-semibold text-foreground">Notice:</span>{" "}
                 Use your college-issued credentials to login. Contact the IT
                 Department during office hours{" "}
-                <span className="font-medium text-foreground">(10 AM – 5 PM)</span>{" "}
+                <span className="font-medium text-foreground">
+                  (10 AM – 5 PM)
+                </span>{" "}
                 if you face any issues.
               </p>
             </div>
-
           </motion.div>
         </main>
 

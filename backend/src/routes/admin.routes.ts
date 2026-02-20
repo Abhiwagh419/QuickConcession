@@ -14,10 +14,10 @@ router.get("/students", requireAuth, async (req: any, res) => {
     return res.status(403).json({ message: "Forbidden" });
   }
 
-const showDeleted = req.query.deleted === "true";
+  const showDeleted = req.query.deleted === "true";
 
-const students = await prisma.student.findMany({
-  where: { isDeleted: showDeleted },
+  const students = await prisma.student.findMany({
+    where: { isDeleted: showDeleted },
 
     orderBy: { createdAt: "desc" },
     select: {
@@ -29,7 +29,7 @@ const students = await prisma.student.findMany({
       year: true,
       sem: true,
       shift: true,
-      active: true, 
+      active: true,
       createdAt: true,
     },
   });
@@ -171,37 +171,41 @@ router.patch("/students/:id/restore", requireAuth, async (req: any, res) => {
 /*
   ADMIN SET STUDENT PASSWORD
 */
-router.post("/students/:id/reset-password", requireAuth, async (req: any, res) => {
-  if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Forbidden" });
-  }
+router.post(
+  "/students/:id/reset-password",
+  requireAuth,
+  async (req: any, res) => {
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
 
-  const studentId = Number(req.params.id);
-  const { newPassword } = req.body;
+    const studentId = Number(req.params.id);
+    const { newPassword } = req.body;
 
-  if (!newPassword || newPassword.length < 6) {
-    return res.status(400).json({
-      message: "Password must be at least 6 characters",
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters",
+      });
+    }
+
+    const student = await prisma.student.findUnique({
+      where: { id: studentId },
     });
-  }
 
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
-  });
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
 
-  if (!student) {
-    return res.status(404).json({ message: "Student not found" });
-  }
+    const passwordHash = await bcrypt.hash(newPassword, 12);
 
-  const passwordHash = await bcrypt.hash(newPassword, 12);
+    await prisma.student.update({
+      where: { id: studentId },
+      data: { passwordHash },
+    });
 
-  await prisma.student.update({
-    where: { id: studentId },
-    data: { passwordHash },
-  });
-
-  res.json({ message: "Password updated successfully" });
-});
+    res.json({ message: "Password updated successfully" });
+  },
+);
 
 /*
   UPDATE STUDENT (ADMIN INLINE EDIT)
@@ -236,9 +240,7 @@ router.patch("/students/:id", requireAuth, async (req: any, res) => {
       sem,
       shift,
       address,
-      dateOfBirth: dateOfBirth
-        ? new Date(dateOfBirth)
-        : null,
+      dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
     },
   });
 
@@ -302,7 +304,6 @@ router.get("/applications/:id", requireAuth, async (req: any, res) => {
   res.json(application);
 });
 
-
 /*
   GET STUDENT WITH APPLICATIONS (ADMIN)
 */
@@ -330,19 +331,19 @@ router.get("/students/:id/full", requireAuth, async (req: any, res) => {
   const total = student.applications.length;
 
   const approved = student.applications.filter(
-    a => a.status === "APPROVED"
+    (a) => a.status === "APPROVED",
   ).length;
 
   const rejected = student.applications.filter(
-    a => a.status === "REJECTED"
+    (a) => a.status === "REJECTED",
   ).length;
 
   const issued = student.applications.filter(
-    a => a.status === "ISSUED" || a.status === "EXPIRED"
+    (a) => a.status === "ISSUED" || a.status === "EXPIRED",
   ).length;
 
   const pending = student.applications.filter(
-    a => a.status === "PENDING"
+    (a) => a.status === "PENDING",
   ).length;
 
   const approvalRate =
@@ -374,7 +375,7 @@ router.post(
 
     // reuse staff controller
     return approveConcessionApplication(req, res);
-  }
+  },
 );
 
 /*
@@ -389,7 +390,7 @@ router.post(
     }
 
     return rejectConcessionApplication(req, res);
-  }
+  },
 );
 
 /*

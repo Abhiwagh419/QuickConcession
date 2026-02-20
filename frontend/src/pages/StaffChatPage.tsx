@@ -28,7 +28,7 @@ export default function StaffChatPage() {
         snap.docs.map((d) => ({
           id: d.id,
           unreadCount: d.data().unreadCount ?? 0,
-        }))
+        })),
       );
     });
     return () => unsub();
@@ -40,7 +40,7 @@ export default function StaffChatPage() {
   };
 
   const filtered = chats.filter((c) =>
-    c.id.toLowerCase().includes(searchQuery.toLowerCase())
+    c.id.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -48,7 +48,6 @@ export default function StaffChatPage() {
       <StaffHeader />
 
       <div className="flex flex-1 overflow-hidden">
-
         {/* ── LEFT SIDEBAR ──────────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, x: -8 }}
@@ -90,7 +89,9 @@ export default function StaffChatPage() {
               <div className="flex flex-col items-center justify-center gap-2 py-12 px-4 text-center">
                 <MessageSquare className="h-8 w-8 text-muted-foreground/40" />
                 <p className="text-sm text-muted-foreground">
-                  {searchQuery ? "No chats match your search." : "No student chats yet."}
+                  {searchQuery
+                    ? "No chats match your search."
+                    : "No student chats yet."}
                 </p>
               </div>
             ) : (
@@ -102,30 +103,40 @@ export default function StaffChatPage() {
                       key={chat.id}
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.25, ease: EASE_OUT, delay: i * 0.03 }}
+                      transition={{
+                        duration: 0.25,
+                        ease: EASE_OUT,
+                        delay: i * 0.03,
+                      }}
                       onClick={() => openChat(chat.id)}
                       className={`
                         group relative flex cursor-pointer items-center justify-between
                         px-4 py-3 transition-colors duration-150
-                        ${isSelected
-                          ? "bg-primary/8 border-l-2 border-l-primary"
-                          : "hover:bg-muted border-l-2 border-l-transparent"
+                        ${
+                          isSelected
+                            ? "bg-primary/8 border-l-2 border-l-primary"
+                            : "hover:bg-muted border-l-2 border-l-transparent"
                         }
                       `}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className={`
+                        <div
+                          className={`
                           flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold
-                          ${isSelected
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                          ${
+                            isSelected
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
                           }
                           transition-colors duration-150
-                        `}>
+                        `}
+                        >
                           {chat.id.slice(0, 2).toUpperCase()}
                         </div>
                         <div className="min-w-0">
-                          <p className={`text-[13px] truncate ${isSelected ? "font-semibold text-foreground" : "font-medium text-foreground"}`}>
+                          <p
+                            className={`text-[13px] truncate ${isSelected ? "font-semibold text-foreground" : "font-medium text-foreground"}`}
+                          >
                             {chat.id}
                           </p>
                           <p className="text-[11px] text-muted-foreground">
@@ -149,7 +160,6 @@ export default function StaffChatPage() {
 
         {/* ── RIGHT CHAT PANEL ──────────────────────────────────────── */}
         <div className="flex flex-1 flex-col bg-muted/30 overflow-hidden">
-
           {selectedChat ? (
             <>
               {/* Chat Header */}
@@ -170,7 +180,9 @@ export default function StaffChatPage() {
                   </p>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
-                    <span className="text-[11px] text-muted-foreground">Online</span>
+                    <span className="text-[11px] text-muted-foreground">
+                      Online
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -200,13 +212,13 @@ export default function StaffChatPage() {
                   No conversation selected
                 </p>
                 <p className="text-[13px] text-muted-foreground max-w-xs">
-                  Select a student from the sidebar to view and respond to their messages.
+                  Select a student from the sidebar to view and respond to their
+                  messages.
                 </p>
               </div>
             </motion.div>
           )}
         </div>
-
       </div>
     </div>
   );

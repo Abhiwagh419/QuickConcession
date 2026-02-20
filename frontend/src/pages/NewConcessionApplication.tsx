@@ -57,13 +57,10 @@ function FormField({
   return (
     <div className="space-y-1.5">
       <Label className="text-[12px] font-semibold text-foreground">
-        {label}{" "}
-        {required && <span className="text-destructive">*</span>}
+        {label} {required && <span className="text-destructive">*</span>}
       </Label>
       {children}
-      {error && (
-        <p className="text-[11px] text-destructive">{error}</p>
-      )}
+      {error && <p className="text-[11px] text-destructive">{error}</p>}
     </div>
   );
 }
@@ -167,9 +164,11 @@ const NewConcessionApplication = () => {
     if (!formData.travelClass) newErrors.travelClass = "Please select a class";
     if (!formData.period) newErrors.period = "Please select a period";
     if (!formData.fromLine) newErrors.fromLine = "Please select departure line";
-    if (!formData.fromStation) newErrors.fromStation = "Please select departure station";
+    if (!formData.fromStation)
+      newErrors.fromStation = "Please select departure station";
     if (!formData.toLine) newErrors.toLine = "Please select arrival line";
-    if (!formData.toStation) newErrors.toStation = "Please select arrival station";
+    if (!formData.toStation)
+      newErrors.toStation = "Please select arrival station";
     if (
       formData.fromStation &&
       formData.toStation &&
@@ -237,7 +236,6 @@ const NewConcessionApplication = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-3xl space-y-6 px-4 py-8">
-
           {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div {...fadeIn(0)}>
             <div className="flex items-center gap-2.5">
@@ -268,10 +266,16 @@ const NewConcessionApplication = () => {
                 </div>
                 <CardContent className="px-6 py-5">
                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                    <InfoField label="Enrollment No"  value={student.enrollmentNo} />
-                    <InfoField label="Name"           value={student.fullName} />
-                    <InfoField label="Department"     value={student.course} />
-                    <InfoField label="Year / Semester" value={`${student.year} / ${student.sem}`} />
+                    <InfoField
+                      label="Enrollment No"
+                      value={student.enrollmentNo}
+                    />
+                    <InfoField label="Name" value={student.fullName} />
+                    <InfoField label="Department" value={student.course} />
+                    <InfoField
+                      label="Year / Semester"
+                      value={`${student.year} / ${student.sem}`}
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -289,22 +293,30 @@ const NewConcessionApplication = () => {
 
               <CardContent className="px-6 py-6">
                 <form onSubmit={handleSubmit} className="space-y-7">
-
                   {/* ── Class & Period ─────────────────────────────────── */}
                   <div className="space-y-3">
                     <SectionHeading>Travel Preferences</SectionHeading>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                      <FormField label="Class" required error={errors.travelClass}>
+                      <FormField
+                        label="Class"
+                        required
+                        error={errors.travelClass}
+                      >
                         <Select
                           value={formData.travelClass}
                           onValueChange={(v) => handleChange("travelClass", v)}
                         >
-                          <SelectTrigger id="travelClass" className={selectTriggerClass("travelClass")}>
+                          <SelectTrigger
+                            id="travelClass"
+                            className={selectTriggerClass("travelClass")}
+                          >
                             <SelectValue placeholder="Select class" />
                           </SelectTrigger>
                           <SelectContent className="bg-card">
                             {concessionClasses.map((cls) => (
-                              <SelectItem key={cls} value={cls}>{cls}</SelectItem>
+                              <SelectItem key={cls} value={cls}>
+                                {cls}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -315,12 +327,17 @@ const NewConcessionApplication = () => {
                           value={formData.period}
                           onValueChange={(v) => handleChange("period", v)}
                         >
-                          <SelectTrigger id="period" className={selectTriggerClass("period")}>
+                          <SelectTrigger
+                            id="period"
+                            className={selectTriggerClass("period")}
+                          >
                             <SelectValue placeholder="Select period" />
                           </SelectTrigger>
                           <SelectContent className="bg-card">
                             {concessionPeriods.map((p) => (
-                              <SelectItem key={p} value={p}>{p}</SelectItem>
+                              <SelectItem key={p} value={p}>
+                                {p}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -334,12 +351,19 @@ const NewConcessionApplication = () => {
                   <div className="space-y-3">
                     <SectionHeading>Departure Details</SectionHeading>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                      <FormField label="From Line" required error={errors.fromLine}>
+                      <FormField
+                        label="From Line"
+                        required
+                        error={errors.fromLine}
+                      >
                         <Select
                           value={formData.fromLine}
                           onValueChange={(v) => handleChange("fromLine", v)}
                         >
-                          <SelectTrigger id="fromLine" className={selectTriggerClass("fromLine")}>
+                          <SelectTrigger
+                            id="fromLine"
+                            className={selectTriggerClass("fromLine")}
+                          >
                             <SelectValue placeholder="Select railway line" />
                           </SelectTrigger>
                           <SelectContent className="bg-card">
@@ -352,7 +376,11 @@ const NewConcessionApplication = () => {
                         </Select>
                       </FormField>
 
-                      <FormField label="From Station" required error={errors.fromStation}>
+                      <FormField
+                        label="From Station"
+                        required
+                        error={errors.fromStation}
+                      >
                         <Select
                           value={formData.fromStation}
                           onValueChange={(v) => handleChange("fromStation", v)}
@@ -368,7 +396,9 @@ const NewConcessionApplication = () => {
                           >
                             <SelectValue
                               placeholder={
-                                formData.fromLine ? "Select station" : "Select line first"
+                                formData.fromLine
+                                  ? "Select station"
+                                  : "Select line first"
                               }
                             />
                           </SelectTrigger>
@@ -395,7 +425,10 @@ const NewConcessionApplication = () => {
                           value={formData.toLine}
                           onValueChange={(v) => handleChange("toLine", v)}
                         >
-                          <SelectTrigger id="toLine" className={selectTriggerClass("toLine")}>
+                          <SelectTrigger
+                            id="toLine"
+                            className={selectTriggerClass("toLine")}
+                          >
                             <SelectValue placeholder="Select railway line" />
                           </SelectTrigger>
                           <SelectContent className="bg-card">
@@ -408,7 +441,11 @@ const NewConcessionApplication = () => {
                         </Select>
                       </FormField>
 
-                      <FormField label="To Station" required error={errors.toStation}>
+                      <FormField
+                        label="To Station"
+                        required
+                        error={errors.toStation}
+                      >
                         <Select
                           value={formData.toStation}
                           onValueChange={(v) => handleChange("toStation", v)}
@@ -424,7 +461,9 @@ const NewConcessionApplication = () => {
                           >
                             <SelectValue
                               placeholder={
-                                formData.toLine ? "Select station" : "Select line first"
+                                formData.toLine
+                                  ? "Select station"
+                                  : "Select line first"
                               }
                             />
                           </SelectTrigger>
@@ -470,7 +509,8 @@ const NewConcessionApplication = () => {
                         </div>
                         {formData.travelClass && formData.period && (
                           <p className="text-[12px] text-muted-foreground">
-                            {formData.travelClass} &nbsp;&bull;&nbsp; {formData.period} Pass
+                            {formData.travelClass} &nbsp;&bull;&nbsp;{" "}
+                            {formData.period} Pass
                           </p>
                         )}
                       </div>
@@ -512,7 +552,6 @@ const NewConcessionApplication = () => {
                       Cancel
                     </Button>
                   </div>
-
                 </form>
               </CardContent>
             </Card>
@@ -525,11 +564,11 @@ const NewConcessionApplication = () => {
           >
             <div className="h-px flex-1 bg-border" />
             <p className="whitespace-nowrap px-3 text-[11px] text-muted-foreground">
-              Railway Concession Management System &mdash; Government Polytechnic Mumbai
+              Railway Concession Management System &mdash; Government
+              Polytechnic Mumbai
             </p>
             <div className="h-px flex-1 bg-border" />
           </motion.div>
-
         </main>
       </PageWrapper>
     </div>

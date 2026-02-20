@@ -160,7 +160,6 @@ const StudentProfile = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-3xl px-4 py-8 space-y-6">
-
           {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -201,8 +200,9 @@ const StudentProfile = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.06 }}
           >
-            <Card className={`border shadow-sm rounded-xl overflow-hidden transition-all duration-300 ${isEditing ? "ring-1 ring-primary/20" : ""}`}>
-
+            <Card
+              className={`border shadow-sm rounded-xl overflow-hidden transition-all duration-300 ${isEditing ? "ring-1 ring-primary/20" : ""}`}
+            >
               {/* Card Header */}
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                 <div className="flex items-center justify-between">
@@ -218,7 +218,6 @@ const StudentProfile = () => {
               </CardHeader>
 
               <CardContent className="px-6 py-6 space-y-8">
-
                 {/* ── Identity (locked) ──────────────────────────────── */}
                 <div className="space-y-4">
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground pl-0.5">
@@ -269,7 +268,10 @@ const StudentProfile = () => {
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {/* Year */}
                     <div className="space-y-1.5">
-                      <Label htmlFor="year" className="text-[12px] text-foreground">
+                      <Label
+                        htmlFor="year"
+                        className="text-[12px] text-foreground"
+                      >
                         Year <span className="text-destructive">*</span>
                       </Label>
                       <Select
@@ -285,18 +287,25 @@ const StudentProfile = () => {
                         </SelectTrigger>
                         <SelectContent className="bg-card">
                           {years.map((y) => (
-                            <SelectItem key={y} value={y}>{y}</SelectItem>
+                            <SelectItem key={y} value={y}>
+                              {y}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                       {errors.year && (
-                        <p className="text-[11px] text-destructive">{errors.year}</p>
+                        <p className="text-[11px] text-destructive">
+                          {errors.year}
+                        </p>
                       )}
                     </div>
 
                     {/* Semester */}
                     <div className="space-y-1.5">
-                      <Label htmlFor="semester" className="text-[12px] text-foreground">
+                      <Label
+                        htmlFor="semester"
+                        className="text-[12px] text-foreground"
+                      >
                         Semester <span className="text-destructive">*</span>
                       </Label>
                       <Select
@@ -309,17 +318,25 @@ const StudentProfile = () => {
                           className={`${errors.semester ? "border-destructive" : "border-border"} ${!isEditing ? "bg-muted/40" : "bg-background"}`}
                         >
                           <SelectValue
-                            placeholder={formData.year ? "Select semester" : "Select year first"}
+                            placeholder={
+                              formData.year
+                                ? "Select semester"
+                                : "Select year first"
+                            }
                           />
                         </SelectTrigger>
                         <SelectContent className="bg-card">
                           {semesters.map((s) => (
-                            <SelectItem key={s} value={s}>{s}</SelectItem>
+                            <SelectItem key={s} value={s}>
+                              {s}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                       {errors.semester && (
-                        <p className="text-[11px] text-destructive">{errors.semester}</p>
+                        <p className="text-[11px] text-destructive">
+                          {errors.semester}
+                        </p>
                       )}
                     </div>
 
@@ -329,7 +346,11 @@ const StudentProfile = () => {
                         Date of Birth
                       </Label>
                       <Input
-                        value={formData.dateOfBirth ? formatDate(formData.dateOfBirth) : ""}
+                        value={
+                          formData.dateOfBirth
+                            ? formatDate(formData.dateOfBirth)
+                            : ""
+                        }
                         disabled
                         className="bg-muted/40 text-foreground border-border"
                       />
@@ -337,7 +358,10 @@ const StudentProfile = () => {
 
                     {/* Shift */}
                     <div className="space-y-1.5">
-                      <Label htmlFor="shift" className="text-[12px] text-foreground">
+                      <Label
+                        htmlFor="shift"
+                        className="text-[12px] text-foreground"
+                      >
                         Shift <span className="text-destructive">*</span>
                       </Label>
                       <Select
@@ -357,7 +381,9 @@ const StudentProfile = () => {
                         </SelectContent>
                       </Select>
                       {errors.shift && (
-                        <p className="text-[11px] text-destructive">{errors.shift}</p>
+                        <p className="text-[11px] text-destructive">
+                          {errors.shift}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -374,7 +400,10 @@ const StudentProfile = () => {
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     {/* Email */}
                     <div className="space-y-1.5">
-                      <Label htmlFor="email" className="text-[12px] text-foreground">
+                      <Label
+                        htmlFor="email"
+                        className="text-[12px] text-foreground"
+                      >
                         Email <span className="text-destructive">*</span>
                       </Label>
                       <Input
@@ -386,13 +415,18 @@ const StudentProfile = () => {
                         className={`${errors.email ? "border-destructive" : "border-border"} ${!isEditing ? "bg-muted/40" : "bg-background"}`}
                       />
                       {errors.email && (
-                        <p className="text-[11px] text-destructive">{errors.email}</p>
+                        <p className="text-[11px] text-destructive">
+                          {errors.email}
+                        </p>
                       )}
                     </div>
 
                     {/* Phone */}
                     <div className="space-y-1.5">
-                      <Label htmlFor="phone" className="text-[12px] text-foreground">
+                      <Label
+                        htmlFor="phone"
+                        className="text-[12px] text-foreground"
+                      >
                         Phone Number <span className="text-destructive">*</span>
                       </Label>
                       <Input
@@ -400,20 +434,28 @@ const StudentProfile = () => {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) =>
-                          handleChange("phone", e.target.value.replace(/\D/g, "").slice(0, 10))
+                          handleChange(
+                            "phone",
+                            e.target.value.replace(/\D/g, "").slice(0, 10),
+                          )
                         }
                         disabled={!isEditing}
                         className={`${errors.phone ? "border-destructive" : "border-border"} ${!isEditing ? "bg-muted/40" : "bg-background"}`}
                       />
                       {errors.phone && (
-                        <p className="text-[11px] text-destructive">{errors.phone}</p>
+                        <p className="text-[11px] text-destructive">
+                          {errors.phone}
+                        </p>
                       )}
                     </div>
                   </div>
 
                   {/* Address */}
                   <div className="space-y-1.5">
-                    <Label htmlFor="address" className="text-[12px] text-foreground">
+                    <Label
+                      htmlFor="address"
+                      className="text-[12px] text-foreground"
+                    >
                       Address <span className="text-destructive">*</span>
                     </Label>
                     <Textarea
@@ -424,7 +466,9 @@ const StudentProfile = () => {
                       className={`min-h-20 resize-none ${errors.address ? "border-destructive" : "border-border"} ${!isEditing ? "bg-muted/40" : "bg-background"}`}
                     />
                     {errors.address && (
-                      <p className="text-[11px] text-destructive">{errors.address}</p>
+                      <p className="text-[11px] text-destructive">
+                        {errors.address}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -462,7 +506,6 @@ const StudentProfile = () => {
                     </div>
                   </>
                 )}
-
               </CardContent>
             </Card>
           </motion.div>
@@ -483,7 +526,6 @@ const StudentProfile = () => {
               </p>
             </div>
           </motion.div>
-
         </main>
       </PageWrapper>
     </div>

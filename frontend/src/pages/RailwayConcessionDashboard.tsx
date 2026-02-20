@@ -135,7 +135,9 @@ const RailwayConcessionDashboard = () => {
         <div className="flex h-[60vh] items-center justify-center">
           <div className="text-center space-y-2">
             <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            <p className="text-sm text-muted-foreground">Loading concession data…</p>
+            <p className="text-sm text-muted-foreground">
+              Loading concession data…
+            </p>
           </div>
         </div>
       </div>
@@ -148,7 +150,6 @@ const RailwayConcessionDashboard = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-6xl space-y-6 px-4 py-8">
-
           {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0)}
@@ -188,7 +189,6 @@ const RailwayConcessionDashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-6 py-5 space-y-4">
-
                 {currentApplication ? (
                   <div className="flex items-start gap-4">
                     {/* Status icon */}
@@ -224,9 +224,13 @@ const RailwayConcessionDashboard = () => {
                       {currentApplication.expiryDate && (
                         <div className="flex items-center gap-1.5 text-[12px]">
                           <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
-                          <span className="text-muted-foreground">Valid Until:</span>{" "}
+                          <span className="text-muted-foreground">
+                            Valid Until:
+                          </span>{" "}
                           <span className="font-semibold text-foreground">
-                            {new Date(currentApplication.expiryDate).toLocaleDateString("en-IN")}
+                            {new Date(
+                              currentApplication.expiryDate,
+                            ).toLocaleDateString("en-IN")}
                           </span>
                         </div>
                       )}
@@ -241,7 +245,8 @@ const RailwayConcessionDashboard = () => {
                       No active concession application
                     </p>
                     <p className="text-[12px] text-muted-foreground max-w-xs">
-                      Click "New Application" to apply for a railway concession pass.
+                      Click "New Application" to apply for a railway concession
+                      pass.
                     </p>
                   </div>
                 )}
@@ -257,7 +262,6 @@ const RailwayConcessionDashboard = () => {
                     </p>
                   </div>
                 )}
-
               </CardContent>
             </Card>
           </motion.div>
@@ -386,7 +390,6 @@ const RailwayConcessionDashboard = () => {
               </CardContent>
             </Card>
           </motion.div>
-
         </main>
       </PageWrapper>
     </div>

@@ -28,7 +28,10 @@ const AdminHeader = () => {
     const breadcrumbs = [{ label: "Dashboard", path: "/admin/dashboard" }];
 
     if (path.includes("/students")) {
-      breadcrumbs.push({ label: "Student Management", path: "/admin/students" });
+      breadcrumbs.push({
+        label: "Student Management",
+        path: "/admin/students",
+      });
     }
     if (path.includes("/staff")) {
       breadcrumbs.push({ label: "Staff Management", path: "/admin/staff" });

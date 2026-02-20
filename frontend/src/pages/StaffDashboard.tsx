@@ -4,7 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Train, FileText, Award, HelpCircle, User, Globe, Landmark, School } from "lucide-react";
+import {
+  Train,
+  FileText,
+  Award,
+  HelpCircle,
+  User,
+  Globe,
+  Landmark,
+  School,
+} from "lucide-react";
 import StaffHeader from "@/components/StaffHeader";
 import { useEffect, useState } from "react";
 import { getStaffApplications } from "../api/staffConcessions";
@@ -55,7 +64,13 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 // ─── Info Field ───────────────────────────────────────────────────────────────
 
-function InfoField({ label, value }: { label: string; value?: string | number }) {
+function InfoField({
+  label,
+  value,
+}: {
+  label: string;
+  value?: string | number;
+}) {
   return (
     <div className="space-y-0.5">
       <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -83,7 +98,9 @@ function StatTile({
         <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">
           {label}
         </p>
-        <p className={`text-3xl font-bold tabular-nums ${colorClass}`}>{value}</p>
+        <p className={`text-3xl font-bold tabular-nums ${colorClass}`}>
+          {value}
+        </p>
       </CardContent>
     </Card>
   );
@@ -93,10 +110,10 @@ function StatTile({
 
 function StatusChip({ status }: { status: string }) {
   const map: Record<string, string> = {
-    ISSUED:   "bg-success/10 text-success border-success/30",
+    ISSUED: "bg-success/10 text-success border-success/30",
     APPROVED: "bg-success/10 text-success border-success/30",
-    EXPIRED:  "bg-warning/10 text-warning border-warning/30",
-    PENDING:  "bg-primary/10 text-primary border-primary/30",
+    EXPIRED: "bg-warning/10 text-warning border-warning/30",
+    PENDING: "bg-primary/10 text-primary border-primary/30",
     REJECTED: "bg-destructive/10 text-destructive border-destructive/30",
   };
   return (
@@ -184,7 +201,9 @@ const StaffDashboard = () => {
     setHistoryError(null);
     setHistoryLoading(true);
     try {
-      const data = await apiFetch(`/staff/applications/by-enrollment/${enrollmentNo}`);
+      const data = await apiFetch(
+        `/staff/applications/by-enrollment/${enrollmentNo}`,
+      );
       setHistory(data);
     } catch (err: any) {
       setHistoryError(err.message || "Failed to fetch history");
@@ -196,11 +215,17 @@ const StaffDashboard = () => {
   const exportExcel = async (range?: string, from?: string, to?: string) => {
     try {
       const token = localStorage.getItem("staffToken");
-      if (!token) { alert("Not authenticated"); return; }
+      if (!token) {
+        alert("Not authenticated");
+        return;
+      }
       let url = `http://localhost:4000/staff/concessions/export`;
       const params = new URLSearchParams();
       if (range) params.append("range", range);
-      if (from && to) { params.append("from", from); params.append("to", to); }
+      if (from && to) {
+        params.append("from", from);
+        params.append("to", to);
+      }
       const response = await fetch(`${url}?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -221,8 +246,14 @@ const StaffDashboard = () => {
   };
 
   useEffect(() => {
-    if (!enrollmentNo.trim()) { setHistory([]); setSelectedApp(null); return; }
-    const debounceTimer = setTimeout(() => { handleSearchStudent(); }, 500);
+    if (!enrollmentNo.trim()) {
+      setHistory([]);
+      setSelectedApp(null);
+      return;
+    }
+    const debounceTimer = setTimeout(() => {
+      handleSearchStudent();
+    }, 500);
     return () => clearTimeout(debounceTimer);
   }, [enrollmentNo]);
 
@@ -240,10 +271,18 @@ const StaffDashboard = () => {
     );
   }
 
-  const pendingCount  = applications.filter((a) => a.status === "PENDING").length;
-  const approvedCount = applications.filter((a) => a.status === "APPROVED").length;
-  const rejectedCount = applications.filter((a) => a.status === "REJECTED").length;
-  const issuedCount   = applications.filter((a) => a.status === "ISSUED" || a.status === "EXPIRED").length;
+  const pendingCount = applications.filter(
+    (a) => a.status === "PENDING",
+  ).length;
+  const approvedCount = applications.filter(
+    (a) => a.status === "APPROVED",
+  ).length;
+  const rejectedCount = applications.filter(
+    (a) => a.status === "REJECTED",
+  ).length;
+  const issuedCount = applications.filter(
+    (a) => a.status === "ISSUED" || a.status === "EXPIRED",
+  ).length;
 
   const adminModules = [
     {
@@ -278,18 +317,20 @@ const StaffDashboard = () => {
   ];
 
   const filteredHistory =
-    historyFilter === "ALL" ? history : history.filter((app) => app.status === historyFilter);
+    historyFilter === "ALL"
+      ? history
+      : history.filter((app) => app.status === historyFilter);
 
   const exportRanges = [
-    { label: "Last 1 Day",    range: "1d" },
-    { label: "Last 3 Days",   range: "3d" },
-    { label: "Last 1 Month",  range: "1m" },
+    { label: "Last 1 Day", range: "1d" },
+    { label: "Last 3 Days", range: "3d" },
+    { label: "Last 1 Month", range: "1m" },
     { label: "Last 6 Months", range: "6m" },
   ];
 
-  const filterOptions: Array<"ALL" | "PENDING" | "APPROVED" | "EXPIRED" | "REJECTED"> = [
-    "ALL", "PENDING", "APPROVED", "EXPIRED", "REJECTED",
-  ];
+  const filterOptions: Array<
+    "ALL" | "PENDING" | "APPROVED" | "EXPIRED" | "REJECTED"
+  > = ["ALL", "PENDING", "APPROVED", "EXPIRED", "REJECTED"];
 
   return (
     <div className="min-h-screen bg-background">
@@ -297,9 +338,11 @@ const StaffDashboard = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-6xl space-y-8 px-4 py-8">
-
           {/* ── Page Header ──────────────────────────────────────────── */}
-          <motion.div {...fadeIn(0)} className="flex items-start justify-between gap-4 flex-wrap">
+          <motion.div
+            {...fadeIn(0)}
+            className="flex items-start justify-between gap-4 flex-wrap"
+          >
             <div>
               <div className="flex items-center gap-2.5">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
@@ -333,10 +376,10 @@ const StaffDashboard = () => {
                 </div>
               </div>
               <CardContent className="grid grid-cols-2 gap-x-8 gap-y-5 px-6 py-5 sm:grid-cols-4">
-                <InfoField label="Full Name"  value={staffInfo?.name} />
-                <InfoField label="Staff ID"   value={staffInfo?.staffId} />
-                <InfoField label="Email"      value={staffInfo?.email} />
-                <InfoField label="Role"       value={staffInfo?.role} />
+                <InfoField label="Full Name" value={staffInfo?.name} />
+                <InfoField label="Staff ID" value={staffInfo?.staffId} />
+                <InfoField label="Email" value={staffInfo?.email} />
+                <InfoField label="Role" value={staffInfo?.role} />
               </CardContent>
             </Card>
           </motion.div>
@@ -345,10 +388,26 @@ const StaffDashboard = () => {
           <motion.div {...fadeIn(0.1)}>
             <SectionLabel>Application Overview</SectionLabel>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <StatTile label="Pending"  value={pendingCount}  colorClass="text-warning" />
-              <StatTile label="Approved" value={approvedCount} colorClass="text-success" />
-              <StatTile label="Rejected" value={rejectedCount} colorClass="text-destructive" />
-              <StatTile label="Issued"   value={issuedCount}   colorClass="text-primary" />
+              <StatTile
+                label="Pending"
+                value={pendingCount}
+                colorClass="text-warning"
+              />
+              <StatTile
+                label="Approved"
+                value={approvedCount}
+                colorClass="text-success"
+              />
+              <StatTile
+                label="Rejected"
+                value={rejectedCount}
+                colorClass="text-destructive"
+              />
+              <StatTile
+                label="Issued"
+                value={issuedCount}
+                colorClass="text-primary"
+              />
             </div>
           </motion.div>
 
@@ -377,7 +436,8 @@ const StaffDashboard = () => {
                   ))}
                 </div>
                 <p className="mt-3 text-[12px] text-muted-foreground">
-                  Downloads an Excel file containing concession records for the selected period.
+                  Downloads an Excel file containing concession records for the
+                  selected period.
                 </p>
               </CardContent>
             </Card>
@@ -401,7 +461,9 @@ const StaffDashboard = () => {
                       className="w-full rounded-lg border border-border bg-background pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all duration-150"
                       placeholder="Enter Enrollment Number"
                       value={enrollmentNo}
-                      onChange={(e) => setEnrollmentNo(e.target.value.toUpperCase())}
+                      onChange={(e) =>
+                        setEnrollmentNo(e.target.value.toUpperCase())
+                      }
                     />
                   </div>
                   {summaryLoading && (
@@ -409,7 +471,8 @@ const StaffDashboard = () => {
                   )}
                 </div>
                 <p className="mt-2 text-[12px] text-muted-foreground">
-                  Enter a student enrollment number to view their profile and application history.
+                  Enter a student enrollment number to view their profile and
+                  application history.
                 </p>
               </CardContent>
             </Card>
@@ -425,7 +488,9 @@ const StaffDashboard = () => {
               {summaryLoading && (
                 <div className="flex items-center gap-2 py-4">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                  <p className="text-sm text-muted-foreground">Loading summary…</p>
+                  <p className="text-sm text-muted-foreground">
+                    Loading summary…
+                  </p>
                 </div>
               )}
 
@@ -449,10 +514,22 @@ const StaffDashboard = () => {
                   <Separator />
 
                   <div className="grid grid-cols-2 gap-4">
-                    <InfoField label="Course"   value={studentSummary.student.course} />
-                    <InfoField label="Year"     value={studentSummary.student.year} />
-                    <InfoField label="Semester" value={studentSummary.student.sem} />
-                    <InfoField label="Shift"    value={studentSummary.student.shift} />
+                    <InfoField
+                      label="Course"
+                      value={studentSummary.student.course}
+                    />
+                    <InfoField
+                      label="Year"
+                      value={studentSummary.student.year}
+                    />
+                    <InfoField
+                      label="Semester"
+                      value={studentSummary.student.sem}
+                    />
+                    <InfoField
+                      label="Shift"
+                      value={studentSummary.student.shift}
+                    />
                   </div>
 
                   <Separator />
@@ -469,7 +546,9 @@ const StaffDashboard = () => {
                     {studentSummary.student.dateOfBirth && (
                       <div className="flex items-center gap-2 text-sm text-foreground">
                         <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                        {new Date(studentSummary.student.dateOfBirth).toLocaleDateString("en-IN")}
+                        {new Date(
+                          studentSummary.student.dateOfBirth,
+                        ).toLocaleDateString("en-IN")}
                       </div>
                     )}
                     {studentSummary.student.address && (
@@ -485,20 +564,36 @@ const StaffDashboard = () => {
                   {/* Stats */}
                   <div className="grid grid-cols-4 gap-3">
                     <div className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-center">
-                      <p className="text-[11px] font-semibold uppercase text-warning">Pending</p>
-                      <p className="text-xl font-bold text-warning">{studentSummary.stats.pending}</p>
+                      <p className="text-[11px] font-semibold uppercase text-warning">
+                        Pending
+                      </p>
+                      <p className="text-xl font-bold text-warning">
+                        {studentSummary.stats.pending}
+                      </p>
                     </div>
                     <div className="rounded-lg border border-success/30 bg-success/10 p-3 text-center">
-                      <p className="text-[11px] font-semibold uppercase text-success">Issued</p>
-                      <p className="text-xl font-bold text-success">{studentSummary.stats.issued}</p>
+                      <p className="text-[11px] font-semibold uppercase text-success">
+                        Issued
+                      </p>
+                      <p className="text-xl font-bold text-success">
+                        {studentSummary.stats.issued}
+                      </p>
                     </div>
                     <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-center">
-                      <p className="text-[11px] font-semibold uppercase text-destructive">Rejected</p>
-                      <p className="text-xl font-bold text-destructive">{studentSummary.stats.rejected}</p>
+                      <p className="text-[11px] font-semibold uppercase text-destructive">
+                        Rejected
+                      </p>
+                      <p className="text-xl font-bold text-destructive">
+                        {studentSummary.stats.rejected}
+                      </p>
                     </div>
                     <div className="rounded-lg border border-border bg-muted p-3 text-center">
-                      <p className="text-[11px] font-semibold uppercase text-muted-foreground">Total</p>
-                      <p className="text-xl font-bold text-foreground">{studentSummary.stats.total}</p>
+                      <p className="text-[11px] font-semibold uppercase text-muted-foreground">
+                        Total
+                      </p>
+                      <p className="text-xl font-bold text-foreground">
+                        {studentSummary.stats.total}
+                      </p>
                     </div>
                   </div>
 
@@ -520,7 +615,9 @@ const StaffDashboard = () => {
                       </p>
                       <p className="text-[12px] text-muted-foreground">
                         Applied:{" "}
-                        {new Date(studentSummary.latest.appliedAt).toLocaleDateString("en-IN")}
+                        {new Date(
+                          studentSummary.latest.appliedAt,
+                        ).toLocaleDateString("en-IN")}
                       </p>
                     </div>
                   ) : (
@@ -578,7 +675,9 @@ const StaffDashboard = () => {
               {historyLoading && (
                 <div className="flex items-center gap-2 py-4">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                  <p className="text-sm text-muted-foreground">Loading history…</p>
+                  <p className="text-sm text-muted-foreground">
+                    Loading history…
+                  </p>
                 </div>
               )}
 
@@ -635,7 +734,9 @@ const StaffDashboard = () => {
               {detailsLoading && (
                 <div className="flex items-center gap-2 py-4">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                  <p className="text-sm text-muted-foreground">Loading details…</p>
+                  <p className="text-sm text-muted-foreground">
+                    Loading details…
+                  </p>
                 </div>
               )}
 
@@ -649,17 +750,26 @@ const StaffDashboard = () => {
                   <div className="rounded-xl border border-border bg-muted/30 p-5 space-y-4">
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4 text-primary" />
-                      <h3 className="text-sm font-semibold text-foreground">Student Details</h3>
+                      <h3 className="text-sm font-semibold text-foreground">
+                        Student Details
+                      </h3>
                     </div>
                     <div className="grid grid-cols-1 gap-3">
-                      <InfoField label="Full Name"   value={selectedApp.student.fullName} />
-                      <InfoField label="Enrollment"  value={selectedApp.student.enrollmentNo} />
+                      <InfoField
+                        label="Full Name"
+                        value={selectedApp.student.fullName}
+                      />
+                      <InfoField
+                        label="Enrollment"
+                        value={selectedApp.student.enrollmentNo}
+                      />
                     </div>
                     <Separator />
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm text-foreground">
                         <GraduationCap className="h-3.5 w-3.5 text-muted-foreground" />
-                        {selectedApp.student.course} &mdash; Sem {selectedApp.student.sem}
+                        {selectedApp.student.course} &mdash; Sem{" "}
+                        {selectedApp.student.sem}
                       </div>
                       <div className="flex items-center gap-2 text-sm text-foreground">
                         <Mail className="h-3.5 w-3.5 text-muted-foreground" />
@@ -680,19 +790,31 @@ const StaffDashboard = () => {
                   <div className="rounded-xl border border-border bg-muted/30 p-5 space-y-4">
                     <div className="flex items-center gap-2">
                       <Train className="h-4 w-4 text-primary" />
-                      <h3 className="text-sm font-semibold text-foreground">Application Details</h3>
+                      <h3 className="text-sm font-semibold text-foreground">
+                        Application Details
+                      </h3>
                     </div>
                     <div className="grid grid-cols-1 gap-3">
                       <div className="space-y-0.5">
-                        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Status</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          Status
+                        </p>
                         <StatusChip status={selectedApp.status} />
                       </div>
-                      <InfoField label="Duration" value={selectedApp.duration} />
-                      <InfoField label="Class"    value={selectedApp.travelClass} />
+                      <InfoField
+                        label="Duration"
+                        value={selectedApp.duration}
+                      />
+                      <InfoField
+                        label="Class"
+                        value={selectedApp.travelClass}
+                      />
                     </div>
                     <Separator />
                     <div className="space-y-2">
-                      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Route</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        Route
+                      </p>
                       <p className="text-sm font-medium text-foreground">
                         {selectedApp.fromStation}
                         <span className="mx-1.5 text-muted-foreground">→</span>
@@ -702,7 +824,9 @@ const StaffDashboard = () => {
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="h-3.5 w-3.5" />
                       Applied on{" "}
-                      {new Date(selectedApp.appliedAt).toLocaleDateString("en-IN")}
+                      {new Date(selectedApp.appliedAt).toLocaleDateString(
+                        "en-IN",
+                      )}
                     </div>
 
                     {selectedApp.status === "REJECTED" && (
@@ -712,29 +836,41 @@ const StaffDashboard = () => {
                         </p>
                         <p className="text-sm text-foreground">
                           <span className="text-muted-foreground">On: </span>
-                          {new Date(selectedApp.rejectedAt).toLocaleDateString("en-IN")}
+                          {new Date(selectedApp.rejectedAt).toLocaleDateString(
+                            "en-IN",
+                          )}
                         </p>
                         <p className="text-sm text-foreground">
-                          <span className="text-muted-foreground">Reason: </span>
+                          <span className="text-muted-foreground">
+                            Reason:{" "}
+                          </span>
                           {selectedApp.rejectionReason}
                         </p>
                       </div>
                     )}
 
-                    {(selectedApp.status === "ISSUED" || selectedApp.status === "EXPIRED") && (
+                    {(selectedApp.status === "ISSUED" ||
+                      selectedApp.status === "EXPIRED") && (
                       <div className="rounded-lg border border-success/30 bg-success/5 p-3 space-y-1">
                         <p className="text-[11px] font-semibold uppercase tracking-wider text-success">
                           Pass Details
                         </p>
                         <p className="text-sm text-foreground">
-                          <span className="text-muted-foreground">Pass No: </span>
+                          <span className="text-muted-foreground">
+                            Pass No:{" "}
+                          </span>
                           {selectedApp.concessionNumber}
                         </p>
                         <p className="text-sm text-foreground">
                           <span className="text-muted-foreground">
-                            {selectedApp.status === "EXPIRED" ? "Expired On" : "Expires On"}:{" "}
+                            {selectedApp.status === "EXPIRED"
+                              ? "Expired On"
+                              : "Expires On"}
+                            :{" "}
                           </span>
-                          {new Date(selectedApp.expiryDate).toLocaleDateString("en-IN")}
+                          {new Date(selectedApp.expiryDate).toLocaleDateString(
+                            "en-IN",
+                          )}
                         </p>
                       </div>
                     )}
@@ -779,14 +915,22 @@ const StaffDashboard = () => {
                   key={module.label}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.32, ease: EASE_OUT, delay: 0.33 + i * 0.05 }}
+                  transition={{
+                    duration: 0.32,
+                    ease: EASE_OUT,
+                    delay: 0.33 + i * 0.05,
+                  }}
                 >
                   <button
                     onClick={() => {
                       if (module.type === "internal") {
                         navigate(module.path!);
                       } else {
-                        window.open(module.url, "_blank", "noopener,noreferrer");
+                        window.open(
+                          module.url,
+                          "_blank",
+                          "noopener,noreferrer",
+                        );
                       }
                     }}
                     className="group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-5 text-left shadow-sm transition-all duration-200 hover:border-primary/30 hover:shadow-md"
@@ -823,11 +967,11 @@ const StaffDashboard = () => {
           >
             <div className="h-px flex-1 bg-border" />
             <p className="whitespace-nowrap px-3 text-[11px] text-muted-foreground">
-              Railway Concession Management System &mdash; Government Polytechnic Mumbai &mdash; Staff Portal
+              Railway Concession Management System &mdash; Government
+              Polytechnic Mumbai &mdash; Staff Portal
             </p>
             <div className="h-px flex-1 bg-border" />
           </motion.div>
-
         </main>
       </PageWrapper>
     </div>

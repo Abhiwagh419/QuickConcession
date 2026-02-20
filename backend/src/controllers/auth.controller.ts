@@ -18,21 +18,22 @@ export const login = async (req: Request, res: Response) => {
     where: { enrollmentNo },
   });
 
-if (!student) {
-  return res.status(401).json({ message: "Invalid credentials" });
-}
+  if (!student) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
 
-if (student.isDeleted) {
-  return res.status(403).json({
-    message: "Your account has been removed from the system.",
-  });
-}
+  if (student.isDeleted) {
+    return res.status(403).json({
+      message: "Your account has been removed from the system.",
+    });
+  }
 
-if (!student.active) {
-  return res.status(403).json({
-    message: "Your account has been deactivated. Please contact administration.",
-  });
-}
+  if (!student.active) {
+    return res.status(403).json({
+      message:
+        "Your account has been deactivated. Please contact administration.",
+    });
+  }
 
   const ok = await bcrypt.compare(password, student.passwordHash);
   if (!ok) {
@@ -72,21 +73,22 @@ export const verifyOtp = async (req: Request, res: Response) => {
     where: { enrollmentNo },
   });
 
-if (!student) {
-  return res.status(401).json({ message: "Invalid request" });
-}
+  if (!student) {
+    return res.status(401).json({ message: "Invalid request" });
+  }
 
-if (student.isDeleted) {
-  return res.status(403).json({
-    message: "Your account has been removed from the system.",
-  });
-}
+  if (student.isDeleted) {
+    return res.status(403).json({
+      message: "Your account has been removed from the system.",
+    });
+  }
 
-if (!student.active) {
-  return res.status(403).json({
-    message: "Your account has been deactivated. Please contact administration.",
-  });
-}
+  if (!student.active) {
+    return res.status(403).json({
+      message:
+        "Your account has been deactivated. Please contact administration.",
+    });
+  }
 
   const record = await prisma.otpVerification.findFirst({
     where: {

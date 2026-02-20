@@ -332,8 +332,7 @@ const AdminDashboard = () => {
                 </h1>
               </div>
               <p className="mt-1 pl-10 text-[13px] text-slate-400">
-                QuickConcession &mdash; Government
-                Polytechnic Institute
+                QuickConcession &mdash; Government Polytechnic Institute
               </p>
             </div>
 
@@ -596,8 +595,8 @@ const AdminDashboard = () => {
           >
             <div className="h-px flex-1 bg-slate-200" />
             <p className="whitespace-nowrap px-3 text-[11px] text-slate-400">
-              QuickConcession &mdash; Government
-              Polytechnic Institute &mdash; Admin Portal
+              QuickConcession &mdash; Government Polytechnic Institute &mdash;
+              Admin Portal
             </p>
             <div className="h-px flex-1 bg-slate-200" />
           </motion.div>

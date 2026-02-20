@@ -120,11 +120,7 @@ const AdminLoginForm = () => {
       </div>
 
       {!otpSent ? (
-        <Button
-          type="submit"
-          disabled={isSendingOtp}
-          className="w-full"
-        >
+        <Button type="submit" disabled={isSendingOtp} className="w-full">
           {isSendingOtp ? "Sending OTP..." : "Send OTP"}
         </Button>
       ) : (

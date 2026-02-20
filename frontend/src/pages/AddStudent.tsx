@@ -66,7 +66,6 @@ const AddStudent = () => {
 
       <PageWrapper>
         <main className="container mx-auto px-4 py-6 max-w-3xl">
-
           <Button
             variant="ghost"
             className="mb-4"
@@ -86,7 +85,6 @@ const AddStudent = () => {
 
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
-
                 {/* Enrollment */}
                 <div className="space-y-2">
                   <Label>Enrollment Number</Label>
@@ -237,11 +235,9 @@ const AddStudent = () => {
                     "Create Student"
                   )}
                 </Button>
-
               </form>
             </CardContent>
           </Card>
-
         </main>
       </PageWrapper>
     </div>

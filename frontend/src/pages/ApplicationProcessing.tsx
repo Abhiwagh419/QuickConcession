@@ -51,7 +51,13 @@ const fadeIn = (delay: number = 0) => ({
 
 // ─── Info Field ───────────────────────────────────────────────────────────────
 
-function InfoField({ label, value }: { label: string; value?: string | number }) {
+function InfoField({
+  label,
+  value,
+}: {
+  label: string;
+  value?: string | number;
+}) {
   return (
     <div className="space-y-0.5">
       <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -107,7 +113,9 @@ const ApplicationProcessing = () => {
         <div className="flex h-[60vh] items-center justify-center">
           <div className="text-center space-y-2">
             <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            <p className="text-sm text-muted-foreground">Loading application…</p>
+            <p className="text-sm text-muted-foreground">
+              Loading application…
+            </p>
           </div>
         </div>
       </div>
@@ -127,11 +135,14 @@ const ApplicationProcessing = () => {
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-destructive/10">
                   <AlertCircle className="h-3.5 w-3.5 text-destructive" />
                 </div>
-                <span className="text-sm font-semibold text-foreground">Application Not Found</span>
+                <span className="text-sm font-semibold text-foreground">
+                  Application Not Found
+                </span>
               </div>
               <div className="px-6 py-10 text-center space-y-4">
                 <p className="text-[13px] text-muted-foreground">
-                  The application you are looking for could not be found or may have been removed.
+                  The application you are looking for could not be found or may
+                  have been removed.
                 </p>
                 <Button
                   variant="outline"
@@ -213,10 +224,10 @@ const ApplicationProcessing = () => {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      PENDING:  "bg-warning/15 text-warning border-warning/30",
+      PENDING: "bg-warning/15 text-warning border-warning/30",
       APPROVED: "bg-success/15 text-success border-success/30",
       REJECTED: "bg-destructive/15 text-destructive border-destructive/30",
-      EXPIRED:  "bg-primary/15 text-primary border-primary/30",
+      EXPIRED: "bg-primary/15 text-primary border-primary/30",
     };
     return styles[status] ?? styles.PENDING;
   };
@@ -229,7 +240,6 @@ const ApplicationProcessing = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-6xl space-y-6 px-4 py-8">
-
           {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0)}
@@ -272,7 +282,6 @@ const ApplicationProcessing = () => {
 
           {/* ── Two-column cards ─────────────────────────────────────── */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-
             {/* Student Profile */}
             <motion.div {...fadeIn(0.07)}>
               <Card className="border border-border shadow-sm rounded-xl overflow-hidden h-full">
@@ -286,8 +295,14 @@ const ApplicationProcessing = () => {
                 </CardHeader>
                 <CardContent className="px-6 py-5 space-y-5">
                   <div className="grid grid-cols-2 gap-4">
-                    <InfoField label="Full Name"    value={application.student.fullName} />
-                    <InfoField label="Enrollment No" value={application.student.enrollmentNo} />
+                    <InfoField
+                      label="Full Name"
+                      value={application.student.fullName}
+                    />
+                    <InfoField
+                      label="Enrollment No"
+                      value={application.student.enrollmentNo}
+                    />
                   </div>
 
                   <Separator />
@@ -298,8 +313,14 @@ const ApplicationProcessing = () => {
                       {application.student.course}
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                      <InfoField label="Year"     value={application.student.year} />
-                      <InfoField label="Semester" value={application.student.sem} />
+                      <InfoField
+                        label="Year"
+                        value={application.student.year}
+                      />
+                      <InfoField
+                        label="Semester"
+                        value={application.student.sem}
+                      />
                     </div>
                   </div>
 
@@ -342,8 +363,11 @@ const ApplicationProcessing = () => {
                 </CardHeader>
                 <CardContent className="px-6 py-5 space-y-5">
                   <div className="grid grid-cols-2 gap-4">
-                    <InfoField label="Application Date" value={formatDate(application.appliedAt)} />
-                    <InfoField label="Period"            value={application.duration} />
+                    <InfoField
+                      label="Application Date"
+                      value={formatDate(application.appliedAt)}
+                    />
+                    <InfoField label="Period" value={application.duration} />
                   </div>
 
                   <Separator />
@@ -355,57 +379,78 @@ const ApplicationProcessing = () => {
                     </p>
                     <div className="rounded-xl border border-border bg-muted/30 px-4 py-4 space-y-3">
                       <div className="grid grid-cols-2 gap-4">
-                        <InfoField label="From Line" value={application.fromLine} />
-                        <InfoField label="To Line"   value={application.toLine} />
+                        <InfoField
+                          label="From Line"
+                          value={application.fromLine}
+                        />
+                        <InfoField label="To Line" value={application.toLine} />
                       </div>
                       <Separator />
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-0.5">
-                          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">From Station</p>
-                          <p className="text-sm font-semibold text-primary">{application.fromStation}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                            From Station
+                          </p>
+                          <p className="text-sm font-semibold text-primary">
+                            {application.fromStation}
+                          </p>
                         </div>
                         <div className="space-y-0.5">
-                          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">To Station</p>
-                          <p className="text-sm font-semibold text-primary">{application.toStation}</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                            To Station
+                          </p>
+                          <p className="text-sm font-semibold text-primary">
+                            {application.toStation}
+                          </p>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <InfoField label="Travel Class" value={application.travelClass} />
+                  <InfoField
+                    label="Travel Class"
+                    value={application.travelClass}
+                  />
 
                   {/* Issued details */}
-                  {application.status === "APPROVED" && application.concessionNumber && (
-                    <>
-                      <Separator />
-                      <div className="rounded-xl border border-success/30 bg-success/10 px-4 py-4 space-y-2">
-                        <p className="text-[11px] font-semibold uppercase tracking-wider text-success">
-                          Issued Details
-                        </p>
-                        <div className="space-y-1.5 text-[13px]">
-                          <div className="flex items-center gap-1.5">
-                            <Hash className="h-3 w-3 text-muted-foreground" />
-                            <span className="text-muted-foreground">Concession No:</span>{" "}
-                            <span className="font-mono font-semibold text-foreground">
-                              {application.concessionNumber}
-                            </span>
+                  {application.status === "APPROVED" &&
+                    application.concessionNumber && (
+                      <>
+                        <Separator />
+                        <div className="rounded-xl border border-success/30 bg-success/10 px-4 py-4 space-y-2">
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-success">
+                            Issued Details
+                          </p>
+                          <div className="space-y-1.5 text-[13px]">
+                            <div className="flex items-center gap-1.5">
+                              <Hash className="h-3 w-3 text-muted-foreground" />
+                              <span className="text-muted-foreground">
+                                Concession No:
+                              </span>{" "}
+                              <span className="font-mono font-semibold text-foreground">
+                                {application.concessionNumber}
+                              </span>
+                            </div>
+                            <p>
+                              <span className="text-muted-foreground">
+                                Issue Date:
+                              </span>{" "}
+                              <span className="font-medium text-foreground">
+                                {formatDate(application.approvedAt)}
+                              </span>
+                            </p>
+                            <p>
+                              <span className="text-muted-foreground">
+                                Issued By:
+                              </span>{" "}
+                              <span className="font-medium text-foreground">
+                                {application.issuedBy}
+                              </span>
+                            </p>
                           </div>
-                          <p>
-                            <span className="text-muted-foreground">Issue Date:</span>{" "}
-                            <span className="font-medium text-foreground">
-                              {formatDate(application.approvedAt)}
-                            </span>
-                          </p>
-                          <p>
-                            <span className="text-muted-foreground">Issued By:</span>{" "}
-                            <span className="font-medium text-foreground">
-                              {application.issuedBy}
-                            </span>
-                          </p>
                         </div>
-                      </div>
-                    </>
-                  )}
+                      </>
+                    )}
 
                   {/* Rejected details */}
                   {application.status === "REJECTED" && (
@@ -415,7 +460,9 @@ const ApplicationProcessing = () => {
                         <p className="text-[11px] font-semibold uppercase tracking-wider text-destructive">
                           Rejection Details
                         </p>
-                        <p className="text-[13px] text-foreground">{application.rejectionReason}</p>
+                        <p className="text-[13px] text-foreground">
+                          {application.rejectionReason}
+                        </p>
                       </div>
                     </>
                   )}
@@ -426,21 +473,24 @@ const ApplicationProcessing = () => {
 
           {/* ── Action Section ───────────────────────────────────────── */}
           {(application.status === "PENDING" ||
-            (application.status === "APPROVED" && !application.concessionNumber)) && (
+            (application.status === "APPROVED" &&
+              !application.concessionNumber)) && (
             <motion.div {...fadeIn(0.16)}>
               <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
                 <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                   <CardTitle className="text-sm font-semibold text-foreground">
-                    {showIssueSection ? "Issue Concession" : "Process Application"}
+                    {showIssueSection
+                      ? "Issue Concession"
+                      : "Process Application"}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="px-6 py-6">
-
                   {!showIssueSection ? (
                     /* Approve / Reject */
                     <div className="space-y-4">
                       <p className="text-[13px] text-muted-foreground">
-                        Review the application details above and choose an action.
+                        Review the application details above and choose an
+                        action.
                       </p>
                       <div className="flex flex-wrap gap-3">
                         <Button
@@ -490,7 +540,8 @@ const ApplicationProcessing = () => {
                           className="font-mono h-9 rounded-lg border-border bg-background text-sm"
                         />
                         <p className="text-[11px] text-muted-foreground">
-                          Enter the serial number from the physical concession form.
+                          Enter the serial number from the physical concession
+                          form.
                         </p>
                       </div>
 
@@ -511,7 +562,6 @@ const ApplicationProcessing = () => {
                       </div>
                     </div>
                   )}
-
                 </CardContent>
               </Card>
             </motion.div>
@@ -524,11 +574,11 @@ const ApplicationProcessing = () => {
           >
             <div className="h-px flex-1 bg-border" />
             <p className="whitespace-nowrap px-3 text-[11px] text-muted-foreground">
-              Railway Concession Management System &mdash; Government Polytechnic Mumbai &mdash; Staff Portal
+              Railway Concession Management System &mdash; Government
+              Polytechnic Mumbai &mdash; Staff Portal
             </p>
             <div className="h-px flex-1 bg-border" />
           </motion.div>
-
         </main>
       </PageWrapper>
 

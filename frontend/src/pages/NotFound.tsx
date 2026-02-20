@@ -30,7 +30,6 @@ const NotFound = () => {
           className="w-full max-w-md"
         >
           <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
-
             {/* Header strip */}
             <div className="border-b border-border bg-muted/20 px-6 py-4 flex items-center gap-2.5">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-destructive/10">
@@ -56,8 +55,8 @@ const NotFound = () => {
                   <code className="rounded bg-muted px-1.5 py-0.5 text-[12px] font-mono text-foreground">
                     {location.pathname}
                   </code>{" "}
-                  could not be found. It may have been moved, deleted, or you may
-                  not have permission to access it.
+                  could not be found. It may have been moved, deleted, or you
+                  may not have permission to access it.
                 </p>
               </div>
 
@@ -80,7 +79,6 @@ const NotFound = () => {
                 QuickConcession &mdash; Government Polytechnic Mumbai
               </p>
             </div>
-
           </div>
         </motion.div>
       </div>

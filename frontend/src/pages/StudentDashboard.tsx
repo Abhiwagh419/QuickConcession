@@ -68,7 +68,13 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 // ─── Info Field ───────────────────────────────────────────────────────────────
 
-function InfoField({ label, value }: { label: string; value: string | number }) {
+function InfoField({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | number;
+}) {
   return (
     <div className="space-y-0.5">
       <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
@@ -216,7 +222,6 @@ const StudentDashboard = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-6xl space-y-8 px-4 py-8">
-
           {/* ── Page Header ────────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0)}
@@ -250,10 +255,8 @@ const StudentDashboard = () => {
 
           {/* ── Main Grid ──────────────────────────────────────────────── */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-
             {/* ── Left Column (2/3) ─────────────────────────────────── */}
             <div className="space-y-6 lg:col-span-2">
-
               {/* Student Details */}
               <motion.div {...fadeIn(0.05)}>
                 <SectionLabel>Student Identity</SectionLabel>
@@ -278,7 +281,10 @@ const StudentDashboard = () => {
                     <InfoField label="Year" value={student.year} />
                     <InfoField label="Semester" value={student.sem} />
                     <InfoField label="Shift" value={student.shift} />
-                    <InfoField label="Enrollment No" value={student.enrollmentNo} />
+                    <InfoField
+                      label="Enrollment No"
+                      value={student.enrollmentNo}
+                    />
                   </div>
                 </Panel>
               </motion.div>
@@ -312,7 +318,11 @@ const StudentDashboard = () => {
                           <span className="font-medium text-slate-600">
                             {new Date(activePass.expiryDate).toLocaleDateString(
                               "en-IN",
-                              { day: "numeric", month: "long", year: "numeric" },
+                              {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                              },
                             )}
                           </span>
                         </p>
@@ -356,7 +366,8 @@ const StudentDashboard = () => {
                           No Active Concession
                         </p>
                         <p className="text-[12px] text-slate-400 mb-3">
-                          You have not applied for a railway concession pass yet.
+                          You have not applied for a railway concession pass
+                          yet.
                         </p>
                         <Button
                           size="sm"
@@ -422,13 +433,12 @@ const StudentDashboard = () => {
                 <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-blue-500" />
                 <p className="text-[13px] text-blue-800 leading-relaxed">
                   <span className="font-semibold">Notice:</span> For any issues
-                  with the portal, please contact the IT Department during office
-                  hours{" "}
+                  with the portal, please contact the IT Department during
+                  office hours{" "}
                   <span className="font-medium">(10 AM – 5 PM)</span>.
                 </p>
               </div>
             </motion.div>
-
           </div>
         </main>
       </PageWrapper>
