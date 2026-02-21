@@ -618,4 +618,160 @@ router.get("/export/excel", requireAuth, async (req: any, res) => {
   return exportAdminExcel(req, res);
 });
 
+router.post(
+  "/students/bulk/preview",
+  requireAuth,
+  upload.single("file"),
+  async (req: any, res) => {
+    if (!ensureAdmin(req, res)) return;
+
+    if (!req.file) {
+      return res.status(400).json({ message: "CSV file required" });
+    }
+
+    const csvString = req.file.buffer.toString();
+
+    const records = parse(csvString, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: true,
+    });
+
+    const validStudents: any[] = [];
+    const errors: any[] = [];
+
+    const existingStudents = await prisma.student.findMany({
+      select: { enrollmentNo: true, email: true },
+    });
+
+    const enrollmentSet = new Set(
+      existingStudents.map((s) => s.enrollmentNo)
+    );
+    const emailSet = new Set(existingStudents.map((s) => s.email));
+
+    const validYears = ["FY", "SY", "TY"];
+    const validSems = [
+      "SEM_I",
+      "SEM_II",
+      "SEM_III",
+      "SEM_IV",
+      "SEM_V",
+      "SEM_VI",
+    ];
+    const validShifts = ["FIRST", "SECOND"];
+
+    for (let i = 0; i < records.length; i++) {
+      const row: any = records[i];
+      const rowNumber = i + 2;
+
+      if (!row.enrollmentNo || !row.fullName || !row.email || !row.password) {
+        errors.push({
+          row: rowNumber,
+          data: row,
+          reason: "Missing required fields",
+        });
+        continue;
+      }
+
+      if (enrollmentSet.has(row.enrollmentNo)) {
+        errors.push({
+          row: rowNumber,
+          data: row,
+          reason: "Duplicate enrollment number in DB",
+        });
+        continue;
+      }
+
+      if (emailSet.has(row.email)) {
+        errors.push({
+          row: rowNumber,
+          data: row,
+          reason: "Duplicate email in DB",
+        });
+        continue;
+      }
+
+      if (!validYears.includes(row.year)) {
+        errors.push({
+          row: rowNumber,
+          data: row,
+          reason: "Invalid Year",
+        });
+        continue;
+      }
+
+      if (!validSems.includes(row.sem)) {
+        errors.push({
+          row: rowNumber,
+          data: row,
+          reason: "Invalid Semester",
+        });
+        continue;
+      }
+
+      if (!validShifts.includes(row.shift)) {
+        errors.push({
+          row: rowNumber,
+          data: row,
+          reason: "Invalid Shift",
+        });
+        continue;
+      }
+
+      validStudents.push(row);
+    }
+
+    res.json({
+      totalRows: records.length,
+      validCount: validStudents.length,
+      invalidCount: errors.length,
+      validStudents,
+      errors,
+    });
+  }
+);
+
+router.post("/students/bulk/confirm", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const { students } = req.body;
+
+  if (!Array.isArray(students)) {
+    return res.status(400).json({ message: "Invalid payload" });
+  }
+
+  const finalData = [];
+
+  for (const s of students) {
+    const passwordHash = await bcrypt.hash(s.password, 12);
+
+    finalData.push({
+      enrollmentNo: s.enrollmentNo,
+      fullName: s.fullName,
+      email: s.email,
+      mobileNumber: s.mobileNumber,
+      course: s.course,
+      year: s.year,
+      sem: s.sem,
+      shift: s.shift,
+      passwordHash,
+      dateOfBirth:
+  s.dateOfBirth && !isNaN(new Date(s.dateOfBirth).getTime())
+    ? new Date(s.dateOfBirth)
+    : null,
+      address: s.address,
+    });
+  }
+
+  const result = await prisma.student.createMany({
+    data: finalData,
+    skipDuplicates: true,
+  });
+
+  res.json({
+    message: "Students imported successfully",
+    inserted: result.count,
+  });
+});
+
 export default router;
