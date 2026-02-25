@@ -17,17 +17,16 @@ const staffConcession_routes_2 = __importDefault(require("./routes/staffConcessi
 const admin_routes_1 = __importDefault(require("./routes/admin.routes"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: "http://localhost:8080",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-}));
-app.use(express_1.default.json());
-app.use((0, cors_1.default)({
-    origin: ["http://localhost:5173", "http://localhost:8080"],
+    origin: [
+        "http://localhost:5173",
+        "http://localhost:8080",
+        "https://quickconcession.onrender.com",
+        "https://your-frontend-domain.vercel.app"
+    ],
     credentials: true,
 }));
-app.use((0, helmet_1.default)());
 app.use(express_1.default.json());
+app.use((0, helmet_1.default)());
 app.use("/auth", auth_routes_1.default);
 app.use("/student", student_routes_1.default);
 app.use("/concession", concession_routes_1.default);

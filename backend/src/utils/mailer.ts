@@ -1,5 +1,4 @@
 import * as nodemailer from "nodemailer";
-import { sendMail } from "./sendMail";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.sendgrid.net",
@@ -20,7 +19,7 @@ export const sendOtpMail = async (
   loginTime: string,
 ) => {
   await transporter.sendMail({
-    from: `"QuickConcession" <${process.env.SMTP_USER}>`,
+    from: `"QuickConcession" <quickconcession@gmail.com>`,
     to,
     subject: "Verification Code for QuickConcession Student Portal",
     html: `

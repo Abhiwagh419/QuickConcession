@@ -36,17 +36,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendStaffLoginOtpMail = exports.sendStaffPasswordResetOtpMail = exports.sendPasswordResetOtpMail = exports.sendOtpMail = void 0;
 const nodemailer = __importStar(require("nodemailer"));
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
+    host: "smtp.sendgrid.net",
+    port: 587,
     secure: false,
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: "apikey",
+        pass: process.env.SENDGRID_API_KEY,
     },
 });
 const sendOtpMail = async (to, otp, studentName, ipAddress, device, loginTime) => {
     await transporter.sendMail({
-        from: `"QuickConcession" <${process.env.SMTP_USER}>`,
+        from: `"QuickConcession" <quickconcession@gmail.com>`,
         to,
         subject: "Verification Code for QuickConcession Student Portal",
         html: `
