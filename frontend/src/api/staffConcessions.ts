@@ -1,9 +1,10 @@
 import { staffAxios } from "./staffAxios";
 
-export async function getStaffApplications(status?: string) {
-  const response = await staffAxios.get("/staff/concessions", {
-    params: status ? { status } : {},
-  });
+export async function getStaffApplications() {
+  const response = await staffAxios.get("/staff/concessions");
 
-  return response.data;
+  return response.data as {
+    pending: any[];
+    personal: any[];
+  };
 }

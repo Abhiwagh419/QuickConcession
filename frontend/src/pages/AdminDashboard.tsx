@@ -594,7 +594,7 @@ const exportExcel = async () => {
           {/* ── Management Modules ───────────────────────────────────── */}
           <div>
             <SectionLabel>Management Modules</SectionLabel>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
               <ModuleCard
                 title="Student Management"
                 description="View, verify, and manage registered student records."
@@ -612,24 +612,6 @@ const exportExcel = async () => {
                 route="/admin/staff"
                 buttonLabel="Manage Staff"
                 delay={0.4}
-              />
-              <ModuleCard
-                title="Application Oversight"
-                description="Review, approve, or reject student concession applications."
-                icon={<FileText className="h-5 w-5 text-slate-500" />}
-                iconBg="bg-slate-100"
-                route="/admin/applications"
-                buttonLabel="View Applications"
-                delay={0.45}
-              />
-              <ModuleCard
-                title="System Controls"
-                description="Configure system parameters, application windows, and settings."
-                icon={<Settings className="h-5 w-5 text-slate-500" />}
-                iconBg="bg-slate-100"
-                route="/admin/settings"
-                buttonLabel="Configure System"
-                delay={0.5}
               />
             </div>
           </div>

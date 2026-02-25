@@ -774,4 +774,91 @@ router.post("/students/bulk/confirm", requireAuth, async (req: any, res) => {
   });
 });
 
+/* GET SINGLE STAFF DETAILS */
+router.get("/staff/:id", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const id = Number(req.params.id);
+
+  const staff = await prisma.staff.findUnique({
+    where: { id },
+    include: {
+      _count: {
+        select: { approvedApplications: true },
+      },
+    },
+  });
+
+  if (!staff) {
+    return res.status(404).json({ message: "Staff not found" });
+  }
+
+  res.json(staff);
+});
+
+router.get("/applications", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  try {
+    const applications = await prisma.concessionApplication.findMany({
+      orderBy: { appliedAt: "desc" },
+      include: {
+        student: {
+          select: {
+            id: true,
+            fullName: true,
+            enrollmentNo: true,
+            email: true,
+            mobileNumber: true,
+            course: true,
+            year: true,
+            sem: true,
+            shift: true,
+          },
+        },
+      },
+    });
+
+    res.json(applications);
+  } catch (error) {
+    console.error("Admin applications fetch error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+/* CREATE STAFF */
+router.post("/staff", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+
+  const { fullName, email, password } = req.body;
+
+  if (!fullName || !email || !password) {
+    return res.status(400).json({
+      message: "Missing required fields",
+    });
+  }
+
+  const existing = await prisma.staff.findUnique({
+    where: { email },
+  });
+
+  if (existing) {
+    return res.status(400).json({
+      message: "Staff email already exists",
+    });
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  const staff = await prisma.staff.create({
+    data: {
+      fullName,
+      email,
+      passwordHash,
+      role: UserRole.STAFF,
+    },
+  });
+
+  res.status(201).json(staff);
+});
 export default router;

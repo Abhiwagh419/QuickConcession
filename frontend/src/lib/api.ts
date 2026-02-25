@@ -1,13 +1,29 @@
 const API = import.meta.env.VITE_API_URL;
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
-  const token =
-    localStorage.getItem("staffToken") ||
-    localStorage.getItem("jwt");
+  const staffToken = localStorage.getItem("staffToken");
+  const studentToken = localStorage.getItem("jwt");
 
-  const headers: Record<string, string> = {
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
+  let token: string | null = null;
+
+  // Decide token based on route
+  if (path.startsWith("/admin") || path.startsWith("/staff")) {
+    token = staffToken;
+  } else {
+    token = studentToken;
+  }
+
+  // DO NOT attach token for login / OTP routes
+  const isAuthRoute =
+    path.startsWith("/auth/login") ||
+    path.startsWith("/auth/verify-otp") ||
+    path.startsWith("/auth/staff/login");
+
+  const headers: Record<string, string> = {};
+
+  if (!isAuthRoute && token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
 
   // Only set JSON header if body is NOT FormData
   if (!(options.body instanceof FormData)) {

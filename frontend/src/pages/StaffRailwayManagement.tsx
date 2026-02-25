@@ -65,7 +65,16 @@ const StaffRailwayManagement = () => {
     const fetchApplications = async () => {
       try {
         const data = await getStaffApplications();
-        setApplications(data);
+
+        const combined = [...(data.pending || []), ...(data.personal || [])];
+
+        // Remove duplicates (if same app appears in both)
+        const uniqueMap = new Map();
+        combined.forEach((app) => {
+          uniqueMap.set(app.id, app);
+        });
+
+        setApplications(Array.from(uniqueMap.values()));
       } catch (err) {
         console.error("Failed to load applications", err);
       } finally {

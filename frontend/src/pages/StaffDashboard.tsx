@@ -164,20 +164,25 @@ const StaffDashboard = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const data = await getStaffApplications();
-        setPendingApps(data.pending);
-        setPersonalApps(data.personal);
-      } catch (err) {
-        console.error("Failed to fetch applications", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchApplications();
-  }, []);
+useEffect(() => {
+  const fetchApplications = async () => {
+    try {
+      const data = await getStaffApplications();
+      console.log("Staff API response:", data);
+
+      setPendingApps(data.pending || []);
+      setPersonalApps(data.personal || []);
+    } catch (err) {
+      console.error("Failed to fetch applications", err);
+      setPendingApps([]);
+      setPersonalApps([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchApplications();
+}, []);
 
   const handleSearchStudent = async () => {
     if (!enrollmentNo.trim()) return;

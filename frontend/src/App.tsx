@@ -24,6 +24,7 @@ import AddStudent from "@/pages/AddStudent";
 import AdminStaff from "@/pages/AdminStaff";
 import AddStaff from "@/pages/AddStaff";
 import ImportStaff from "@/pages/ImportStaff";
+import AdminApplications from "./pages/AdminApplications";
 
 const queryClient = new QueryClient();
 function AnimatedRoutes() {
@@ -119,6 +120,8 @@ function AnimatedRoutes() {
             </RequireAdmin>
           }
         />
+
+        <Route path="/admin/applications" element={<AdminApplications />} />
       </Routes>
     </AnimatePresence>
   );
