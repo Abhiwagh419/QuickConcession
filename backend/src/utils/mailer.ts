@@ -1,14 +1,6 @@
-import * as nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.sendgrid.net",
-  port: 587,
-  secure: false,
-  auth: {
-    user: "apikey",
-    pass: process.env.SENDGRID_API_KEY,
-  },
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 export const sendOtpMail = async (
   to: string,
@@ -18,10 +10,10 @@ export const sendOtpMail = async (
   device: string,
   loginTime: string,
 ) => {
-  await transporter.sendMail({
-    from: `"QuickConcession" <quickconcession@gmail.com>`,
-    to,
-    subject: "Verification Code for QuickConcession Student Portal",
+  await sgMail.send({
+  to,
+  from: "quickconcession@gmail.com",
+  subject: "Verification Code for QuickConcession Student Portal",
     html: `
     <!DOCTYPE html>
 <html>
@@ -169,10 +161,10 @@ export const sendPasswordResetOtpMail = async (
   device: string,
   requestTime: string,
 ) => {
-  await transporter.sendMail({
-    from: `"QuickConcession" <${process.env.SMTP_USER}>`,
-    to,
-    subject: "QuickConcession – Password Reset OTP",
+  await sgMail.send({
+  to,
+  from: "quickconcession@gmail.com",
+  subject: "QuickConcession - Password Reset OTP",
     html: `
      <!DOCTYPE html>
 <html>
@@ -319,10 +311,10 @@ export const sendStaffPasswordResetOtpMail = async (
   device: string,
   requestTime: string,
 ) => {
-  await transporter.sendMail({
-    from: `"QuickConcession" <${process.env.SMTP_USER}>`,
-    to,
-    subject: "QuickConcession – Staff Password Reset OTP",
+  await sgMail.send({
+  to,
+  from: "quickconcession@gmail.com", 
+  subject: "QuickConcession - Staff Password Reset OTP",
     html: `
       <!DOCTYPE html>
 <html>
@@ -477,10 +469,10 @@ export const sendStaffLoginOtpMail = async (
   device: string,
   loginTime: string,
 ) => {
-  await transporter.sendMail({
-    from: `"QuickConcession" <${process.env.SMTP_USER}>`,
-    to,
-    subject: "Verification Code for QuickConcession Staff Portal",
+  await sgMail.send({
+  to,
+  from: "quickconcession@gmail.com", // verified sender
+  subject: "Verification Code for QuickConcession Staff Portal",
     html: `
       <!DOCTYPE html>
 <html>

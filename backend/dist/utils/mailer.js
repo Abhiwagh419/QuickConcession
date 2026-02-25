@@ -1,53 +1,15 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendStaffLoginOtpMail = exports.sendStaffPasswordResetOtpMail = exports.sendPasswordResetOtpMail = exports.sendOtpMail = void 0;
-const nodemailer = __importStar(require("nodemailer"));
-const transporter = nodemailer.createTransport({
-    host: "smtp.sendgrid.net",
-    port: 587,
-    secure: false,
-    auth: {
-        user: "apikey",
-        pass: process.env.SENDGRID_API_KEY,
-    },
-});
+const mail_1 = __importDefault(require("@sendgrid/mail"));
+mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
 const sendOtpMail = async (to, otp, studentName, ipAddress, device, loginTime) => {
-    await transporter.sendMail({
-        from: `"QuickConcession" <quickconcession@gmail.com>`,
+    await mail_1.default.send({
         to,
+        from: "quickconcession@gmail.com",
         subject: "Verification Code for QuickConcession Student Portal",
         html: `
     <!DOCTYPE html>
@@ -189,10 +151,10 @@ box-shadow:0 10px 35px rgba(0,0,0,0.06);">
 };
 exports.sendOtpMail = sendOtpMail;
 const sendPasswordResetOtpMail = async (to, otp, studentName, ipAddress, device, requestTime) => {
-    await transporter.sendMail({
-        from: `"QuickConcession" <${process.env.SMTP_USER}>`,
+    await mail_1.default.send({
         to,
-        subject: "QuickConcession – Password Reset OTP",
+        from: "quickconcession@gmail.com",
+        subject: "QuickConcession - Password Reset OTP",
         html: `
      <!DOCTYPE html>
 <html>
@@ -332,10 +294,10 @@ box-shadow:0 10px 35px rgba(0,0,0,0.06);">
 };
 exports.sendPasswordResetOtpMail = sendPasswordResetOtpMail;
 const sendStaffPasswordResetOtpMail = async (to, otp, staffName, ipAddress, device, requestTime) => {
-    await transporter.sendMail({
-        from: `"QuickConcession" <${process.env.SMTP_USER}>`,
+    await mail_1.default.send({
         to,
-        subject: "QuickConcession – Staff Password Reset OTP",
+        from: "quickconcession@gmail.com",
+        subject: "QuickConcession - Staff Password Reset OTP",
         html: `
       <!DOCTYPE html>
 <html>
@@ -483,9 +445,9 @@ box-shadow:0 12px 40px rgba(0,0,0,0.07);">
 };
 exports.sendStaffPasswordResetOtpMail = sendStaffPasswordResetOtpMail;
 const sendStaffLoginOtpMail = async (to, otp, staffName, ipAddress, device, loginTime) => {
-    await transporter.sendMail({
-        from: `"QuickConcession" <${process.env.SMTP_USER}>`,
+    await mail_1.default.send({
         to,
+        from: "quickconcession@gmail.com", // verified sender
         subject: "Verification Code for QuickConcession Staff Portal",
         html: `
       <!DOCTYPE html>
