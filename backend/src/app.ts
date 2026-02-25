@@ -15,22 +15,18 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:8080",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
-app.use(express.json());
-
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "http://localhost:8080"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:8080",
+      "https://quickconcession.onrender.com",
+      "https://your-frontend-domain.vercel.app"
+    ],
     credentials: true,
-  }),
+  })
 );
 
-app.use(helmet());
 app.use(express.json());
+app.use(helmet());
 app.use("/auth", authRoutes);
 app.use("/student", studentRoutes);
 app.use("/concession", concessionRoutes);
