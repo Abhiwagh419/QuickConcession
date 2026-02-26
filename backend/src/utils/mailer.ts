@@ -1,17 +1,17 @@
-import sgMail from "@sendgrid/mail";
+import { Resend } from "resend";
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
 const sendMail = async (to: string, subject: string, html: string) => {
   try {
-    await sgMail.send({
+    await resend.emails.send({
+      from: "QuickConcession <onboarding@resend.dev>", // demo sender
       to,
-      from: `QuickConcession <${process.env.SENDGRID_VERIFIED_SENDER}>`,
       subject,
       html,
     });
   } catch (error: any) {
-    console.error("SendGrid error:", error.response?.body || error.message);
+    console.error("Resend error:", error?.message || error);
     throw error;
   }
 };
