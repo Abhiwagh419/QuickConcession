@@ -23,9 +23,9 @@ export const sendOtpMail = async (
   to: string,
   otp: string,
   studentName: string,
-  ipAddress: string,
-  device: string,
-  loginTime: string
+  ipAddress?: string,
+  device?: string,
+  loginTime?: string
 ) => {
   await sendMail(
     to,
@@ -40,7 +40,10 @@ export const sendOtpMail = async (
 export const sendPasswordResetOtpMail = async (
   to: string,
   otp: string,
-  studentName: string
+  studentName: string,
+  ipAddress?: string,
+  device?: string,
+  requestTime?: string
 ) => {
   await sendMail(
     to,
@@ -55,7 +58,10 @@ export const sendPasswordResetOtpMail = async (
 export const sendStaffLoginOtpMail = async (
   to: string,
   otp: string,
-  staffName: string
+  staffName: string,
+  ipAddress?: string,
+  device?: string,
+  loginTime?: string
 ) => {
   await sendMail(
     to,
@@ -70,7 +76,10 @@ export const sendStaffLoginOtpMail = async (
 export const sendStaffPasswordResetOtpMail = async (
   to: string,
   otp: string,
-  staffName: string
+  staffName: string,
+  ipAddress?: string,
+  device?: string,
+  requestTime?: string
 ) => {
   await sendMail(
     to,
