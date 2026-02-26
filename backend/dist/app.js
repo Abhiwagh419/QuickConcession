@@ -21,7 +21,7 @@ app.use((0, cors_1.default)({
         "http://localhost:5173",
         "http://localhost:8080",
         "https://quickconcession.onrender.com",
-        "https://your-frontend-domain.vercel.app"
+        "https://quick-concession.vercel.app"
     ],
     credentials: true,
 }));
