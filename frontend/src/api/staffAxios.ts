@@ -1,14 +1,15 @@
 import axios from "axios";
 
 export const staffAxios = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
 });
 
 staffAxios.interceptors.request.use((config) => {
   const token = localStorage.getItem("staffToken");
 
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers?.set("Authorization", `Bearer ${token}`);
   }
 
   return config;
