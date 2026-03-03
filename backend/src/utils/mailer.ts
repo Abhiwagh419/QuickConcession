@@ -5,7 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY!);
 const sendMail = async (to: string, subject: string, html: string) => {
   try {
     await resend.emails.send({
-      from: "QuickConcession <onboarding@resend.dev>", // demo sender
+      from: "QuickConcession <otp@quickconcession.online>",
       to,
       subject,
       html,
