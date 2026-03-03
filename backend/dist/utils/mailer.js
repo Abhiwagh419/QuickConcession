@@ -1,22 +1,19 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendStaffPasswordResetOtpMail = exports.sendStaffLoginOtpMail = exports.sendPasswordResetOtpMail = exports.sendOtpMail = void 0;
-const mail_1 = __importDefault(require("@sendgrid/mail"));
-mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
+const resend_1 = require("resend");
+const resend = new resend_1.Resend(process.env.RESEND_API_KEY);
 const sendMail = async (to, subject, html) => {
     try {
-        await mail_1.default.send({
+        await resend.emails.send({
+            from: "QuickConcession <otp@quickconcession.online>",
             to,
-            from: `QuickConcession <${process.env.SENDGRID_VERIFIED_SENDER}>`,
             subject,
             html,
         });
     }
     catch (error) {
-        console.error("SendGrid error:", error.response?.body || error.message);
+        console.error("Resend error:", error?.message || error);
         throw error;
     }
 };
