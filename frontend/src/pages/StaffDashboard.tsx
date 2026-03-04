@@ -164,25 +164,25 @@ const StaffDashboard = () => {
     }
   };
 
-useEffect(() => {
-  const fetchApplications = async () => {
-    try {
-      const data = await getStaffApplications();
-      console.log("Staff API response:", data);
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const data = await getStaffApplications();
+        console.log("Staff API response:", data);
 
-      setPendingApps(data.pending || []);
-      setPersonalApps(data.personal || []);
-    } catch (err) {
-      console.error("Failed to fetch applications", err);
-      setPendingApps([]);
-      setPersonalApps([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setPendingApps(data.pending || []);
+        setPersonalApps(data.personal || []);
+      } catch (err) {
+        console.error("Failed to fetch applications", err);
+        setPendingApps([]);
+        setPersonalApps([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchApplications();
-}, []);
+    fetchApplications();
+  }, []);
 
   const handleSearchStudent = async () => {
     if (!enrollmentNo.trim()) return;
@@ -226,7 +226,8 @@ useEffect(() => {
         alert("Not authenticated");
         return;
       }
-      let url = `http://localhost:4000/staff/concessions/export`;
+      const API = import.meta.env.VITE_API_URL;
+      let url = `${API}/staff/concessions/export`;
       const params = new URLSearchParams();
       if (range) params.append("range", range);
       if (from && to) {
