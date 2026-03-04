@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">quickconcession</string>
+    <string name="title_activity_main">quickconcession</string>
+    <string name="package_name">com.quickconcession.app</string>
+    <string name="custom_url_scheme">com.quickconcession.app</string>
+</resources>

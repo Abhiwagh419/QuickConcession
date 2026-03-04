@@ -1,0 +1,5 @@
+{
+  "appId": "com.quickconcession.app",
+  "appName": "quickconcession",
+  "webDir": "frontend/dist"
+}

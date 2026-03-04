@@ -302,7 +302,7 @@ const AdminDashboard = () => {
 const exportExcel = async () => {
   try {
     const response = await fetch(
-      "http://localhost:4000/admin/export/excel",
+      "https://quickconcession.onrender.com/admin/export/excel",
       {
         headers: {
           Authorization: `Bearer ${
