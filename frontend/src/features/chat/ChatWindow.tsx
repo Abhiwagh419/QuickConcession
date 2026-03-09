@@ -82,21 +82,23 @@ style={{
     initial={{ opacity: 0, y: 6 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.15 }}
-    className={`
-      inline-block
-      hover:scale-[1.01] transition-transform
-      max-w-[55%]
-      px-4 py-2
-      rounded-2xl
-      text-sm
-      shadow
-      break-words
-      ${
-        m.senderId === userId
-          ? "ml-auto bg-[#075e54] text-white"
-          : "mr-auto bg-white text-black"
-      }
-    `}
+   className={`
+  inline-block
+  hover:scale-[1.01] transition-transform
+  max-w-[65%]
+  px-4 py-2
+  rounded-2xl
+  text-sm
+  shadow
+  break-words
+  whitespace-pre-wrap
+  overflow-hidden
+  ${
+    m.senderId === userId
+      ? "ml-auto bg-[#075e54] text-white"
+      : "mr-auto bg-white text-black"
+  }
+`}
   >
     <p>{m.text}</p>
 
