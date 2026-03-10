@@ -24,7 +24,7 @@ export default function StudentHelpDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-2xl p-0 overflow-hidden">
         <DialogHeader>
           <DialogTitle>Help & Support</DialogTitle>
         </DialogHeader>
@@ -41,7 +41,7 @@ export default function StudentHelpDialog({
             </Button>
           </div>
         ) : (
-          <div className="h-[420px] flex flex-col">
+          <div className="h-[450px] w-full flex flex-col">
   <ChatWindow
     chatId={enrollmentNo}
     userId={enrollmentNo}

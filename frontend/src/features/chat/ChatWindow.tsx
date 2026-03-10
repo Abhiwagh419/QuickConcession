@@ -47,7 +47,7 @@
         {/* SCROLLABLE MESSAGE AREA */}
         <div
           ref={scrollRef}
-          className="flex-1 overflow-y-auto px-6 py-4 space-y-3"
+          className="flex flex-col flex-1 overflow-y-auto px-6 py-4 space-y-3"
   style={{
     backgroundImage: "url('/src/assets/chat-bg.png')",
     backgroundSize: "cover",
