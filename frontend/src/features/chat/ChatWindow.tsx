@@ -35,7 +35,6 @@ export default function ChatWindow({
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // ✅ Scroll to bottom ALWAYS
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -82,7 +81,7 @@ style={{
     initial={{ opacity: 0, y: 6 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.15 }}
-   className={`
+ className={`
   inline-block
   hover:scale-[1.01] transition-transform
   max-w-[65%]
