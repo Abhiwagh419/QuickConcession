@@ -220,22 +220,22 @@ const NewConcessionApplication = () => {
     return railwayLines.find((l) => l.id === lineId)?.name || lineId;
   };
 
-  const selectTriggerClass = (field: string) =>
-    `h-9 rounded-lg border-border bg-background text-sm ${
-      errors[field] ? "border-destructive" : ""
-    }`;
+const selectTriggerClass = (field: string) =>
+  `w-full h-9 rounded-lg border border-slate-300 bg-white text-sm ${
+    errors[field] ? "border-destructive" : ""
+  }`;
 
-  const disabledTriggerClass = (field: string) =>
-    `h-9 rounded-lg border-border bg-muted/40 text-sm ${
-      errors[field] ? "border-destructive" : ""
-    }`;
+const disabledTriggerClass = (field: string) =>
+  `w-full h-9 rounded-lg border border-slate-200 bg-slate-100 text-sm ${
+    errors[field] ? "border-destructive" : ""
+  }`;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <StudentHeader />
 
       <PageWrapper>
-        <main className="container mx-auto max-w-3xl space-y-6 px-4 py-8">
+        <main className="mx-auto w-full max-w-3xl space-y-6 px-4 py-8">
           {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div {...fadeIn(0)}>
             <div className="flex items-center gap-2.5">
@@ -402,7 +402,7 @@ const NewConcessionApplication = () => {
                               }
                             />
                           </SelectTrigger>
-                          <SelectContent className="bg-card max-h-60">
+                         <SelectContent className="bg-white max-h-60 overflow-y-scroll">
                             {fromStations.map((station) => (
                               <SelectItem key={station} value={station}>
                                 {station}
@@ -467,7 +467,7 @@ const NewConcessionApplication = () => {
                               }
                             />
                           </SelectTrigger>
-                          <SelectContent className="bg-card max-h-60">
+                          <SelectContent className="bg-white max-h-60 overflow-y-scroll">
                             {toStations.map((station) => (
                               <SelectItem key={station} value={station}>
                                 {station}

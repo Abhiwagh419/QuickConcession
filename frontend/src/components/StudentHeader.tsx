@@ -58,7 +58,7 @@ const StudentHeader = () => {
         <div className="flex items-center justify-between px-6 h-[72px]">
           {/* LEFT — Brand identity */}
           <div className="flex items-center gap-4 min-w-0">
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-black text-white shadow-sm">
               <GraduationCap className="h-[18px] w-[18px]" />
               <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[hsl(var(--header-status))] border-2 border-header-surface" />
             </div>
@@ -99,7 +99,7 @@ const StudentHeader = () => {
             {/* Profile button */}
             <button
               onClick={() => navigate("/student/profile")}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-150 hover:bg-accent"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-150 hover:bg-slate-100"
             >
               {student ? (
                 <>
@@ -111,7 +111,7 @@ const StudentHeader = () => {
                       {student.enrollmentNo}
                     </p>
                   </div>
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/[0.08] text-primary text-[12px] font-semibold tracking-wide">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 text-[12px] font-semibold tracking-wide">
                     {initials}
                   </div>
                 </>
@@ -132,7 +132,7 @@ const StudentHeader = () => {
             {/* Logout */}
             <button
               onClick={handleLogout}
-              className="group flex items-center gap-2 px-3.5 py-2 text-[13px] font-medium text-muted-foreground rounded-lg transition-all duration-150 hover:bg-destructive/[0.06] hover:text-destructive"
+              className="group flex items-center gap-2 px-3.5 py-2 text-[13px] font-medium text-muted-foreground rounded-lg transition-all duration-150 hover:bg-red-50 hover:text-destructive"
             >
               <LogOut className="h-[15px] w-[15px] transition-transform duration-150 group-hover:-translate-x-0.5" />
               <span className="hidden sm:inline">Sign out</span>

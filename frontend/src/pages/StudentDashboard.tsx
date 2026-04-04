@@ -229,7 +229,7 @@ const StudentDashboard = () => {
           >
             <div>
               <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-black">
                   <Train className="h-4 w-4 text-white" />
                 </div>
                 <h1 className="text-xl font-bold tracking-tight text-slate-800">
@@ -262,8 +262,8 @@ const StudentDashboard = () => {
                 <SectionLabel>Student Identity</SectionLabel>
                 <Panel className="overflow-hidden">
                   <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
-                      <User className="h-5 w-5 text-blue-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
+                      <User className="h-5 w-5 text-black" />
                     </div>
                     <div>
                       <h2 className="text-sm font-semibold text-slate-800">
@@ -372,7 +372,7 @@ const StudentDashboard = () => {
                         <Button
                           size="sm"
                           onClick={() => navigate("/student/railway")}
-                          className="h-8 rounded-lg bg-blue-600 px-4 text-[13px] font-semibold text-white hover:bg-blue-700 transition-colors"
+                          className="h-8 rounded-lg bg-black px-4 text-[13px] font-semibold text-white hover:bg-slate-900 transition-colors"
                         >
                           Apply Now
                           <ChevronRight className="ml-1 h-3.5 w-3.5" />
@@ -406,10 +406,10 @@ const StudentDashboard = () => {
                           ease: EASE_OUT,
                           delay: 0.18 + i * 0.05,
                         }}
-                        className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors duration-150 hover:bg-blue-50 group"
+                        className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors duration-150 hover:bg-slate-100 group"
                       >
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 group-hover:bg-blue-100 transition-colors duration-150">
-                          <s.icon className="h-4 w-4 text-slate-500 group-hover:text-blue-600 transition-colors duration-150" />
+                          <s.icon className="h-4 w-4 text-slate-500 group-hover:text-black transition-colors duration-150" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-[13px] font-semibold text-slate-700 group-hover:text-blue-700 truncate">
@@ -429,9 +429,9 @@ const StudentDashboard = () => {
 
             {/* ── Notice Banner (full width) ─────────────────────────── */}
             <motion.div {...fadeIn(0.3)} className="col-span-1 lg:col-span-3">
-              <div className="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 px-5 py-4">
-                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-blue-500" />
-                <p className="text-[13px] text-blue-800 leading-relaxed">
+              <div className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-100 px-5 py-4">
+                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-slate-500" />
+                <p className="text-[13px] text-slate-800 leading-relaxed">
                   <span className="font-semibold">Notice:</span> For any issues
                   with the portal, please contact the IT Department during
                   office hours{" "}
