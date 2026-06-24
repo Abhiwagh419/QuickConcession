@@ -100,24 +100,36 @@ const AdminLoginForm = () => {
       )}
 
       <div className="space-y-2">
-        <Label>Email</Label>
-        <Input
-          type="text"
-          placeholder="Admin email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
+  <Label>Email</Label>
 
-      <div className="space-y-2">
-        <Label>Password</Label>
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
+  <div className="relative">
+    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+
+    <Input
+      type="text"
+      placeholder="Admin email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      className="pl-10"
+    />
+  </div>
+</div>
+
+<div className="space-y-2">
+  <Label>Password</Label>
+
+  <div className="relative">
+    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+
+    <Input
+      type="password"
+      placeholder="Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      className="pl-10"
+    />
+  </div>
+</div>
 
       {!otpSent ? (
         <Button type="submit" disabled={isSendingOtp} className="w-full">
