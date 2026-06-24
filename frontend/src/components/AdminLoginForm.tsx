@@ -137,16 +137,18 @@ const AdminLoginForm = () => {
         </Button>
       ) : (
         <>
-          <div className="space-y-2">
-            <Label>OTP</Label>
-            <Input
-              type="text"
-              value={otp}
-              onChange={(e) =>
-                setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
-              }
-            />
-          </div>
+          <div className="relative">
+  <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+
+  <Input
+    type="text"
+    value={otp}
+    onChange={(e) =>
+      setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+    }
+    className="pl-10"
+  />
+</div>
 
           <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? "Verifying..." : "Login"}
