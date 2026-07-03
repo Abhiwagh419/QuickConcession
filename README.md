@@ -1,17 +1,30 @@
-# QuickConcession  
-Student Railway Concession Management System
+# QuickConcession
 
-QuickConcession is a full-stack web application developed to digitize the railway concession workflow for students of Government Polytechnic Mumbai.  
-The system replaces the traditional manual process with a secure, role-based online platform for students and staff.
+**Student Railway Concession Management System**
+
+QuickConcession is a full-stack web application developed to digitize the railway concession workflow for students of Government Polytechnic Mumbai. The system replaces the traditional manual process with a secure, role-based online platform for students and staff.
+
+**Live Demo:** [quick-concession.vercel.app](https://quick-concession.vercel.app)
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation & Setup](#installation--setup)
+- [Security Notes](#security-notes)
+- [Author](#author)
+- [License](#license)
 
 ---
 
 ## Overview
 
-The application allows students to apply for railway concessions online and enables staff members to review, approve, or reject applications through a centralized system.  
-Authentication is implemented using enrollment credentials with email-based OTP verification for additional security.
+The application allows students to apply for railway concessions online and enables staff members to review, approve, or reject applications through a centralized system. Authentication is implemented using enrollment credentials with email-based OTP verification for additional security.
 
-This project is developed as an academic and real-world problem–oriented system.
+This project was built end-to-end — from database design to deployment — as a real-world problem-oriented system addressing a genuine institutional workflow.
 
 ---
 
@@ -34,46 +47,35 @@ This project is developed as an academic and real-world problem–oriented syste
 
 ## Tech Stack
 
-### Frontend
-- React.js
-- Vite
-- TypeScript
-
-### Backend
-- Node.js
-- Express.js
-
-### Database
-- PostgreSQL
-
-### Authentication
-- Credential-based login
-- Email OTP verification
-- Role-based access control
+| Layer | Technology |
+|---|---|
+| **Frontend** | React.js, Vite, TypeScript |
+| **Backend** | Node.js, Express.js |
+| **Database** | PostgreSQL |
+| **Authentication** | Credential-based login, Email OTP, Role-based access control |
 
 ---
 
 ## Installation & Setup
+
+> **Note:** These setup instructions are provided for transparency and evaluation purposes only. Running this code locally does not grant any rights to use, modify, or redistribute it. See [License](#license).
 
 ### Prerequisites
 - Node.js (v18 or above recommended)
 - PostgreSQL
 - npm
 
----
-
 ### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/Abhiwagh419/QuickConcession.git
-````
-
----
+```
 
 ### 2. Environment Variables
 
 Environment configuration files are excluded from version control and must be created manually.
 
-#### Backend `.env`
+**Backend `.env`**
 
 Create a `.env` file inside the `backend` directory with the following variables:
 
@@ -93,15 +95,11 @@ JWT_SECRET=your_secret_key
 
 > Ensure the email credentials support SMTP access (App Password recommended).
 
----
-
 ### 3. Database Setup
 
-* Create a PostgreSQL database
-* Import the provided SQL schema (if available)
-* Verify database credentials in the `.env` file
-
----
+- Create a PostgreSQL database
+- Import the provided SQL schema (if available)
+- Verify database credentials in the `.env` file
 
 ### 4. Backend Setup
 
@@ -110,8 +108,6 @@ cd backend
 npm install
 npm run dev
 ```
-
----
 
 ### 5. Frontend Setup
 
@@ -125,20 +121,26 @@ npm run dev
 
 ## Security Notes
 
-* Sensitive credentials are stored using environment variables
-* OTP verification adds an additional authentication layer
-* Server-side validation is enforced for all critical operations
+- Sensitive credentials are stored using environment variables
+- OTP verification adds an additional authentication layer
+- Server-side validation is enforced for all critical operations
 
 ---
 
 ## Author
 
-Abhishek Chintamani Wagh<br>
-Diploma in Computer Engineering<br>
+**Abhishek Chintamani Wagh**
+Diploma in Computer Engineering
 Government Polytechnic Mumbai
+
+[GitHub](https://github.com/Abhiwagh419)
 
 ---
 
 ## License
 
-This project is intended for academic and educational use.
+This project is **source-available for viewing purposes only**. All rights are reserved by the author.
+
+No part of this codebase — including its design, structure, or logic — may be copied, modified, distributed, sublicensed, or used in any other project, whether personal, academic, or commercial, without explicit prior written permission from the author.
+
+See the [LICENSE](./LICENSE) file for full terms.
