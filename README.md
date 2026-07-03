@@ -2,9 +2,9 @@
 
 **Student Railway Concession Management System**
 
-QuickConcession is a full-stack web application developed to digitize the railway concession workflow for students of Government Polytechnic Mumbai. The system replaces the traditional manual process with a secure, role-based online platform for students and staff.
+QuickConcession is a full-stack web application built to digitize the railway concession workflow for students of Government Polytechnic Mumbai. It replaces the manual, paper-based process with a secure, role-based platform spanning three tiers of access — **Student**, **Staff**, and **Admin** — covering everything from application submission to approval, issuance, expiry, and reporting.
 
-**Live Demo:** [quick-concession.vercel.app](https://quick-concession.vercel.app)
+**Live Demo:** [quickconcession.online](https://quickconcession.online)
 
 ---
 
@@ -13,6 +13,7 @@ QuickConcession is a full-stack web application developed to digitize the railwa
 - [Overview](#overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
 - [Installation & Setup](#installation--setup)
 - [Security Notes](#security-notes)
 - [Author](#author)
@@ -22,26 +23,43 @@ QuickConcession is a full-stack web application developed to digitize the railwa
 
 ## Overview
 
-The application allows students to apply for railway concessions online and enables staff members to review, approve, or reject applications through a centralized system. Authentication is implemented using enrollment credentials with email-based OTP verification for additional security.
+QuickConcession allows students to apply for railway concessions online and enables staff and administrators to review, approve, reject, and issue applications through a centralized dashboard. Authentication for both students and staff uses credential-based login combined with email OTP verification. An admin tier sits above staff, with full control over student and staff records, bulk data import, analytics, and system-wide reporting.
 
-This project was built end-to-end — from database design to deployment — as a real-world problem-oriented system addressing a genuine institutional workflow.
+This project was designed and built end-to-end — from database schema to deployment — as a real-world system addressing a genuine institutional workflow, not a tutorial or template project.
 
 ---
 
 ## Features
 
 ### Student
-- Login using Enrollment Number and Password
-- Email-based OTP verification
-- Online railway concession application
-- Application status tracking
-- Profile management (Semester, Shift, etc.)
+- Login using Enrollment Number and Password, with email OTP verification
+- Forgot password flow with OTP-based reset
+- Submit new railway concession applications (station, route/line, class, duration)
+- Track application status (Pending / Approved / Rejected / Issued / Expired)
+- View and update profile details (course, year, semester, shift, address, DOB)
+- In-app real-time chat with staff for query resolution
 
 ### Staff
-- Secure staff authentication
-- View student concession applications
-- Approve or reject applications
-- Access structured student records
+- Secure login with email OTP verification and dedicated password reset flow
+- View, approve, or reject student concession applications
+- Manage and search student records
+- Access a railway route/station management panel
+- Real-time chat with students
+
+### Admin
+- All staff capabilities, plus full administrative control
+- Dashboard with system-wide analytics (total students, staff, applications, and status breakdown)
+- Create, update, activate/deactivate, soft-delete, and restore student and staff accounts
+- Reset student and staff passwords directly
+- Bulk import students and staff via CSV, with row-level validation and a preview/confirm step before committing to the database
+- Export students, staff, and applications to Excel
+- Per-student analytics (approval rate, application history breakdown)
+- Full visibility into every concession application across the system
+
+### System-level
+- Automatic expiry of issued concessions via a scheduled cron job
+- Role-based access control enforced at the API level (Student / Staff / Admin)
+- Centralized email delivery for OTPs and notifications
 
 ---
 
@@ -49,10 +67,40 @@ This project was built end-to-end — from database design to deployment — as 
 
 | Layer | Technology |
 |---|---|
-| **Frontend** | React.js, Vite, TypeScript |
-| **Backend** | Node.js, Express.js |
-| **Database** | PostgreSQL |
-| **Authentication** | Credential-based login, Email OTP, Role-based access control |
+| **Frontend** | React, Vite, TypeScript, Tailwind CSS, shadcn/ui, Radix UI, React Router, React Query, React Hook Form + Zod, Recharts, Framer Motion |
+| **Backend** | Node.js, Express 5, TypeScript |
+| **Database & ORM** | PostgreSQL, Prisma |
+| **Authentication** | JWT, bcrypt, email OTP verification, role-based access control (Student / Staff / Admin) |
+| **Email Delivery** | Resend |
+| **Real-time Chat** | Firebase (Firestore) |
+| **Data Tools** | ExcelJS (export), csv-parse (bulk import), Multer (file uploads) |
+| **Scheduling** | node-cron (automatic concession expiry) |
+| **Security Middleware** | Helmet, CORS |
+| **Deployment** | Vercel (frontend), Render (backend) |
+
+---
+
+## Project Structure
+
+```
+QuickConcession/
+├── backend/
+│   ├── prisma/
+│   │   ├── schema.prisma        # Student, Staff, ConcessionApplication, OTP models
+│   │   └── migrations/
+│   └── src/
+│       ├── controllers/         # Student, staff, and admin business logic
+│       ├── routes/               # /auth, /student, /staff, /admin, /concession
+│       ├── middleware/           # requireAuth, requireStaff, requireAdmin
+│       ├── cron/                 # Scheduled concession expiry
+│       └── utils/                # Mailer, OTP, JWT, password helpers
+└── frontend/
+    └── src/
+        ├── pages/                 # Student, Staff, and Admin dashboards & flows
+        ├── components/            # Shared UI, role-specific forms and dialogs
+        ├── features/chat/         # Real-time student–staff chat
+        └── api/                   # Axios clients per role
+```
 
 ---
 
@@ -75,31 +123,41 @@ git clone https://github.com/Abhiwagh419/QuickConcession.git
 
 Environment configuration files are excluded from version control and must be created manually.
 
-**Backend `.env`**
-
-Create a `.env` file inside the `backend` directory with the following variables:
+**Backend `.env`** (inside the `backend` directory)
 
 ```env
-PORT=5000
+PORT=4000
 
-DB_HOST=localhost
-DB_USER=your_db_username
-DB_PASSWORD=your_db_password
-DB_NAME=your_database_name
-
-EMAIL_USER=your_email_address
-EMAIL_PASS=your_email_app_password
+DATABASE_URL=postgresql://your_db_username:your_db_password@localhost:5432/your_database_name
 
 JWT_SECRET=your_secret_key
+
+RESEND_API_KEY=your_resend_api_key
+
+MAIL_USER=your_email_address
+MAIL_PASS=your_email_app_password
+
+OTP_EXPIRY_MINUTES=10
 ```
 
-> Ensure the email credentials support SMTP access (App Password recommended).
+> Email delivery uses [Resend](https://resend.com) as the primary provider, with Nodemailer/Gmail as a secondary path — configure whichever your deployment relies on.
+
+**Frontend `.env`** (inside the `frontend` directory)
+
+```env
+VITE_API_URL=http://localhost:4000
+```
 
 ### 3. Database Setup
 
-- Create a PostgreSQL database
-- Import the provided SQL schema (if available)
-- Verify database credentials in the `.env` file
+The schema is managed with Prisma. From the `backend` directory:
+
+```bash
+npx prisma migrate deploy
+npx prisma generate
+```
+
+This creates the `Student`, `Staff`, `ConcessionApplication`, and `OtpVerification` tables along with all required enums.
 
 ### 4. Backend Setup
 
@@ -121,9 +179,12 @@ npm run dev
 
 ## Security Notes
 
-- Sensitive credentials are stored using environment variables
-- OTP verification adds an additional authentication layer
-- Server-side validation is enforced for all critical operations
+- Passwords are hashed with bcrypt before storage; plaintext credentials are never persisted
+- Sensitive configuration (database URL, JWT secret, email provider keys) is managed via environment variables, excluded from version control
+- OTP verification adds a second authentication factor for both student and staff logins
+- All admin and staff routes are protected by role-based middleware (`requireAuth`, `requireStaff`, `requireAdmin`) enforced server-side
+- Helmet is used to set secure HTTP headers, and CORS is restricted to a defined allowlist of origins
+- Soft-delete is used for student and staff records, preserving historical data integrity while restricting access
 
 ---
 
