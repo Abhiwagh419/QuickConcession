@@ -27,7 +27,6 @@ const AdminStaff = () => {
   const [selectedStaff, setSelectedStaff] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
-  // ================= LOAD STAFF =================
 
   const loadStaff = async () => {
     try {
@@ -44,8 +43,6 @@ const AdminStaff = () => {
     loadStaff();
   }, [showDeleted]);
 
-  // ================= OPEN DETAILS =================
-
   const openStaffDetails = async (id: number) => {
     try {
       const fullData = await apiFetch(`/admin/staff/${id}`);
@@ -55,8 +52,6 @@ const AdminStaff = () => {
       console.error("Failed to fetch staff details:", err);
     }
   };
-
-  // ================= ACTIONS =================
 
   const handleToggleActive = async (id: number) => {
     await apiFetch(`/admin/staff/${id}/toggle`, { method: "PATCH" });
@@ -74,15 +69,11 @@ const AdminStaff = () => {
     loadStaff();
   };
 
-  // ================= FILTER =================
-
   const filteredStaff = staffList.filter(
     (s) =>
       s.fullName.toLowerCase().includes(search.toLowerCase()) ||
       s.email.toLowerCase().includes(search.toLowerCase()),
   );
-
-  // ================= UI =================
 
   return (
     <div className="min-h-screen bg-background">
@@ -90,7 +81,6 @@ const AdminStaff = () => {
 
       <PageWrapper>
         <main className="container mx-auto px-4 py-6 max-w-7xl">
-          {/* TITLE */}
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold flex items-center gap-2">
               <Users className="w-6 h-6 text-primary" />
@@ -118,7 +108,6 @@ const AdminStaff = () => {
             </div>
           </div>
 
-          {/* SEARCH */}
           <Card className="mb-6">
             <CardContent className="p-4 flex items-center gap-4">
               <Search className="w-5 h-5 text-muted-foreground" />
@@ -130,7 +119,6 @@ const AdminStaff = () => {
             </CardContent>
           </Card>
 
-          {/* TABLE */}
           <Card>
             <CardHeader>
               <CardTitle>
@@ -164,7 +152,6 @@ const AdminStaff = () => {
                   ) : (
                     filteredStaff.map((staff) => (
                       <tr key={staff.id} className="border-b hover:bg-muted/50">
-                        {/* NAME — click to open dialog */}
                         <td
                           className="py-3 cursor-pointer hover:text-primary font-medium"
                           onClick={() => openStaffDetails(staff.id)}
@@ -249,7 +236,6 @@ const AdminStaff = () => {
             </CardContent>
           </Card>
 
-          {/* DIALOG */}
           <AdminStaffDialog
             open={dialogOpen}
             onClose={() => setDialogOpen(false)}

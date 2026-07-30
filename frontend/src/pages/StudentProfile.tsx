@@ -160,7 +160,6 @@ const StudentProfile = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-3xl px-4 py-8 space-y-6">
-          {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -194,7 +193,6 @@ const StudentProfile = () => {
             )}
           </motion.div>
 
-          {/* ── Profile Card ─────────────────────────────────────────── */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -218,7 +216,6 @@ const StudentProfile = () => {
               </CardHeader>
 
               <CardContent className="px-6 py-6 space-y-8">
-                {/* ── Identity (locked) ──────────────────────────────── */}
                 <div className="space-y-4">
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground pl-0.5">
                     Identity
@@ -259,14 +256,12 @@ const StudentProfile = () => {
 
                 <Separator />
 
-                {/* ── Academic ───────────────────────────────────────── */}
                 <div className="space-y-4">
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground pl-0.5">
                     Academic Details
                   </p>
 
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {/* Year */}
                     <div className="space-y-1.5">
                       <Label
                         htmlFor="year"
@@ -300,7 +295,6 @@ const StudentProfile = () => {
                       )}
                     </div>
 
-                    {/* Semester */}
                     <div className="space-y-1.5">
                       <Label
                         htmlFor="semester"
@@ -340,7 +334,6 @@ const StudentProfile = () => {
                       )}
                     </div>
 
-                    {/* Date of Birth */}
                     <div className="space-y-1.5">
                       <Label className="text-[12px] text-muted-foreground">
                         Date of Birth
@@ -356,7 +349,6 @@ const StudentProfile = () => {
                       />
                     </div>
 
-                    {/* Shift */}
                     <div className="space-y-1.5">
                       <Label
                         htmlFor="shift"
@@ -391,14 +383,12 @@ const StudentProfile = () => {
 
                 <Separator />
 
-                {/* ── Contact ────────────────────────────────────────── */}
                 <div className="space-y-4">
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground pl-0.5">
                     Contact Information
                   </p>
 
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {/* Email */}
                     <div className="space-y-1.5">
                       <Label
                         htmlFor="email"
@@ -421,7 +411,6 @@ const StudentProfile = () => {
                       )}
                     </div>
 
-                    {/* Phone */}
                     <div className="space-y-1.5">
                       <Label
                         htmlFor="phone"
@@ -450,7 +439,6 @@ const StudentProfile = () => {
                     </div>
                   </div>
 
-                  {/* Address */}
                   <div className="space-y-1.5">
                     <Label
                       htmlFor="address"
@@ -473,7 +461,6 @@ const StudentProfile = () => {
                   </div>
                 </div>
 
-                {/* ── Action Buttons ─────────────────────────────────── */}
                 {isEditing && (
                   <>
                     <Separator />
@@ -510,7 +497,6 @@ const StudentProfile = () => {
             </Card>
           </motion.div>
 
-          {/* ── Notice Panel ─────────────────────────────────────────── */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -21,10 +21,10 @@ app.use(
       "https://quickconcession.onrender.com",
       "https://quick-concession.vercel.app",
       "https://quickconcession.online",
-      "https://www.quickconcession.online"
+      "https://www.quickconcession.online",
     ],
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());

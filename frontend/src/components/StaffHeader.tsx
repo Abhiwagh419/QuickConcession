@@ -49,9 +49,7 @@ const StaffHeader = () => {
   return (
     <div className="px-5 pt-5">
       <header className="relative rounded-xl bg-header-surface shadow-header border border-header-border backdrop-blur-sm">
-        {/* Main bar */}
         <div className="flex items-center justify-between px-6 h-[72px]">
-          {/* LEFT — Brand identity */}
           <div className="flex items-center gap-4 min-w-0">
             <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
               <GraduationCap className="h-[18px] w-[18px]" />
@@ -68,7 +66,6 @@ const StaffHeader = () => {
             </div>
           </div>
 
-          {/* CENTER — Navigation context */}
           <div className="hidden lg:flex items-center gap-3">
             {breadcrumbs.map((crumb, index) => (
               <div key={crumb.path} className="flex items-center gap-3">
@@ -89,9 +86,7 @@ const StaffHeader = () => {
             ))}
           </div>
 
-          {/* RIGHT — User controls */}
           <div className="flex items-center gap-3 shrink-0">
-            {/* User identity */}
             <div className="flex items-center gap-3">
               {staff ? (
                 <>
@@ -118,10 +113,8 @@ const StaffHeader = () => {
               )}
             </div>
 
-            {/* Divider */}
             <div className="h-8 w-px bg-header-divider mx-1" />
 
-            {/* Logout */}
             <button
               onClick={handleLogout}
               className="group flex items-center gap-2 px-3.5 py-2 text-[13px] font-medium text-muted-foreground rounded-lg transition-all duration-150 hover:bg-destructive/[0.06] hover:text-destructive"
@@ -132,7 +125,6 @@ const StaffHeader = () => {
           </div>
         </div>
 
-        {/* Bottom context strip — only on deeper pages */}
         {breadcrumbs.length > 1 && (
           <div className="border-t border-header-divider px-6 h-10 flex items-center">
             <div className="flex items-center gap-2">

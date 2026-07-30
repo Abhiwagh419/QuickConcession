@@ -30,7 +30,6 @@ const NotFound = () => {
           className="w-full max-w-md"
         >
           <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
-            {/* Header strip */}
             <div className="border-b border-border bg-muted/20 px-6 py-4 flex items-center gap-2.5">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-destructive/10">
                 <FileX className="h-3.5 w-3.5 text-destructive" />
@@ -40,7 +39,6 @@ const NotFound = () => {
               </span>
             </div>
 
-            {/* Body */}
             <div className="px-8 py-10 text-center space-y-4">
               <p className="text-6xl font-bold tabular-nums text-foreground tracking-tight">
                 404
@@ -73,7 +71,6 @@ const NotFound = () => {
               </div>
             </div>
 
-            {/* Footer strip */}
             <div className="border-t border-border bg-muted/20 px-6 py-3 text-center">
               <p className="text-[11px] text-muted-foreground">
                 QuickConcession &mdash; Government Polytechnic Mumbai

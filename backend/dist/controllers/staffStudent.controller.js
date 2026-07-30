@@ -38,7 +38,6 @@ const getStudentSummary = async (req, res) => {
                 status: "REJECTED",
             },
         }),
-        // ✅ NEW: Pending count
         client_1.prisma.concessionApplication.count({
             where: {
                 student: { enrollmentNo },

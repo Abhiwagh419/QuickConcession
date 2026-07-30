@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { User, Lock, KeyRound, Mail, Loader2 } from "lucide-react";
@@ -100,36 +101,31 @@ const AdminLoginForm = () => {
       )}
 
       <div className="space-y-2">
-  <Label>Email</Label>
+        <Label>Email</Label>
 
-  <div className="relative">
-    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="relative">
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 
-    <Input
-      type="text"
-      placeholder="Admin email"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      className="pl-10"
-    />
-  </div>
-</div>
+          <Input
+            type="text"
+            placeholder="Admin email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+      </div>
 
-<div className="space-y-2">
-  <Label>Password</Label>
+      <div className="space-y-2">
+        <Label>Password</Label>
 
-  <div className="relative">
-    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-
-    <Input
-      type="password"
-      placeholder="Password"
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-      className="pl-10"
-    />
-  </div>
-</div>
+        <PasswordInput
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          startAdornment={<Lock className="h-4 w-4" />}
+        />
+      </div>
 
       {!otpSent ? (
         <Button type="submit" disabled={isSendingOtp} className="w-full">
@@ -137,19 +133,18 @@ const AdminLoginForm = () => {
         </Button>
       ) : (
         <>
-        
           <div className="relative">
-  <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 
-  <Input
-    type="text"
-    value={otp}
-    onChange={(e) =>
-      setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
-    }
-    className="pl-10"
-  />
-</div>
+            <Input
+              type="text"
+              value={otp}
+              onChange={(e) =>
+                setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+              }
+              className="pl-10"
+            />
+          </div>
 
           <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? "Verifying..." : "Login"}

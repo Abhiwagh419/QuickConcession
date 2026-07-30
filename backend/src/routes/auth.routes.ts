@@ -24,11 +24,7 @@ router.post(
   otpRequestLimiter,
   requestStudentPasswordReset,
 );
-router.post(
-  "/student/reset-password",
-  otpVerifyLimiter,
-  resetStudentPassword,
-);
+router.post("/student/reset-password", otpVerifyLimiter, resetStudentPassword);
 router.post("/staff/login", loginLimiter, staffLogin);
 router.post(
   "/staff/forgot-password",

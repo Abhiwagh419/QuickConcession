@@ -34,12 +34,8 @@ const fadeIn = (delay: number = 0) => ({
   transition: { duration: 0.38, ease: EASE_OUT, delay },
 });
 
-// ─── Shared table head style ──────────────────────────────────────────────────
-
 const TH =
   "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground whitespace-nowrap";
-
-// ─── Empty state ──────────────────────────────────────────────────────────────
 
 function EmptyRow({ colSpan, message }: { colSpan: number; message: string }) {
   return (
@@ -54,8 +50,6 @@ function EmptyRow({ colSpan, message }: { colSpan: number; message: string }) {
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
-
 const StaffRailwayManagement = () => {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<any[]>([]);
@@ -68,7 +62,6 @@ const StaffRailwayManagement = () => {
 
         const combined = [...(data.pending || []), ...(data.personal || [])];
 
-        // Remove duplicates (if same app appears in both)
         const uniqueMap = new Map();
         combined.forEach((app) => {
           uniqueMap.set(app.id, app);
@@ -125,7 +118,6 @@ const StaffRailwayManagement = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
-          {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0)}
             className="flex items-start justify-between flex-wrap gap-4"
@@ -145,7 +137,6 @@ const StaffRailwayManagement = () => {
             </div>
           </motion.div>
 
-          {/* ── Main Card ────────────────────────────────────────────── */}
           <motion.div {...fadeIn(0.07)}>
             <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
@@ -156,7 +147,6 @@ const StaffRailwayManagement = () => {
 
               <CardContent className="px-6 py-6">
                 <Tabs defaultValue="pending" className="w-full">
-                  {/* ── Tab Bar ────────────────────────────────────────── */}
                   <TabsList className="grid w-full grid-cols-4 mb-6 h-10 rounded-lg bg-muted p-0.5 gap-0.5">
                     <TabsTrigger
                       value="pending"
@@ -227,7 +217,6 @@ const StaffRailwayManagement = () => {
                     </TabsTrigger>
                   </TabsList>
 
-                  {/* ── Pending ─────────────────────────────────────────── */}
                   <TabsContent value="pending">
                     <div className="rounded-xl border border-border overflow-hidden">
                       <Table>
@@ -300,7 +289,6 @@ const StaffRailwayManagement = () => {
                     </div>
                   </TabsContent>
 
-                  {/* ── Approved ────────────────────────────────────────── */}
                   <TabsContent value="approved">
                     <div className="rounded-xl border border-border overflow-hidden">
                       <Table>
@@ -359,7 +347,6 @@ const StaffRailwayManagement = () => {
                     </div>
                   </TabsContent>
 
-                  {/* ── Rejected ────────────────────────────────────────── */}
                   <TabsContent value="rejected">
                     <div className="rounded-xl border border-border overflow-hidden">
                       <Table>
@@ -411,7 +398,6 @@ const StaffRailwayManagement = () => {
                     </div>
                   </TabsContent>
 
-                  {/* ── Issued ──────────────────────────────────────────── */}
                   <TabsContent value="issued">
                     <div className="rounded-xl border border-border overflow-hidden">
                       <Table>
@@ -471,7 +457,6 @@ const StaffRailwayManagement = () => {
             </Card>
           </motion.div>
 
-          {/* ── Footer ───────────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0.18)}
             className="flex items-center gap-3 pb-6"

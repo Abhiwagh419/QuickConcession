@@ -23,7 +23,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, getAuthToken } from "@/lib/api";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -302,13 +302,10 @@ const AdminDashboard = () => {
 const exportExcel = async () => {
   try {
     const response = await fetch(
-      "https://quickconcession.onrender.com/admin/export/excel",
+      `${import.meta.env.VITE_API_URL}/admin/export/excel`,
       {
         headers: {
-          Authorization: `Bearer ${
-            localStorage.getItem("staffToken") ||
-            localStorage.getItem("jwt")
-          }`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
       }
     );

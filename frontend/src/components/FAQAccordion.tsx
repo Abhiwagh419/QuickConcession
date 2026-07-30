@@ -45,13 +45,9 @@ export default function FAQAccordion() {
           >
             <button
               className="w-full flex justify-between items-center px-4 py-3 text-left hover:bg-muted transition"
-              onClick={() =>
-                setOpenIndex(isOpen ? null : index)
-              }
+              onClick={() => setOpenIndex(isOpen ? null : index)}
             >
-              <span className="font-medium text-sm">
-                {faq.question}
-              </span>
+              <span className="font-medium text-sm">{faq.question}</span>
               <ChevronDown
                 className={`w-4 h-4 transition-transform ${
                   isOpen ? "rotate-180" : ""

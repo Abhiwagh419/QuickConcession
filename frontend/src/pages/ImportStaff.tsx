@@ -71,39 +71,37 @@ const ImportStaff = () => {
     setConfirmLoading(false);
   };
 
-const downloadErrors = () => {
-  if (!preview?.errors || preview.errors.length === 0) return;
+  const downloadErrors = () => {
+    if (!preview?.errors || preview.errors.length === 0) return;
 
-  const headers = Object.keys(preview.errors[0].data || {});
+    const headers = Object.keys(preview.errors[0].data || {});
 
-  const csvRows = [];
+    const csvRows = [];
 
-  // Header row
-  csvRows.push([...headers, "Reason"].join(","));
+    csvRows.push([...headers, "Reason"].join(","));
 
-  // Data rows
-  preview.errors.forEach((e: any) => {
-    const rowValues = headers.map((h) =>
-      `"${(e.data?.[h] ?? "").toString().replace(/"/g, '""')}"`
-    );
+    preview.errors.forEach((e: any) => {
+      const rowValues = headers.map(
+        (h) => `"${(e.data?.[h] ?? "").toString().replace(/"/g, '""')}"`,
+      );
 
-    rowValues.push(`"${e.reason}"`);
+      rowValues.push(`"${e.reason}"`);
 
-    csvRows.push(rowValues.join(","));
-  });
+      csvRows.push(rowValues.join(","));
+    });
 
-  const csvContent = csvRows.join("\n");
+    const csvContent = csvRows.join("\n");
 
-  const blob = new Blob([csvContent], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "staff_failed_rows.csv";
-  a.click();
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "staff_failed_rows.csv";
+    a.click();
 
-  URL.revokeObjectURL(url);
-};
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="min-h-screen bg-muted/40">

@@ -6,14 +6,12 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
 
   let token: string | null = null;
 
-  // Decide token based on route
   if (path.startsWith("/admin") || path.startsWith("/staff")) {
     token = staffToken;
   } else {
     token = studentToken;
   }
 
-  // DO NOT attach token for login / OTP routes
   const isAuthRoute =
     path.startsWith("/auth/login") ||
     path.startsWith("/auth/verify-otp") ||
@@ -25,7 +23,6 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  // Only set JSON header if body is NOT FormData
   if (!(options.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
@@ -47,8 +44,5 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
 }
 
 export function getAuthToken() {
-  return (
-    localStorage.getItem("jwt") ||
-    localStorage.getItem("staffToken")
-  );
+  return localStorage.getItem("jwt") || localStorage.getItem("staffToken");
 }

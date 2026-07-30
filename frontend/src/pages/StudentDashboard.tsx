@@ -27,8 +27,6 @@ import {
 } from "lucide-react";
 import StudentHelpDialog from "@/components/StudentHelpDialog";
 
-// ─── Animation helpers ────────────────────────────────────────────────────────
-
 type CubicBezier = [number, number, number, number];
 const EASE_OUT: CubicBezier = [0.16, 1, 0.3, 1];
 
@@ -37,8 +35,6 @@ const fadeIn = (delay: number = 0) => ({
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.38, ease: EASE_OUT, delay },
 });
-
-// ─── Panel shell ─────────────────────────────────────────────────────────────
 
 function Panel({
   children,
@@ -56,8 +52,6 @@ function Panel({
   );
 }
 
-// ─── Section Label ────────────────────────────────────────────────────────────
-
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <p className="mb-3 pl-0.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-400">
@@ -65,8 +59,6 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     </p>
   );
 }
-
-// ─── Info Field ───────────────────────────────────────────────────────────────
 
 function InfoField({
   label,
@@ -84,8 +76,6 @@ function InfoField({
     </div>
   );
 }
-
-// ─── Main Component ───────────────────────────────────────────────────────────
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
@@ -113,8 +103,6 @@ const StudentDashboard = () => {
     loadDashboard();
   }, []);
 
-  // ── Loading state ──────────────────────────────────────────────────────────
-
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50">
@@ -128,8 +116,6 @@ const StudentDashboard = () => {
       </div>
     );
   }
-
-  // ── Error state ────────────────────────────────────────────────────────────
 
   if (error || !student) {
     return (
@@ -146,8 +132,6 @@ const StudentDashboard = () => {
       </div>
     );
   }
-
-  // ── Derived state ──────────────────────────────────────────────────────────
 
   const activePass = applications.find(
     (a) =>
@@ -214,15 +198,12 @@ const StudentDashboard = () => {
     },
   ];
 
-  // ── Render ─────────────────────────────────────────────────────────────────
-
   return (
     <div className="min-h-screen bg-slate-50">
       <StudentHeader />
 
       <PageWrapper>
         <main className="container mx-auto max-w-6xl space-y-8 px-4 py-8">
-          {/* ── Page Header ────────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0)}
             className="flex flex-wrap items-start justify-between gap-3"
@@ -253,11 +234,8 @@ const StudentDashboard = () => {
             </Button>
           </motion.div>
 
-          {/* ── Main Grid ──────────────────────────────────────────────── */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            {/* ── Left Column (2/3) ─────────────────────────────────── */}
             <div className="space-y-6 lg:col-span-2">
-              {/* Student Details */}
               <motion.div {...fadeIn(0.05)}>
                 <SectionLabel>Student Identity</SectionLabel>
                 <Panel className="overflow-hidden">
@@ -289,7 +267,6 @@ const StudentDashboard = () => {
                 </Panel>
               </motion.div>
 
-              {/* Railway Concession Status */}
               <motion.div {...fadeIn(0.1)}>
                 <SectionLabel>Railway Concession Status</SectionLabel>
 
@@ -384,7 +361,6 @@ const StudentDashboard = () => {
               </motion.div>
             </div>
 
-            {/* ── Right Column (1/3) ─────────────────────────────────── */}
             <div className="space-y-6">
               <motion.div {...fadeIn(0.15)}>
                 <SectionLabel>Student Services</SectionLabel>
@@ -427,7 +403,6 @@ const StudentDashboard = () => {
               </motion.div>
             </div>
 
-            {/* ── Notice Banner (full width) ─────────────────────────── */}
             <motion.div {...fadeIn(0.3)} className="col-span-1 lg:col-span-3">
               <div className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-100 px-5 py-4">
                 <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-slate-500" />

@@ -25,7 +25,6 @@ async function exportAdminExcel(req, res) {
         const workbook = new exceljs_1.default.Workbook();
         workbook.creator = "QuickConcession System";
         workbook.created = new Date();
-        // ================= STUDENTS =================
         const studentSelect = {
             id: true,
             enrollmentNo: true,
@@ -69,17 +68,16 @@ async function exportAdminExcel(req, res) {
         allStudents
             .filter((s) => !s.isDeleted)
             .forEach((s) => {
-            studentSheet.addRow({
-                ...s,
-                createdAt: s.createdAt.toLocaleDateString("en-IN"),
+                studentSheet.addRow({
+                    ...s,
+                    createdAt: s.createdAt.toLocaleDateString("en-IN"),
+                });
             });
-        });
         studentSheet.addRow({});
         studentSheet.addRow({
             enrollmentNo: "TOTAL STUDENTS",
             fullName: allStudents.filter((s) => !s.isDeleted).length,
         });
-        // ================= DELETED STUDENTS =================
         const deletedStudentSheet = workbook.addWorksheet("Deleted Students");
         deletedStudentSheet.columns = studentSheet.columns;
         addMeta(deletedStudentSheet, adminId);
@@ -96,7 +94,6 @@ async function exportAdminExcel(req, res) {
             enrollmentNo: "TOTAL DELETED",
             fullName: deletedStudents.length,
         });
-        // ================= STAFF =================
         const staffSelect = {
             id: true,
             fullName: true,
@@ -130,17 +127,16 @@ async function exportAdminExcel(req, res) {
         allStaff
             .filter((s) => !s.isDeleted)
             .forEach((s) => {
-            staffSheet.addRow({
-                ...s,
-                createdAt: s.createdAt.toLocaleDateString("en-IN"),
+                staffSheet.addRow({
+                    ...s,
+                    createdAt: s.createdAt.toLocaleDateString("en-IN"),
+                });
             });
-        });
         staffSheet.addRow({});
         staffSheet.addRow({
             fullName: "TOTAL STAFF",
             email: allStaff.filter((s) => !s.isDeleted).length,
         });
-        // ================= DELETED STAFF =================
         const deletedStaffSheet = workbook.addWorksheet("Deleted Staff");
         deletedStaffSheet.columns = staffSheet.columns;
         addMeta(deletedStaffSheet, adminId);
@@ -157,7 +153,6 @@ async function exportAdminExcel(req, res) {
             fullName: "TOTAL DELETED",
             email: deletedStaff.length,
         });
-        // ================= SEND FILE =================
         const buffer = await workbook.xlsx.writeBuffer();
         res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         res.setHeader("Content-Disposition", "attachment; filename=admin-system-export.xlsx");

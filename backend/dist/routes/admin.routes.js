@@ -14,9 +14,7 @@ const client_2 = require("@prisma/client");
 const adminExport_controller_1 = require("../controllers/adminExport.controller");
 const validate_1 = require("../utils/validate");
 const router = (0, express_1.Router)();
-/* =========================================================
-   COMMON ADMIN CHECK
-========================================================= */
+
 function ensureAdmin(req, res) {
     if (!req.user || req.user.role !== "ADMIN") {
         res.status(403).json({ message: "Forbidden" });
@@ -24,10 +22,7 @@ function ensureAdmin(req, res) {
     }
     return true;
 }
-/* =========================================================
-   STUDENT ROUTES
-========================================================= */
-/* GET STUDENTS */
+
 router.get("/students", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -50,7 +45,7 @@ router.get("/students", requireAuth_1.requireAuth, async (req, res) => {
     });
     res.json(students);
 });
-/* CREATE STUDENT */
+
 router.post("/students", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -108,7 +103,7 @@ router.post("/students", requireAuth_1.requireAuth, async (req, res) => {
     });
     res.status(201).json(student);
 });
-/* TOGGLE STUDENT ACTIVE STATUS */
+
 router.patch("/students/:id/toggle", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -128,7 +123,7 @@ router.patch("/students/:id/toggle", requireAuth_1.requireAuth, async (req, res)
         active: updated.active,
     });
 });
-/* SOFT DELETE STUDENT */
+
 router.patch("/students/:id/delete", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -139,7 +134,7 @@ router.patch("/students/:id/delete", requireAuth_1.requireAuth, async (req, res)
     });
     res.json({ message: "Student deleted successfully" });
 });
-/* RESTORE STUDENT */
+
 router.patch("/students/:id/restore", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -156,7 +151,7 @@ router.patch("/students/:id/restore", requireAuth_1.requireAuth, async (req, res
     });
     res.json({ message: "Student restored successfully" });
 });
-/* RESET STUDENT PASSWORD */
+
 router.post("/students/:id/reset-password", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -180,7 +175,7 @@ router.post("/students/:id/reset-password", requireAuth_1.requireAuth, async (re
     });
     res.json({ message: "Password updated successfully" });
 });
-/* UPDATE STUDENT */
+
 router.patch("/students/:id", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -217,7 +212,7 @@ router.patch("/students/:id", requireAuth_1.requireAuth, async (req, res) => {
     });
     res.json(updated);
 });
-/* GET STUDENT DETAILS */
+
 router.get("/students/:id", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -664,7 +659,7 @@ router.post("/students/bulk/confirm", requireAuth_1.requireAuth, async (req, res
         inserted: result.count,
     });
 });
-/* GET SINGLE STAFF DETAILS */
+
 router.get("/staff/:id", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -718,7 +713,7 @@ router.get("/applications", requireAuth_1.requireAuth, async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
-/* CREATE STAFF */
+
 router.post("/staff", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;

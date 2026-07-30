@@ -4,20 +4,30 @@ import AdminHeader from "@/components/AdminHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
-  Dialog, DialogContent,
-} from "@/components/ui/dialog";
-import {
-  FileText, Train, User, ArrowRight,
-  Clock, CheckCircle, XCircle, FileCheck, AlertTriangle,
-  Calendar, Hash, MapPin,
+  FileText,
+  Train,
+  User,
+  ArrowRight,
+  Clock,
+  CheckCircle,
+  XCircle,
+  FileCheck,
+  AlertTriangle,
+  Calendar,
+  Hash,
+  MapPin,
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
-
-// ── Animation helpers ─────────────────────────────────────────────────────────
 
 type CubicBezier = [number, number, number, number];
 const EASE_OUT: CubicBezier = [0.16, 1, 0.3, 1];
@@ -28,56 +38,57 @@ const fadeIn = (delay: number = 0) => ({
   transition: { duration: 0.38, ease: EASE_OUT, delay },
 });
 
-// ── Status configuration ──────────────────────────────────────────────────────
-
-const STATUS_CONFIG: Record<string, {
-  badge: string;
-  header: string;
-  dot: string;
-  icon: React.ReactNode;
-  label: string;
-}> = {
-  PENDING:  {
-    badge:  "bg-amber-50 text-amber-700 border-amber-200",
+const STATUS_CONFIG: Record<
+  string,
+  {
+    badge: string;
+    header: string;
+    dot: string;
+    icon: React.ReactNode;
+    label: string;
+  }
+> = {
+  PENDING: {
+    badge: "bg-amber-50 text-amber-700 border-amber-200",
     header: "bg-amber-50 border-amber-200",
-    dot:    "bg-amber-400",
-    icon:   <Clock       className="h-3.5 w-3.5" />,
-    label:  "Pending Review",
+    dot: "bg-amber-400",
+    icon: <Clock className="h-3.5 w-3.5" />,
+    label: "Pending Review",
   },
   SUBMITTED: {
-    badge:  "bg-amber-50 text-amber-700 border-amber-200",
+    badge: "bg-amber-50 text-amber-700 border-amber-200",
     header: "bg-amber-50 border-amber-200",
-    dot:    "bg-amber-400",
-    icon:   <Clock       className="h-3.5 w-3.5" />,
-    label:  "Submitted",
+    dot: "bg-amber-400",
+    icon: <Clock className="h-3.5 w-3.5" />,
+    label: "Submitted",
   },
   APPROVED: {
-    badge:  "bg-emerald-50 text-emerald-700 border-emerald-200",
+    badge: "bg-emerald-50 text-emerald-700 border-emerald-200",
     header: "bg-emerald-50 border-emerald-200",
-    dot:    "bg-emerald-500",
-    icon:   <CheckCircle className="h-3.5 w-3.5" />,
-    label:  "Approved",
+    dot: "bg-emerald-500",
+    icon: <CheckCircle className="h-3.5 w-3.5" />,
+    label: "Approved",
   },
   REJECTED: {
-    badge:  "bg-red-50 text-red-700 border-red-200",
+    badge: "bg-red-50 text-red-700 border-red-200",
     header: "bg-red-50 border-red-200",
-    dot:    "bg-red-500",
-    icon:   <XCircle     className="h-3.5 w-3.5" />,
-    label:  "Rejected",
+    dot: "bg-red-500",
+    icon: <XCircle className="h-3.5 w-3.5" />,
+    label: "Rejected",
   },
   ISSUED: {
-    badge:  "bg-blue-50 text-blue-700 border-blue-200",
+    badge: "bg-blue-50 text-blue-700 border-blue-200",
     header: "bg-blue-50 border-blue-200",
-    dot:    "bg-blue-500",
-    icon:   <FileCheck   className="h-3.5 w-3.5" />,
-    label:  "Pass Issued",
+    dot: "bg-blue-500",
+    icon: <FileCheck className="h-3.5 w-3.5" />,
+    label: "Pass Issued",
   },
   EXPIRED: {
-    badge:  "bg-slate-100 text-slate-500 border-slate-200",
+    badge: "bg-slate-100 text-slate-500 border-slate-200",
     header: "bg-slate-50 border-slate-200",
-    dot:    "bg-slate-400",
-    icon:   <AlertTriangle className="h-3.5 w-3.5" />,
-    label:  "Expired",
+    dot: "bg-slate-400",
+    icon: <AlertTriangle className="h-3.5 w-3.5" />,
+    label: "Expired",
   },
 };
 
@@ -85,19 +96,17 @@ function getStatusConfig(status: string) {
   return STATUS_CONFIG[status] ?? STATUS_CONFIG["EXPIRED"];
 }
 
-// ── Status Badge ──────────────────────────────────────────────────────────────
-
 function StatusBadge({ status }: { status: string }) {
   const cfg = getStatusConfig(status);
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${cfg.badge}`}>
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${cfg.badge}`}
+    >
       <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot} shrink-0`} />
       {status}
     </span>
   );
 }
-
-// ── Info Field ────────────────────────────────────────────────────────────────
 
 function InfoField({ label, value }: { label: string; value?: string | null }) {
   return (
@@ -110,10 +119,12 @@ function InfoField({ label, value }: { label: string; value?: string | null }) {
   );
 }
 
-// ── Timeline Event ────────────────────────────────────────────────────────────
-
 function TimelineEvent({
-  icon, label, date, note, accent = false,
+  icon,
+  label,
+  date,
+  note,
+  accent = false,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -124,15 +135,20 @@ function TimelineEvent({
   if (!date) return null;
   return (
     <div className="flex gap-3">
-      <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${accent ? "bg-primary text-primary-foreground" : "bg-slate-100 text-slate-500"}`}>
+      <div
+        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${accent ? "bg-primary text-primary-foreground" : "bg-slate-100 text-slate-500"}`}
+      >
         {icon}
       </div>
       <div className="pb-4 pt-0.5">
         <p className="text-[12px] font-semibold text-slate-800">{label}</p>
         <p className="text-[11px] text-slate-400">
           {new Date(date).toLocaleString("en-IN", {
-            day: "2-digit", month: "short", year: "numeric",
-            hour: "2-digit", minute: "2-digit",
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
           })}
         </p>
         {note && (
@@ -145,9 +161,13 @@ function TimelineEvent({
   );
 }
 
-// ── Section Heading ───────────────────────────────────────────────────────────
-
-function SectionHeading({ icon, label }: { icon: React.ReactNode; label: string }) {
+function SectionHeading({
+  icon,
+  label,
+}: {
+  icon: React.ReactNode;
+  label: string;
+}) {
   return (
     <div className="flex items-center gap-2 mb-4">
       <div className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-100 text-slate-500">
@@ -160,10 +180,9 @@ function SectionHeading({ icon, label }: { icon: React.ReactNode; label: string 
   );
 }
 
-// ── Application Detail Dialog ─────────────────────────────────────────────────
-
 function ApplicationDialog({
-  app, onClose,
+  app,
+  onClose,
 }: {
   app: any;
   onClose: () => void;
@@ -171,9 +190,13 @@ function ApplicationDialog({
   const cfg = getStatusConfig(app.status);
 
   const fmt = (d?: string) =>
-    d ? new Date(d).toLocaleDateString("en-IN", {
-          day: "2-digit", month: "short", year: "numeric",
-        }) : "—";
+    d
+      ? new Date(d).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
+      : "—";
 
   return (
     <DialogContent className="max-w-2xl p-0 overflow-hidden rounded-2xl border border-slate-200 shadow-2xl gap-0">
@@ -182,7 +205,6 @@ function ApplicationDialog({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: EASE_OUT }}
       >
-        {/* ── Status Header ─────────────────────────────────────── */}
         <div className={`px-6 py-5 border-b ${cfg.header}`}>
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -198,13 +220,14 @@ function ApplicationDialog({
                 Government Polytechnic Mumbai &mdash; Admin View
               </p>
             </div>
-            <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold ${cfg.badge}`}>
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold ${cfg.badge}`}
+            >
               {cfg.icon}
               {cfg.label}
             </span>
           </div>
 
-          {/* Route banner */}
           <div className="mt-4 flex items-center justify-center gap-3 bg-white/60 backdrop-blur-sm border border-white/40 rounded-xl px-5 py-3">
             <div className="flex items-center gap-1.5">
               <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
@@ -233,29 +256,34 @@ function ApplicationDialog({
           </div>
         </div>
 
-        {/* ── Body ─────────────────────────────────────────────── */}
         <div className="max-h-[60vh] overflow-y-auto">
-
-          {/* Student Information */}
           <div className="px-6 py-5 border-b border-slate-100">
-            <SectionHeading icon={<User className="h-3.5 w-3.5" />} label="Student Information" />
+            <SectionHeading
+              icon={<User className="h-3.5 w-3.5" />}
+              label="Student Information"
+            />
             <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
-              <InfoField label="Full Name"    value={app.student?.fullName} />
-              <InfoField label="Enrollment"   value={app.student?.enrollmentNo} />
-              <InfoField label="Email"        value={app.student?.email} />
-              <InfoField label="Mobile"       value={app.student?.mobileNumber} />
-              <InfoField label="Course"       value={app.student?.course} />
-              <InfoField label="Year / Sem"   value={`${app.student?.year ?? ""} / ${app.student?.sem ?? ""}`} />
+              <InfoField label="Full Name" value={app.student?.fullName} />
+              <InfoField label="Enrollment" value={app.student?.enrollmentNo} />
+              <InfoField label="Email" value={app.student?.email} />
+              <InfoField label="Mobile" value={app.student?.mobileNumber} />
+              <InfoField label="Course" value={app.student?.course} />
+              <InfoField
+                label="Year / Sem"
+                value={`${app.student?.year ?? ""} / ${app.student?.sem ?? ""}`}
+              />
             </div>
           </div>
 
-          {/* Application Details */}
           <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/60">
-            <SectionHeading icon={<FileText className="h-3.5 w-3.5" />} label="Application Details" />
+            <SectionHeading
+              icon={<FileText className="h-3.5 w-3.5" />}
+              label="Application Details"
+            />
             <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
               <InfoField label="Travel Class" value={app.travelClass} />
-              <InfoField label="Duration"     value={app.duration} />
-              <InfoField label="Applied On"   value={fmt(app.appliedAt)} />
+              <InfoField label="Duration" value={app.duration} />
+              <InfoField label="Applied On" value={fmt(app.appliedAt)} />
               {app.concessionNumber && (
                 <div className="space-y-0.5">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400">
@@ -282,11 +310,12 @@ function ApplicationDialog({
             </div>
           </div>
 
-          {/* Timeline */}
           <div className="px-6 py-5">
-            <SectionHeading icon={<Clock className="h-3.5 w-3.5" />} label="Timeline" />
+            <SectionHeading
+              icon={<Clock className="h-3.5 w-3.5" />}
+              label="Timeline"
+            />
             <div className="relative pl-1">
-              {/* Vertical line */}
               <div className="absolute left-[13px] top-2 bottom-2 w-px bg-slate-100" />
               <TimelineEvent
                 icon={<Calendar className="h-3 w-3" />}
@@ -308,33 +337,39 @@ function ApplicationDialog({
               <TimelineEvent
                 icon={<Hash className="h-3 w-3" />}
                 label="Pass Issued"
-                date={app.issuedAt ?? (app.status === "ISSUED" ? app.approvedAt : undefined)}
-                note={app.concessionNumber ? `Pass: ${app.concessionNumber}` : undefined}
+                date={
+                  app.issuedAt ??
+                  (app.status === "ISSUED" ? app.approvedAt : undefined)
+                }
+                note={
+                  app.concessionNumber
+                    ? `Pass: ${app.concessionNumber}`
+                    : undefined
+                }
               />
               <TimelineEvent
                 icon={<AlertTriangle className="h-3 w-3" />}
                 label="Expired"
                 date={
-                  app.status === "EXPIRED" && app.expiryDate && new Date(app.expiryDate) < new Date()
+                  app.status === "EXPIRED" &&
+                  app.expiryDate &&
+                  new Date(app.expiryDate) < new Date()
                     ? app.expiryDate
                     : undefined
                 }
               />
             </div>
           </div>
-
         </div>
       </motion.div>
     </DialogContent>
   );
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
-
 const AdminApplications = () => {
   const [applications, setApplications] = useState<any[]>([]);
-  const [loading, setLoading]           = useState(true);
-  const [selectedApp, setSelectedApp]   = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedApp, setSelectedApp] = useState<any | null>(null);
 
   useEffect(() => {
     const loadApplications = async () => {
@@ -353,7 +388,9 @@ const AdminApplications = () => {
   const formatDate = (date?: string) => {
     if (!date) return "—";
     return new Date(date).toLocaleDateString("en-IN", {
-      day: "2-digit", month: "short", year: "numeric",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
     });
   };
 
@@ -363,8 +400,6 @@ const AdminApplications = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-7xl space-y-6 px-4 py-8">
-
-          {/* ── Page Header ──────────────────────────────────────── */}
           <motion.div {...fadeIn(0)}>
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
@@ -375,11 +410,11 @@ const AdminApplications = () => {
               </h1>
             </div>
             <p className="mt-1 pl-10 text-[13px] text-muted-foreground">
-              Government Polytechnic Mumbai — Admin Portal &nbsp;·&nbsp; Click any row to view full details
+              Government Polytechnic Mumbai — Admin Portal &nbsp;·&nbsp; Click
+              any row to view full details
             </p>
           </motion.div>
 
-          {/* ── Table Card ───────────────────────────────────────── */}
           <motion.div {...fadeIn(0.07)}>
             <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
@@ -397,14 +432,23 @@ const AdminApplications = () => {
                 {loading ? (
                   <div className="flex flex-col items-center justify-center gap-2.5 py-14">
                     <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                    <p className="text-[13px] text-muted-foreground">Loading applications…</p>
+                    <p className="text-[13px] text-muted-foreground">
+                      Loading applications…
+                    </p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow className="bg-muted/40 hover:bg-muted/40">
-                          {["Student", "Enrollment", "Route", "Class", "Applied On", "Status"].map((h) => (
+                          {[
+                            "Student",
+                            "Enrollment",
+                            "Route",
+                            "Class",
+                            "Applied On",
+                            "Status",
+                          ].map((h) => (
                             <TableHead
                               key={h}
                               className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground whitespace-nowrap"
@@ -418,10 +462,15 @@ const AdminApplications = () => {
                       <TableBody>
                         {applications.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={6} className="py-14 text-center">
+                            <TableCell
+                              colSpan={6}
+                              className="py-14 text-center"
+                            >
                               <div className="flex flex-col items-center gap-2.5">
                                 <FileText className="h-8 w-8 text-muted-foreground/40" />
-                                <p className="text-sm text-muted-foreground">No applications found.</p>
+                                <p className="text-sm text-muted-foreground">
+                                  No applications found.
+                                </p>
                               </div>
                             </TableCell>
                           </TableRow>
@@ -431,21 +480,22 @@ const AdminApplications = () => {
                               key={app.id}
                               initial={{ opacity: 0, y: 5 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.25, delay: index * 0.025, ease: EASE_OUT }}
+                              transition={{
+                                duration: 0.25,
+                                delay: index * 0.025,
+                                ease: EASE_OUT,
+                              }}
                               onClick={() => setSelectedApp(app)}
                               className="cursor-pointer border-b border-border hover:bg-muted/30 transition-colors duration-100 group"
                             >
-                              {/* Student name */}
                               <TableCell className="py-3 font-semibold text-[13px] text-foreground group-hover:text-primary transition-colors whitespace-nowrap">
                                 {app.student?.fullName}
                               </TableCell>
 
-                              {/* Enrollment */}
                               <TableCell className="text-[13px] text-muted-foreground whitespace-nowrap font-mono">
                                 {app.student?.enrollmentNo}
                               </TableCell>
 
-                              {/* Route */}
                               <TableCell className="text-[13px] text-foreground whitespace-nowrap">
                                 <span className="flex items-center gap-1.5">
                                   <span>{app.fromStation}</span>
@@ -454,17 +504,14 @@ const AdminApplications = () => {
                                 </span>
                               </TableCell>
 
-                              {/* Class */}
                               <TableCell className="text-[13px] text-muted-foreground">
                                 {app.travelClass}
                               </TableCell>
 
-                              {/* Applied on */}
                               <TableCell className="text-[13px] text-muted-foreground whitespace-nowrap">
                                 {formatDate(app.appliedAt)}
                               </TableCell>
 
-                              {/* Status badge */}
                               <TableCell>
                                 <StatusBadge status={app.status} />
                               </TableCell>
@@ -478,11 +525,9 @@ const AdminApplications = () => {
               </CardContent>
             </Card>
           </motion.div>
-
         </main>
       </PageWrapper>
 
-      {/* ── Application Detail Dialog ────────────────────────────── */}
       <Dialog open={!!selectedApp} onOpenChange={() => setSelectedApp(null)}>
         <AnimatePresence>
           {selectedApp && (

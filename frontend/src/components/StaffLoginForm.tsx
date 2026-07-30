@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { User, Lock, KeyRound, Mail, Loader2 } from "lucide-react";
@@ -170,16 +171,13 @@ const StaffLoginForm = () => {
 
       <div className="space-y-2">
         <Label className="text-foreground font-medium">Password</Label>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="pl-10 form-input"
-          />
-        </div>
+        <PasswordInput
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="form-input"
+          startAdornment={<Lock className="w-4 h-4" />}
+        />
         {errors.password && (
           <p className="text-sm text-destructive animate-slide-in">
             {errors.password}
@@ -189,7 +187,7 @@ const StaffLoginForm = () => {
 
       {!otpSent ? (
         <Button
-          type="submit" 
+          type="submit"
           disabled={isSendingOtp}
           className="w-full btn-accent h-11"
         >

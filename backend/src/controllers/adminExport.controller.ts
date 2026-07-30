@@ -28,8 +28,6 @@ export async function exportAdminExcel(req: Request, res: Response) {
     workbook.creator = "QuickConcession System";
     workbook.created = new Date();
 
-    // ================= STUDENTS =================
-
     const studentSelect = {
       id: true,
       enrollmentNo: true,
@@ -90,8 +88,6 @@ export async function exportAdminExcel(req: Request, res: Response) {
       fullName: allStudents.filter((s) => !s.isDeleted).length,
     });
 
-    // ================= DELETED STUDENTS =================
-
     const deletedStudentSheet = workbook.addWorksheet("Deleted Students");
     deletedStudentSheet.columns = studentSheet.columns;
 
@@ -111,8 +107,6 @@ export async function exportAdminExcel(req: Request, res: Response) {
       enrollmentNo: "TOTAL DELETED",
       fullName: deletedStudents.length,
     });
-
-    // ================= STAFF =================
 
     const staffSelect = {
       id: true,
@@ -164,8 +158,6 @@ export async function exportAdminExcel(req: Request, res: Response) {
       email: allStaff.filter((s) => !s.isDeleted).length,
     });
 
-    // ================= DELETED STAFF =================
-
     const deletedStaffSheet = workbook.addWorksheet("Deleted Staff");
     deletedStaffSheet.columns = staffSheet.columns;
 
@@ -185,8 +177,6 @@ export async function exportAdminExcel(req: Request, res: Response) {
       fullName: "TOTAL DELETED",
       email: deletedStaff.length,
     });
-
-    // ================= SEND FILE =================
 
     const buffer = await workbook.xlsx.writeBuffer();
 

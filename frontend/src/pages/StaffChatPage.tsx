@@ -48,7 +48,6 @@ export default function StaffChatPage() {
       <StaffHeader />
 
       <div className="flex flex-1 overflow-hidden">
-        {/* ── LEFT SIDEBAR ──────────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, x: -8 }}
           animate={{ opacity: 1, x: 0 }}
@@ -71,7 +70,6 @@ export default function StaffChatPage() {
               )}
             </div>
 
-            {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -83,7 +81,6 @@ export default function StaffChatPage() {
             </div>
           </div>
 
-          {/* Chat List */}
           <div className="flex-1 overflow-y-auto">
             {filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-2 py-12 px-4 text-center">
@@ -158,11 +155,9 @@ export default function StaffChatPage() {
           </div>
         </motion.div>
 
-        {/* ── RIGHT CHAT PANEL ──────────────────────────────────────── */}
         <div className="flex flex-1 flex-col bg-muted/30 overflow-hidden">
           {selectedChat ? (
             <>
-              {/* Chat Header */}
               <motion.div
                 initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -187,7 +182,6 @@ export default function StaffChatPage() {
                 </div>
               </motion.div>
 
-              {/* Chat Window */}
               <div className="flex flex-1 overflow-hidden">
                 <ChatWindow
                   chatId={selectedChat}
@@ -197,7 +191,6 @@ export default function StaffChatPage() {
               </div>
             </>
           ) : (
-            /* Empty State */
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

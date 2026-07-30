@@ -1,7 +1,7 @@
 import rateLimit from "express-rate-limit";
 
 export const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
+  windowMs: 15 * 60 * 1000,
   limit: 10,
   standardHeaders: true,
   legacyHeaders: false,
@@ -9,7 +9,7 @@ export const loginLimiter = rateLimit({
 });
 
 export const otpVerifyLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000, 
+  windowMs: 10 * 60 * 1000,
   limit: 8,
   standardHeaders: true,
   legacyHeaders: false,

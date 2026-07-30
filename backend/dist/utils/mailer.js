@@ -4,21 +4,21 @@ exports.sendStaffPasswordResetOtpMail = exports.sendStaffLoginOtpMail = exports.
 const resend_1 = require("resend");
 const resend = new resend_1.Resend(process.env.RESEND_API_KEY);
 const sendMail = async (to, subject, html) => {
-    try {
-        await resend.emails.send({
-            from: "QuickConcession <otp@quickconcession.online>",
-            to,
-            subject,
-            html,
-        });
-    }
-    catch (error) {
-        console.error("Resend error:", error?.message || error);
-        throw error;
-    }
+  try {
+    await resend.emails.send({
+      from: "QuickConcession <otp@quickconcession.online>",
+      to,
+      subject,
+      html,
+    });
+  }
+  catch (error) {
+    console.error("Resend error:", error?.message || error);
+    throw error;
+  }
 };
 const sendOtpMail = async (to, otp, studentName, ipAddress, device, loginTime) => {
-    await sendMail(to, "Verification Code for QuickConcession Student Portal", `
+  await sendMail(to, "Verification Code for QuickConcession Student Portal", `
 <!DOCTYPE html>
 <html>
 <body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,Helvetica,sans-serif;">
@@ -68,7 +68,7 @@ box-shadow:0 10px 35px rgba(0,0,0,0.06);">
 </p>
 
 ${ipAddress
-        ? `
+      ? `
 <div style="background:#f9fafb;border:1px solid #e5e7eb;
             border-radius:8px;padding:20px;margin-bottom:30px;">
   <p style="margin:0 0 15px;font-size:14px;font-weight:bold;color:#111827;">
@@ -80,7 +80,7 @@ ${ipAddress
     Time: ${loginTime}
   </p>
 </div>`
-        : ""}
+      : ""}
 
 </td>
 </tr>
@@ -108,7 +108,7 @@ ${ipAddress
 };
 exports.sendOtpMail = sendOtpMail;
 const sendPasswordResetOtpMail = async (to, otp, studentName, ipAddress, device, requestTime) => {
-    await sendMail(to, "QuickConcession – Password Reset OTP", `
+  await sendMail(to, "QuickConcession – Password Reset OTP", `
 <!DOCTYPE html>
 <html>
 <body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,Helvetica,sans-serif;">
@@ -161,7 +161,7 @@ box-shadow:0 10px 35px rgba(0,0,0,0.06);">
 </p>
 
 ${ipAddress
-        ? `
+      ? `
 <div style="background:#f9fafb;border:1px solid #e5e7eb;
             border-radius:8px;padding:20px;margin-bottom:30px;">
   <p style="margin:0 0 15px;font-size:14px;font-weight:bold;color:#111827;">
@@ -173,7 +173,7 @@ ${ipAddress
     Time: ${requestTime}
   </p>
 </div>`
-        : ""}
+      : ""}
 
 <p style="font-size:12px;color:#9ca3af;line-height:1.6;">
   QuickConcession will never ask for your password via email.
@@ -206,7 +206,7 @@ ${ipAddress
 };
 exports.sendPasswordResetOtpMail = sendPasswordResetOtpMail;
 const sendStaffLoginOtpMail = async (to, otp, staffName, ipAddress, device, loginTime) => {
-    await sendMail(to, "Verification Code for QuickConcession Staff Portal", `
+  await sendMail(to, "Verification Code for QuickConcession Staff Portal", `
 <!DOCTYPE html>
 <html>
 <body style="margin:0;padding:0;background:#eef2f7;font-family:Arial,Helvetica,sans-serif;">
@@ -263,7 +263,7 @@ box-shadow:0 12px 40px rgba(0,0,0,0.07);">
 </p>
 
 ${ipAddress
-        ? `
+      ? `
 <div style="background:#f8fafc;border:1px solid #e2e8f0;
             border-radius:10px;padding:22px;margin-bottom:35px;">
   <p style="margin:0 0 15px;font-size:14px;font-weight:600;color:#0f172a;">
@@ -275,7 +275,7 @@ ${ipAddress
     Time: ${loginTime}
   </p>
 </div>`
-        : ""}
+      : ""}
 
 <p style="font-size:12px;color:#94a3b8;line-height:1.6;">
   If this login attempt was not initiated by you, please secure your account immediately.
@@ -308,7 +308,7 @@ ${ipAddress
 };
 exports.sendStaffLoginOtpMail = sendStaffLoginOtpMail;
 const sendStaffPasswordResetOtpMail = async (to, otp, staffName, ipAddress, device, requestTime) => {
-    await sendMail(to, "QuickConcession – Staff Password Reset OTP", `
+  await sendMail(to, "QuickConcession – Staff Password Reset OTP", `
 <!DOCTYPE html>
 <html>
 <body style="margin:0;padding:0;background:#eef2f7;font-family:Arial,Helvetica,sans-serif;">
@@ -364,7 +364,7 @@ box-shadow:0 12px 40px rgba(0,0,0,0.07);">
 </p>
 
 ${ipAddress
-        ? `
+      ? `
 <div style="background:#f8fafc;border:1px solid #e2e8f0;
             border-radius:10px;padding:22px;margin-bottom:35px;">
 
@@ -379,7 +379,7 @@ ${ipAddress
   </p>
 
 </div>`
-        : ""}
+      : ""}
 
 <hr style="border:none;border-top:1px solid #e2e8f0;margin:35px 0;" />
 

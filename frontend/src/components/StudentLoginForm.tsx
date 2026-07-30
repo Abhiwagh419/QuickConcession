@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { User, Lock, KeyRound, Mail, Loader2 } from "lucide-react";
@@ -39,48 +40,47 @@ const StudentLoginForm = () => {
     return "";
   };
 
-const handleSendOtp = async () => {
-  const enrollmentError = validateEnrollmentNo(enrollmentNo);
-  const passwordError = validatePassword(password);
+  const handleSendOtp = async () => {
+    const enrollmentError = validateEnrollmentNo(enrollmentNo);
+    const passwordError = validatePassword(password);
 
-  if (enrollmentError || passwordError) {
-    setErrors({
-      enrollmentNo: enrollmentError,
-      password: passwordError,
-    });
-    return;
-  }
+    if (enrollmentError || passwordError) {
+      setErrors({
+        enrollmentNo: enrollmentError,
+        password: passwordError,
+      });
+      return;
+    }
 
-  setIsSendingOtp(true);
-  setErrors({});
+    setIsSendingOtp(true);
+    setErrors({});
 
-  try {
-    await apiFetch("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({
-        enrollmentNo,
-        password,
-      }),
-    });
+    try {
+      await apiFetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          enrollmentNo,
+          password,
+        }),
+      });
 
-    setOtpSent(true);
+      setOtpSent(true);
 
-    toast({
-      title: "OTP Sent",
-      description:
-        "A one-time password has been sent to your registered email address.",
-    });
-
-  } catch (err: any) {
-    toast({
-      title: "Login Failed",
-      description: err.message,
-      variant: "destructive",
-    });
-  } finally {
-    setIsSendingOtp(false);
-  }
-};
+      toast({
+        title: "OTP Sent",
+        description:
+          "A one-time password has been sent to your registered email address.",
+      });
+    } catch (err: any) {
+      toast({
+        title: "Login Failed",
+        description: err.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,17 +162,14 @@ const handleSendOtp = async () => {
         <Label htmlFor="password" className="text-foreground font-medium">
           Password
         </Label>
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            id="password"
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="pl-10 form-input"
-          />
-        </div>
+        <PasswordInput
+          id="password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="form-input"
+          startAdornment={<Lock className="w-4 h-4" />}
+        />
         {errors.password && (
           <p className="text-sm text-destructive animate-slide-in">
             {errors.password}

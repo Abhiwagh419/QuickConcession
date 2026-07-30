@@ -39,7 +39,6 @@ export async function staffLogin(req: Request, res: Response) {
       });
     }
 
-    // Invalidate previous OTPs
     await prisma.otpVerification.updateMany({
       where: {
         staffId: staff.id,
@@ -135,7 +134,7 @@ export async function verifyStaffOtp(req: Request, res: Response) {
     const token = jwt.sign(
       {
         sub: staff.id,
-         id: staff.id,
+        id: staff.id,
         role: staff.role,
         email: staff.email,
         name: staff.fullName,

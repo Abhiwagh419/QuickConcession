@@ -12,7 +12,7 @@ export type UserRole = "STUDENT" | "STAFF" | "ADMIN";
 export interface AppJwtPayload {
   sub: number;
   id: number;
-  role: UserRole;   // ✅ FIXED
+  role: UserRole; 
   email?: string;
   name?: string;
 }

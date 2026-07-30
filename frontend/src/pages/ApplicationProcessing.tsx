@@ -38,8 +38,6 @@ import StaffHeader from "@/components/StaffHeader";
 import PageWrapper from "@/components/PageWrapper";
 import { motion } from "framer-motion";
 
-// ─── Animation helpers ────────────────────────────────────────────────────────
-
 type CubicBezier = [number, number, number, number];
 const EASE_OUT: CubicBezier = [0.16, 1, 0.3, 1];
 
@@ -48,8 +46,6 @@ const fadeIn = (delay: number = 0) => ({
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.38, ease: EASE_OUT, delay },
 });
-
-// ─── Info Field ───────────────────────────────────────────────────────────────
 
 function InfoField({
   label,
@@ -67,8 +63,6 @@ function InfoField({
     </div>
   );
 }
-
-// ─── Main Component ───────────────────────────────────────────────────────────
 
 const ApplicationProcessing = () => {
   const { id } = useParams<{ id: string }>();
@@ -104,8 +98,6 @@ const ApplicationProcessing = () => {
     if (id) fetchApplication();
   }, [id]);
 
-  // ── Loading ────────────────────────────────────────────────────────────────
-
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -121,8 +113,6 @@ const ApplicationProcessing = () => {
       </div>
     );
   }
-
-  // ── Not Found ──────────────────────────────────────────────────────────────
 
   if (!application) {
     return (
@@ -160,8 +150,6 @@ const ApplicationProcessing = () => {
       </div>
     );
   }
-
-  // ── Handlers (untouched) ───────────────────────────────────────────────────
 
   const handleApprove = async () => {
     try {
@@ -232,15 +220,12 @@ const ApplicationProcessing = () => {
     return styles[status] ?? styles.PENDING;
   };
 
-  // ── Render ─────────────────────────────────────────────────────────────────
-
   return (
     <div className="min-h-screen bg-background">
       <StaffHeader />
 
       <PageWrapper>
         <main className="container mx-auto max-w-6xl space-y-6 px-4 py-8">
-          {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0)}
             className="flex flex-wrap items-start justify-between gap-4"
@@ -280,9 +265,7 @@ const ApplicationProcessing = () => {
             </span>
           </motion.div>
 
-          {/* ── Two-column cards ─────────────────────────────────────── */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {/* Student Profile */}
             <motion.div {...fadeIn(0.07)}>
               <Card className="border border-border shadow-sm rounded-xl overflow-hidden h-full">
                 <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
@@ -350,7 +333,6 @@ const ApplicationProcessing = () => {
               </Card>
             </motion.div>
 
-            {/* Application Details */}
             <motion.div {...fadeIn(0.11)}>
               <Card className="border border-border shadow-sm rounded-xl overflow-hidden h-full">
                 <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
@@ -372,7 +354,6 @@ const ApplicationProcessing = () => {
 
                   <Separator />
 
-                  {/* Route */}
                   <div className="space-y-2">
                     <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                       Route Details
@@ -412,7 +393,6 @@ const ApplicationProcessing = () => {
                     value={application.travelClass}
                   />
 
-                  {/* Issued details */}
                   {application.status === "APPROVED" &&
                     application.concessionNumber && (
                       <>
@@ -452,7 +432,6 @@ const ApplicationProcessing = () => {
                       </>
                     )}
 
-                  {/* Rejected details */}
                   {application.status === "REJECTED" && (
                     <>
                       <Separator />
@@ -471,7 +450,6 @@ const ApplicationProcessing = () => {
             </motion.div>
           </div>
 
-          {/* ── Action Section ───────────────────────────────────────── */}
           {(application.status === "PENDING" ||
             (application.status === "APPROVED" &&
               !application.concessionNumber)) && (
@@ -486,7 +464,6 @@ const ApplicationProcessing = () => {
                 </CardHeader>
                 <CardContent className="px-6 py-6">
                   {!showIssueSection ? (
-                    /* Approve / Reject */
                     <div className="space-y-4">
                       <p className="text-[13px] text-muted-foreground">
                         Review the application details above and choose an
@@ -513,7 +490,6 @@ const ApplicationProcessing = () => {
                       </div>
                     </div>
                   ) : (
-                    /* Issue */
                     <div className="space-y-5">
                       <div className="flex items-start gap-2.5 rounded-xl border border-success/30 bg-success/10 px-4 py-3">
                         <CheckCircle className="h-4 w-4 text-success shrink-0 mt-0.5" />
@@ -567,7 +543,6 @@ const ApplicationProcessing = () => {
             </motion.div>
           )}
 
-          {/* ── Footer ───────────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0.22)}
             className="flex items-center gap-3 pb-6"
@@ -582,7 +557,6 @@ const ApplicationProcessing = () => {
         </main>
       </PageWrapper>
 
-      {/* ── Reject Dialog (untouched logic) ─────────────────────────── */}
       <AlertDialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
         <AlertDialogContent className="rounded-xl border border-border">
           <AlertDialogHeader>

@@ -63,35 +63,35 @@ export async function exportConcessionsExcel(req: Request, res: Response) {
     const { start, end } = getDateRange(range, from, to);
     const staffId = req.user!.sub;
 
-const approved = await prisma.concessionApplication.findMany({
-  where: {
-    approvedByStaffId: staffId,
-    status: { in: ["APPROVED", "ISSUED", "EXPIRED"] },
-    approvedAt: {
-  gte: start,
-  lte: end,
-},
-  },
-  include: {
-    student: true,
-  },
-  orderBy: { approvedAt: "desc" },
-});
+    const approved = await prisma.concessionApplication.findMany({
+      where: {
+        approvedByStaffId: staffId,
+        status: { in: ["APPROVED", "ISSUED", "EXPIRED"] },
+        approvedAt: {
+          gte: start,
+          lte: end,
+        },
+      },
+      include: {
+        student: true,
+      },
+      orderBy: { approvedAt: "desc" },
+    });
 
-const rejected = await prisma.concessionApplication.findMany({
-  where: {
-    approvedByStaffId: staffId,
-    status: "REJECTED",
-    rejectedAt: {
-  gte: start,
-  lte: end,
-},
-  },
-  include: {
-    student: true,
-  },
-  orderBy: { rejectedAt: "desc" },
-});
+    const rejected = await prisma.concessionApplication.findMany({
+      where: {
+        approvedByStaffId: staffId,
+        status: "REJECTED",
+        rejectedAt: {
+          gte: start,
+          lte: end,
+        },
+      },
+      include: {
+        student: true,
+      },
+      orderBy: { rejectedAt: "desc" },
+    });
 
     const workbook = new ExcelJS.Workbook();
 

@@ -22,7 +22,7 @@ export const sendOtpMail = async (
   studentName: string,
   ipAddress?: string,
   device?: string,
-  loginTime?: string
+  loginTime?: string,
 ) => {
   await sendMail(
     to,
@@ -115,7 +115,7 @@ ${
 
 </body>
 </html>
-`
+`,
   );
 };
 
@@ -125,7 +125,7 @@ export const sendPasswordResetOtpMail = async (
   studentName: string,
   ipAddress?: string,
   device?: string,
-  requestTime?: string
+  requestTime?: string,
 ) => {
   await sendMail(
     to,
@@ -226,7 +226,7 @@ ${
 
 </body>
 </html>
-`
+`,
   );
 };
 
@@ -236,7 +236,7 @@ export const sendStaffLoginOtpMail = async (
   staffName: string,
   ipAddress?: string,
   device?: string,
-  loginTime?: string
+  loginTime?: string,
 ) => {
   await sendMail(
     to,
@@ -341,7 +341,7 @@ ${
 
 </body>
 </html>
-`
+`,
   );
 };
 
@@ -351,7 +351,7 @@ export const sendStaffPasswordResetOtpMail = async (
   staffName: string,
   ipAddress?: string,
   device?: string,
-  requestTime?: string
+  requestTime?: string,
 ) => {
   await sendMail(
     to,
@@ -461,6 +461,6 @@ ${
 
 </body>
 </html>
-`
+`,
   );
 };

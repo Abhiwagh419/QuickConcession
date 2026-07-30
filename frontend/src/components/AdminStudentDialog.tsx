@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useEffect, useMemo, useState } from "react";
@@ -26,7 +27,6 @@ interface Props {
 }
 
 const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
-  /* ================= STATES ================= */
 
   const [activeTab, setActiveTab] = useState("profile");
 
@@ -56,8 +56,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
   const [rejectReason, setRejectReason] = useState("");
   const [showRejectBox, setShowRejectBox] = useState(false);
 
-  /* ================= MEMO ================= */
-
   const initials = useMemo(() => {
     if (!data?.fullName) return "";
     return data.fullName
@@ -76,8 +74,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
       { name: "Pending", value: data?.analytics?.pending || 0 },
     ];
   }, [data]);
-
-  /* ================= SYNC ================= */
 
   useEffect(() => {
     if (data) {
@@ -100,8 +96,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
   if (!data) return null;
 
   const isChanged = JSON.stringify(form) !== JSON.stringify(original);
-
-  /* ================= ACTIONS ================= */
 
   const saveChanges = async () => {
     try {
@@ -170,8 +164,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
     }
   };
 
-  /* ================= UI ================= */
-
   return (
     <>
       <Dialog open={open} onOpenChange={onClose}>
@@ -200,7 +192,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                {/* ================= PROFILE ================= */}
                 {activeTab === "profile" && (
                   <div className="space-y-6">
                     <div className="flex items-center gap-4">
@@ -252,7 +243,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                   </div>
                 )}
 
-                {/* ================= EDIT ================= */}
                 {activeTab === "edit" && (
                   <div className="space-y-4">
                     {Object.entries(form).map(([key, value]) => (
@@ -281,7 +271,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                   </div>
                 )}
 
-                {/* ================= ANALYTICS ================= */}
                 {activeTab === "analytics" && (
                   <div className="space-y-6">
                     <div className="grid grid-cols-4 gap-4 text-center">
@@ -325,7 +314,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                   </div>
                 )}
 
-                {/* ================= APPLICATIONS ================= */}
                 {activeTab === "applications" && (
                   <div className="space-y-3 max-h-[400px] overflow-y-auto">
                     {data.applications?.map((app: any) => (
@@ -349,7 +337,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                   </div>
                 )}
 
-                {/* ================= CONTROLS ================= */}
                 {activeTab === "controls" && (
                   <div className="space-y-6">
                     <Button
@@ -363,8 +350,7 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
 
                     <div className="space-y-3">
                       <Label>Set New Password</Label>
-                      <Input
-                        type="password"
+                      <PasswordInput
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                       />
@@ -397,7 +383,7 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
           </Tabs>
         </DialogContent>
       </Dialog>
-      {/* ================= FULL APPLICATION DETAILS ================= */}
+
       <Dialog open={openAppDetails} onOpenChange={setOpenAppDetails}>
         <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
@@ -415,7 +401,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
 
           {selectedApplication && (
             <div className="space-y-8">
-              {/* ================= STATUS BAR ================= */}
               <div className="flex justify-between items-center bg-muted/40 border rounded-xl p-4">
                 <div>
                   <p className="text-sm text-muted-foreground">
@@ -456,7 +441,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                 </div>
               </div>
 
-              {/* ================= PROGRESS STEPS ================= */}
               <div className="flex items-center justify-between relative">
                 {["APPLIED", "APPROVED", "ISSUED", "EXPIRED"].map(
                   (step, index) => {
@@ -505,9 +489,7 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                 )}
               </div>
 
-              {/* ================= MAIN GRID ================= */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* STUDENT PANEL */}
                 <div className="rounded-2xl border p-6 bg-card shadow-sm space-y-4">
                   <h3 className="font-semibold text-lg">Student Information</h3>
                   <Separator />
@@ -551,7 +533,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                   </div>
                 </div>
 
-                {/* APPLICATION PANEL */}
                 <div className="rounded-2xl border p-6 bg-card shadow-sm space-y-4">
                   <h3 className="font-semibold text-lg">Application Details</h3>
                   <Separator />
@@ -634,7 +615,6 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                 </div>
               </div>
 
-              {/* ================= ADMIN ACTIONS ================= */}
               <div className="flex gap-4 justify-end border-t pt-6">
                 {selectedApplication.status === "PENDING" && (
                   <>

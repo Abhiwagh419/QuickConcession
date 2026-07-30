@@ -28,7 +28,6 @@ export default function ChatWindow({
 
   return (
     <div className="flex flex-col w-full h-full overflow-hidden bg-white">
-      {/* MESSAGE AREA */}
       <div
         ref={scrollRef}
         className="flex flex-col flex-1 min-w-0 overflow-y-auto px-3 sm:px-4 py-4 space-y-3"
@@ -48,8 +47,8 @@ export default function ChatWindow({
             <div
               key={m.id}
               className={`flex mb-1 px-1 min-w-0 ${
-  isMe ? "justify-end" : "justify-start"
-}`}
+                isMe ? "justify-end" : "justify-start"
+              }`}
             >
               <motion.div
                 initial={{ opacity: 0, y: 6 }}
@@ -74,9 +73,7 @@ export default function ChatWindow({
   }
 `}
               >
-                <p className="break-all whitespace-pre-wrap">
-  {m.text}
-</p>
+                <p className="break-all whitespace-pre-wrap">{m.text}</p>
 
                 {m.createdAt?.toDate && (
                   <span className="block text-[10px] opacity-70 mt-1 text-right">
@@ -92,7 +89,6 @@ export default function ChatWindow({
         })}
       </div>
 
-      {/* INPUT */}
       <div className="shrink-0 flex items-center gap-2 px-3 py-3 border-t bg-white">
         <Input
           value={text}

@@ -6,9 +6,8 @@ import { sendMail } from "../utils/sendMail";
 
 export async function getConcessionApplications(req: any, res: Response) {
   try {
-    const staffId = req.user.sub; // 🔥 IMPORTANT
+    const staffId = req.user.sub;
 
-    // 1️⃣ Global Pending (visible to all staff)
     const pendingApps = await prisma.concessionApplication.findMany({
       where: {
         status: "PENDING",
@@ -31,7 +30,6 @@ export async function getConcessionApplications(req: any, res: Response) {
       },
     });
 
-    // 2️⃣ Personal Applications (processed by this staff)
     const personalApps = await prisma.concessionApplication.findMany({
       where: {
         approvedByStaffId: staffId,
@@ -125,7 +123,7 @@ export async function approveConcessionApplication(
         });
       }
 
-      const issuedAt = new Date(); 
+      const issuedAt = new Date();
       const expiryDate = calculateExpiryFromApproval(
         application.approvedAt!,
         application.duration,

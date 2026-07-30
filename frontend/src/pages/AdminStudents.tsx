@@ -30,8 +30,6 @@ const AdminStudents = () => {
   const [selectedStudent, setSelectedStudent] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // ================= LOAD STUDENTS =================
-
   const loadStudents = async () => {
     try {
       const data = await apiFetch(
@@ -47,8 +45,6 @@ const AdminStudents = () => {
     loadStudents();
   }, [showDeleted]);
 
-  // ================= OPEN DETAILS =================
-
   const openStudentDetails = async (id: number) => {
     try {
       const fullData = await apiFetch(`/admin/students/${id}/full`);
@@ -58,8 +54,6 @@ const AdminStudents = () => {
       console.error("Failed to fetch student details:", err);
     }
   };
-
-  // ================= ACTIONS =================
 
   const handleToggleActive = async (id: number) => {
     await apiFetch(`/admin/students/${id}/toggle`, {
@@ -84,15 +78,11 @@ const AdminStudents = () => {
     loadStudents();
   };
 
-  // ================= FILTER =================
-
   const filteredStudents = students.filter(
     (s) =>
       s.fullName.toLowerCase().includes(search.toLowerCase()) ||
       s.enrollmentNo.toLowerCase().includes(search.toLowerCase()),
   );
-
-  // ================= UI =================
 
   return (
     <div className="min-h-screen bg-background">
@@ -122,7 +112,6 @@ const AdminStudents = () => {
             </div>
           </div>
 
-          {/* SEARCH */}
           <Card className="mb-6">
             <CardContent className="p-4 flex items-center gap-4">
               <Search className="w-5 h-5 text-muted-foreground" />
@@ -134,7 +123,6 @@ const AdminStudents = () => {
             </CardContent>
           </Card>
 
-          {/* TABLE */}
           <Card>
             <CardHeader>
               <CardTitle>
@@ -239,7 +227,6 @@ const AdminStudents = () => {
             </CardContent>
           </Card>
 
-          {/* DIALOG */}
           <AdminStudentDialog
             open={dialogOpen}
             onClose={() => setDialogOpen(false)}

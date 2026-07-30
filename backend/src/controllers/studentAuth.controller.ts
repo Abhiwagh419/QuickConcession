@@ -54,17 +54,24 @@ export const requestStudentPasswordReset = async (
 
   const ip = req.ip || "Unknown IP";
 
-const device =
-  typeof req.headers["user-agent"] === "string"
-    ? req.headers["user-agent"]
-    : "Unknown Device";
+  const device =
+    typeof req.headers["user-agent"] === "string"
+      ? req.headers["user-agent"]
+      : "Unknown Device";
 
-const time = new Date().toLocaleString("en-IN", {
-  dateStyle: "medium",
-  timeStyle: "short",
-});
+  const time = new Date().toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
 
-  await sendPasswordResetOtpMail(student.email, otp, student.fullName, ip, device, time,);
+  await sendPasswordResetOtpMail(
+    student.email,
+    otp,
+    student.fullName,
+    ip,
+    device,
+    time,
+  );
 
   return res.status(200).json({
     message:

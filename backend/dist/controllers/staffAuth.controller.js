@@ -34,7 +34,6 @@ async function staffLogin(req, res) {
                 message: "Invalid credentials",
             });
         }
-        // Invalidate previous OTPs
         await client_1.prisma.otpVerification.updateMany({
             where: {
                 staffId: staff.id,

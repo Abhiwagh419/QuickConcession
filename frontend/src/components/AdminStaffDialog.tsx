@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useEffect, useMemo, useState } from "react";
@@ -30,7 +31,10 @@ interface StaffForm {
 const AdminStaffDialog = ({ open, onClose, data, refresh }: Props) => {
   const [activeTab, setActiveTab] = useState("profile");
   const [form, setForm] = useState<StaffForm>({ fullName: "", email: "" });
-  const [original, setOriginal] = useState<StaffForm>({ fullName: "", email: "" });
+  const [original, setOriginal] = useState<StaffForm>({
+    fullName: "",
+    email: "",
+  });
   const [isSaving, setIsSaving] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
@@ -61,8 +65,6 @@ const AdminStaffDialog = ({ open, onClose, data, refresh }: Props) => {
   if (!data) return null;
 
   const isChanged = JSON.stringify(form) !== JSON.stringify(original);
-
-  /* ================= ACTIONS ================= */
 
   const saveChanges = async () => {
     try {
@@ -114,8 +116,6 @@ const AdminStaffDialog = ({ open, onClose, data, refresh }: Props) => {
     }
   };
 
-  /* ================= UI ================= */
-
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl">
@@ -141,8 +141,6 @@ const AdminStaffDialog = ({ open, onClose, data, refresh }: Props) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-
-              {/* ================= PROFILE ================= */}
               {activeTab === "profile" && (
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
@@ -221,7 +219,6 @@ const AdminStaffDialog = ({ open, onClose, data, refresh }: Props) => {
                 </div>
               )}
 
-              {/* ================= EDIT ================= */}
               {activeTab === "edit" && (
                 <div className="space-y-5">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -257,15 +254,17 @@ const AdminStaffDialog = ({ open, onClose, data, refresh }: Props) => {
                 </div>
               )}
 
-              {/* ================= CONTROLS ================= */}
               {activeTab === "controls" && (
                 <div className="space-y-6">
-
                   <div>
                     <p className="text-sm font-medium">Account Status</p>
                     <p className="text-xs text-muted-foreground mb-2">
                       Currently:{" "}
-                      <span className={data.active ? "text-green-600" : "text-red-600"}>
+                      <span
+                        className={
+                          data.active ? "text-green-600" : "text-red-600"
+                        }
+                      >
                         {data.active ? "Active" : "Inactive"}
                       </span>
                     </p>
@@ -284,8 +283,7 @@ const AdminStaffDialog = ({ open, onClose, data, refresh }: Props) => {
 
                   <div>
                     <p className="text-sm font-medium mb-2">Reset Password</p>
-                    <Input
-                      type="password"
+                    <PasswordInput
                       placeholder="Enter new password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
@@ -321,10 +319,8 @@ const AdminStaffDialog = ({ open, onClose, data, refresh }: Props) => {
                       </Button>
                     )}
                   </div>
-
                 </div>
               )}
-
             </motion.div>
           </AnimatePresence>
         </Tabs>
@@ -333,4 +329,4 @@ const AdminStaffDialog = ({ open, onClose, data, refresh }: Props) => {
   );
 };
 
-export default AdminStaffDialog;  
+export default AdminStaffDialog;

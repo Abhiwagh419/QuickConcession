@@ -17,7 +17,7 @@ async function getApplicationsByEnrollment(req, res) {
         where: { enrollmentNo },
     });
     if (!student) {
-        return res.json([]); // IMPORTANT: do not leak info
+        return res.json([]);
     }
     const applications = await client_1.prisma.concessionApplication.findMany({
         where: { studentId: student.id },

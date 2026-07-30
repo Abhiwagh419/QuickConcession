@@ -30,8 +30,6 @@ import { apiFetch } from "@/lib/api";
 import PageWrapper from "@/components/PageWrapper";
 import { motion } from "framer-motion";
 
-// ─── Animation helpers ────────────────────────────────────────────────────────
-
 type CubicBezier = [number, number, number, number];
 const EASE_OUT: CubicBezier = [0.16, 1, 0.3, 1];
 
@@ -40,8 +38,6 @@ const fadeIn = (delay: number = 0) => ({
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.38, ease: EASE_OUT, delay },
 });
-
-// ─── FormField helper ─────────────────────────────────────────────────────────
 
 function FormField({
   label,
@@ -65,8 +61,6 @@ function FormField({
   );
 }
 
-// ─── InfoField helper ─────────────────────────────────────────────────────────
-
 function InfoField({ label, value }: { label: string; value?: string }) {
   return (
     <div className="space-y-0.5">
@@ -77,8 +71,6 @@ function InfoField({ label, value }: { label: string; value?: string }) {
     </div>
   );
 }
-
-// ─── Skeleton loader ──────────────────────────────────────────────────────────
 
 function StudentInfoSkeleton() {
   return (
@@ -100,8 +92,6 @@ function StudentInfoSkeleton() {
   );
 }
 
-// ─── Section heading ──────────────────────────────────────────────────────────
-
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground pl-0.5">
@@ -109,8 +99,6 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
     </p>
   );
 }
-
-// ─── Main Component ───────────────────────────────────────────────────────────
 
 const NewConcessionApplication = () => {
   useEffect(() => {
@@ -220,15 +208,15 @@ const NewConcessionApplication = () => {
     return railwayLines.find((l) => l.id === lineId)?.name || lineId;
   };
 
-const selectTriggerClass = (field: string) =>
-  `w-full h-9 rounded-lg border border-slate-300 bg-white text-sm ${
-    errors[field] ? "border-destructive" : ""
-  }`;
+  const selectTriggerClass = (field: string) =>
+    `w-full h-9 rounded-lg border border-slate-300 bg-white text-sm ${
+      errors[field] ? "border-destructive" : ""
+    }`;
 
-const disabledTriggerClass = (field: string) =>
-  `w-full h-9 rounded-lg border border-slate-200 bg-slate-100 text-sm ${
-    errors[field] ? "border-destructive" : ""
-  }`;
+  const disabledTriggerClass = (field: string) =>
+    `w-full h-9 rounded-lg border border-slate-200 bg-slate-100 text-sm ${
+      errors[field] ? "border-destructive" : ""
+    }`;
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
@@ -236,7 +224,6 @@ const disabledTriggerClass = (field: string) =>
 
       <PageWrapper>
         <main className="mx-auto w-full max-w-3xl space-y-6 px-4 py-8">
-          {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div {...fadeIn(0)}>
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
@@ -251,7 +238,6 @@ const disabledTriggerClass = (field: string) =>
             </p>
           </motion.div>
 
-          {/* ── Student Info Card ─────────────────────────────────────── */}
           {!student ? (
             <motion.div {...fadeIn(0.06)}>
               <StudentInfoSkeleton />
@@ -282,7 +268,6 @@ const disabledTriggerClass = (field: string) =>
             </motion.div>
           )}
 
-          {/* ── Application Form Card ─────────────────────────────────── */}
           <motion.div {...fadeIn(0.11)}>
             <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
@@ -293,7 +278,6 @@ const disabledTriggerClass = (field: string) =>
 
               <CardContent className="px-6 py-6">
                 <form onSubmit={handleSubmit} className="space-y-7">
-                  {/* ── Class & Period ─────────────────────────────────── */}
                   <div className="space-y-3">
                     <SectionHeading>Travel Preferences</SectionHeading>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -347,7 +331,6 @@ const disabledTriggerClass = (field: string) =>
 
                   <Separator />
 
-                  {/* ── Departure ──────────────────────────────────────── */}
                   <div className="space-y-3">
                     <SectionHeading>Departure Details</SectionHeading>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -402,7 +385,7 @@ const disabledTriggerClass = (field: string) =>
                               }
                             />
                           </SelectTrigger>
-                         <SelectContent className="bg-white max-h-60 overflow-y-scroll">
+                          <SelectContent className="bg-white max-h-60 overflow-y-scroll">
                             {fromStations.map((station) => (
                               <SelectItem key={station} value={station}>
                                 {station}
@@ -416,7 +399,6 @@ const disabledTriggerClass = (field: string) =>
 
                   <Separator />
 
-                  {/* ── Arrival ────────────────────────────────────────── */}
                   <div className="space-y-3">
                     <SectionHeading>Arrival Details</SectionHeading>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -479,7 +461,6 @@ const disabledTriggerClass = (field: string) =>
                     </div>
                   </div>
 
-                  {/* ── Route Summary ──────────────────────────────────── */}
                   {formData.fromStation && formData.toStation && (
                     <motion.div
                       initial={{ opacity: 0, y: 6 }}
@@ -517,7 +498,6 @@ const disabledTriggerClass = (field: string) =>
                     </motion.div>
                   )}
 
-                  {/* ── Warning Panel ──────────────────────────────────── */}
                   <div className="flex items-start gap-2.5 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3.5">
                     <AlertTriangle className="h-4 w-4 text-warning shrink-0 mt-0.5" />
                     <p className="text-[12px] leading-relaxed text-foreground">
@@ -527,7 +507,6 @@ const disabledTriggerClass = (field: string) =>
                     </p>
                   </div>
 
-                  {/* ── Action Buttons ─────────────────────────────────── */}
                   <div className="flex flex-col gap-3 pt-1 sm:flex-row">
                     <Button
                       type="submit"
@@ -557,7 +536,6 @@ const disabledTriggerClass = (field: string) =>
             </Card>
           </motion.div>
 
-          {/* ── Footer ───────────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0.18)}
             className="flex items-center gap-3 pb-6"

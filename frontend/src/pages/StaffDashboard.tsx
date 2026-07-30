@@ -41,8 +41,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-// ─── Animation helpers ────────────────────────────────────────────────────────
-
 type CubicBezier = [number, number, number, number];
 const EASE_OUT: CubicBezier = [0.16, 1, 0.3, 1];
 
@@ -52,8 +50,6 @@ const fadeIn = (delay: number = 0) => ({
   transition: { duration: 0.38, ease: EASE_OUT, delay },
 });
 
-// ─── Section Label ────────────────────────────────────────────────────────────
-
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <p className="mb-3 pl-0.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
@@ -61,8 +57,6 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     </p>
   );
 }
-
-// ─── Info Field ───────────────────────────────────────────────────────────────
 
 function InfoField({
   label,
@@ -80,8 +74,6 @@ function InfoField({
     </div>
   );
 }
-
-// ─── Stat Card ────────────────────────────────────────────────────────────────
 
 function StatTile({
   label,
@@ -106,8 +98,6 @@ function StatTile({
   );
 }
 
-// ─── Status Badge ─────────────────────────────────────────────────────────────
-
 function StatusChip({ status }: { status: string }) {
   const map: Record<string, string> = {
     ISSUED: "bg-success/10 text-success border-success/30",
@@ -126,8 +116,6 @@ function StatusChip({ status }: { status: string }) {
     </span>
   );
 }
-
-// ─── Main Component ───────────────────────────────────────────────────────────
 
 const StaffDashboard = () => {
   const [openDetails, setOpenDetails] = useState(false);
@@ -347,7 +335,6 @@ const StaffDashboard = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-6xl space-y-8 px-4 py-8">
-          {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0)}
             className="flex items-start justify-between gap-4 flex-wrap"
@@ -367,7 +354,6 @@ const StaffDashboard = () => {
             </div>
           </motion.div>
 
-          {/* ── Staff Profile ────────────────────────────────────────── */}
           <motion.div {...fadeIn(0.05)}>
             <SectionLabel>Staff Identity</SectionLabel>
             <Card className="border shadow-sm overflow-hidden">
@@ -393,7 +379,6 @@ const StaffDashboard = () => {
             </Card>
           </motion.div>
 
-          {/* ── Quick Stats ──────────────────────────────────────────── */}
           <motion.div {...fadeIn(0.1)}>
             <SectionLabel>Application Overview</SectionLabel>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -420,7 +405,6 @@ const StaffDashboard = () => {
             </div>
           </motion.div>
 
-          {/* ── Export Concession Records ─────────────────────────────── */}
           <motion.div {...fadeIn(0.15)}>
             <SectionLabel>Export Records</SectionLabel>
             <Card className="border shadow-sm">
@@ -452,7 +436,6 @@ const StaffDashboard = () => {
             </Card>
           </motion.div>
 
-          {/* ── Student Lookup ───────────────────────────────────────── */}
           <motion.div {...fadeIn(0.2)}>
             <SectionLabel>Student Lookup</SectionLabel>
             <Card className="border shadow-sm">
@@ -487,7 +470,6 @@ const StaffDashboard = () => {
             </Card>
           </motion.div>
 
-          {/* ── Student Summary Dialog ────────────────────────────────── */}
           <Dialog open={openStudentDialog} onOpenChange={setOpenStudentDialog}>
             <DialogContent className="max-w-xl">
               <DialogHeader>
@@ -505,7 +487,6 @@ const StaffDashboard = () => {
 
               {studentSummary && (
                 <div className="space-y-5">
-                  {/* Identity */}
                   <div className="flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                       <User className="h-6 w-6 text-primary" />
@@ -570,7 +551,6 @@ const StaffDashboard = () => {
 
                   <Separator />
 
-                  {/* Stats */}
                   <div className="grid grid-cols-4 gap-3">
                     <div className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-center">
                       <p className="text-[11px] font-semibold uppercase text-warning">
@@ -608,7 +588,6 @@ const StaffDashboard = () => {
 
                   <Separator />
 
-                  {/* Latest Application */}
                   {studentSummary.latest ? (
                     <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-1.5">
                       <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -651,7 +630,6 @@ const StaffDashboard = () => {
             </DialogContent>
           </Dialog>
 
-          {/* ── History Dialog ────────────────────────────────────────── */}
           <Dialog
             open={openHistoryPanel}
             onOpenChange={(open) => {
@@ -664,7 +642,6 @@ const StaffDashboard = () => {
                 <DialogTitle>Application History</DialogTitle>
               </DialogHeader>
 
-              {/* Filter Buttons */}
               <div className="flex flex-wrap gap-2 mb-2">
                 {filterOptions.map((f) => (
                   <Button
@@ -733,7 +710,6 @@ const StaffDashboard = () => {
             </DialogContent>
           </Dialog>
 
-          {/* ── Application Details Modal ─────────────────────────────── */}
           <Dialog open={openDetails} onOpenChange={setOpenDetails}>
             <DialogContent className="max-w-3xl">
               <DialogHeader>
@@ -755,7 +731,6 @@ const StaffDashboard = () => {
 
               {selectedApp && (
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                  {/* Student Profile */}
                   <div className="rounded-xl border border-border bg-muted/30 p-5 space-y-4">
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4 text-primary" />
@@ -795,7 +770,6 @@ const StaffDashboard = () => {
                     </div>
                   </div>
 
-                  {/* Application Details */}
                   <div className="rounded-xl border border-border bg-muted/30 p-5 space-y-4">
                     <div className="flex items-center gap-2">
                       <Train className="h-4 w-4 text-primary" />
@@ -889,7 +863,6 @@ const StaffDashboard = () => {
             </DialogContent>
           </Dialog>
 
-          {/* ── Help & Support ───────────────────────────────────────── */}
           <motion.div {...fadeIn(0.25)}>
             <SectionLabel>Support</SectionLabel>
             <Card className="border shadow-sm">
@@ -915,7 +888,6 @@ const StaffDashboard = () => {
             </Card>
           </motion.div>
 
-          {/* ── Administrative Modules ───────────────────────────────── */}
           <motion.div {...fadeIn(0.3)}>
             <SectionLabel>Administrative Modules</SectionLabel>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -969,7 +941,6 @@ const StaffDashboard = () => {
             </div>
           </motion.div>
 
-          {/* ── Footer ───────────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0.45)}
             className="flex items-center gap-3 pb-6 pt-2"

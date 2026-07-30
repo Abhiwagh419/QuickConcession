@@ -398,23 +398,15 @@ router.get("/applications/:id", requireAuth, async (req: any, res) => {
   res.json(application);
 });
 
-router.post(
-  "/applications/:id/approve",
-  requireAuth,
-  async (req: any, res) => {
-    if (!ensureAdmin(req, res)) return;
-    return approveConcessionApplication(req, res);
-  },
-);
+router.post("/applications/:id/approve", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+  return approveConcessionApplication(req, res);
+});
 
-router.post(
-  "/applications/:id/reject",
-  requireAuth,
-  async (req: any, res) => {
-    if (!ensureAdmin(req, res)) return;
-    return rejectConcessionApplication(req, res);
-  },
-);
+router.post("/applications/:id/reject", requireAuth, async (req: any, res) => {
+  if (!ensureAdmin(req, res)) return;
+  return rejectConcessionApplication(req, res);
+});
 
 router.get("/dashboard", requireAuth, async (req: any, res) => {
   if (!ensureAdmin(req, res)) return;
@@ -718,9 +710,7 @@ router.post(
       select: { enrollmentNo: true, email: true },
     });
 
-    const enrollmentSet = new Set(
-      existingStudents.map((s) => s.enrollmentNo)
-    );
+    const enrollmentSet = new Set(existingStudents.map((s) => s.enrollmentNo));
     const emailSet = new Set(existingStudents.map((s) => s.email));
 
     const validYears = ["FY", "SY", "TY"];
@@ -802,7 +792,7 @@ router.post(
       validStudents,
       errors,
     });
-  }
+  },
 );
 
 router.post("/students/bulk/confirm", requireAuth, async (req: any, res) => {
@@ -830,9 +820,9 @@ router.post("/students/bulk/confirm", requireAuth, async (req: any, res) => {
       shift: s.shift,
       passwordHash,
       dateOfBirth:
-  s.dateOfBirth && !isNaN(new Date(s.dateOfBirth).getTime())
-    ? new Date(s.dateOfBirth)
-    : null,
+        s.dateOfBirth && !isNaN(new Date(s.dateOfBirth).getTime())
+          ? new Date(s.dateOfBirth)
+          : null,
       address: s.address,
     });
   }

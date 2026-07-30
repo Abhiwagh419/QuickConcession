@@ -150,7 +150,6 @@ const RailwayConcessionDashboard = () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-6xl space-y-6 px-4 py-8">
-          {/* ── Page Header ──────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0)}
             className="flex flex-wrap items-start justify-between gap-4"
@@ -180,7 +179,6 @@ const RailwayConcessionDashboard = () => {
             </Button>
           </motion.div>
 
-          {/* ── Current Application Status ───────────────────────────── */}
           <motion.div {...fadeIn(0.07)}>
             <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
@@ -191,13 +189,11 @@ const RailwayConcessionDashboard = () => {
               <CardContent className="px-6 py-5 space-y-4">
                 {currentApplication ? (
                   <div className="flex items-start gap-4">
-                    {/* Status icon */}
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-muted">
                       {getStatusIcon(currentApplication.status)}
                     </div>
 
                     <div className="flex-1 min-w-0 space-y-2">
-                      {/* Badge + Pass No row */}
                       <div className="flex flex-wrap items-center gap-2.5">
                         <span
                           className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${getStatusBadge(currentApplication.status)}`}
@@ -215,12 +211,10 @@ const RailwayConcessionDashboard = () => {
                         )}
                       </div>
 
-                      {/* Status message */}
                       <p className="text-[13px] text-muted-foreground leading-relaxed">
                         {getStatusMessage(currentApplication.status)}
                       </p>
 
-                      {/* Expiry date */}
                       {currentApplication.expiryDate && (
                         <div className="flex items-center gap-1.5 text-[12px]">
                           <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
@@ -251,7 +245,6 @@ const RailwayConcessionDashboard = () => {
                   </div>
                 )}
 
-                {/* Cannot-apply notice */}
                 {hasActivePass && (
                   <div className="flex items-start gap-2.5 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3">
                     <AlertCircle className="h-3.5 w-3.5 shrink-0 mt-0.5 text-warning" />
@@ -266,7 +259,6 @@ const RailwayConcessionDashboard = () => {
             </Card>
           </motion.div>
 
-          {/* ── Application History ──────────────────────────────────── */}
           <motion.div {...fadeIn(0.13)}>
             <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">

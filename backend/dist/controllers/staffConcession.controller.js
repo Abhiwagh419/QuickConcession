@@ -8,8 +8,7 @@ const client_1 = require("../prisma/client");
 const expiry_1 = require("../utils/expiry");
 async function getConcessionApplications(req, res) {
     try {
-        const staffId = req.user.sub; // 🔥 IMPORTANT
-        // 1️⃣ Global Pending (visible to all staff)
+        const staffId = req.user.sub;
         const pendingApps = await client_1.prisma.concessionApplication.findMany({
             where: {
                 status: "PENDING",
@@ -31,7 +30,6 @@ async function getConcessionApplications(req, res) {
                 },
             },
         });
-        // 2️⃣ Personal Applications (processed by this staff)
         const personalApps = await client_1.prisma.concessionApplication.findMany({
             where: {
                 approvedByStaffId: staffId,

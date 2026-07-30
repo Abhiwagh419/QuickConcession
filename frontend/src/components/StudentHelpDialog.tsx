@@ -32,14 +32,12 @@ export default function StudentHelpDialog({
           shadow-none
         "
       >
-        {/* Header */}
         <DialogHeader className="px-6 pt-5 pb-3 border-b border-slate-200">
           <DialogTitle className="text-base font-semibold text-black">
             Help & Support
           </DialogTitle>
         </DialogHeader>
 
-        {/* Content */}
         {!openChat ? (
           <div className="px-6 py-5 space-y-6">
             {/* FAQ */}
@@ -53,7 +51,6 @@ export default function StudentHelpDialog({
               </div>
             </div>
 
-            {/* Button */}
             <Button
               onClick={() => setOpenChat(true)}
               className="
