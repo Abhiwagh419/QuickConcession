@@ -30,13 +30,30 @@ export async function exportAdminExcel(req: Request, res: Response) {
 
     // ================= STUDENTS =================
 
+    const studentSelect = {
+      id: true,
+      enrollmentNo: true,
+      fullName: true,
+      email: true,
+      mobileNumber: true,
+      course: true,
+      year: true,
+      sem: true,
+      shift: true,
+      active: true,
+      isDeleted: true,
+      createdAt: true,
+    } as const;
+
     const allStudents = await prisma.student.findMany({
       orderBy: { id: "asc" },
+      select: studentSelect,
     });
 
     const deletedStudents = await prisma.student.findMany({
       where: { isDeleted: true },
       orderBy: { id: "asc" },
+      select: studentSelect,
     });
 
     const studentSheet = workbook.addWorksheet("All Students");
@@ -97,13 +114,25 @@ export async function exportAdminExcel(req: Request, res: Response) {
 
     // ================= STAFF =================
 
+    const staffSelect = {
+      id: true,
+      fullName: true,
+      email: true,
+      role: true,
+      active: true,
+      isDeleted: true,
+      createdAt: true,
+    } as const;
+
     const allStaff = await prisma.staff.findMany({
       orderBy: { id: "asc" },
+      select: staffSelect,
     });
 
     const deletedStaff = await prisma.staff.findMany({
       where: { isDeleted: true },
       orderBy: { id: "asc" },
+      select: staffSelect,
     });
 
     const staffSheet = workbook.addWorksheet("All Staff");

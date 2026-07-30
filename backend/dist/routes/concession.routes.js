@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const concession_controller_1 = require("../controllers/concession.controller");
-const auth_middleware_1 = require("../middleware/auth.middleware");
+const requireAuth_1 = require("../middleware/requireAuth");
 const prisma_1 = require("../prisma");
 const router = (0, express_1.Router)();
-router.post("/apply", auth_middleware_1.requireAuth, concession_controller_1.applyConcession);
-router.get("/my", auth_middleware_1.requireAuth, async (req, res) => {
+router.post("/apply", requireAuth_1.requireAuth, concession_controller_1.applyConcession);
+router.get("/my", requireAuth_1.requireAuth, async (req, res) => {
     try {
         console.log("REQ.USER =", req.user);
         const studentId = req.user.sub;

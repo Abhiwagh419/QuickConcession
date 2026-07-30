@@ -1,5 +1,5 @@
 import cors from "cors";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import helmet from "helmet";
 import authRoutes from "./routes/auth.routes";
 import { expireIssuedConcessions } from "./utils/expireIssuedConcessions";
@@ -40,5 +40,19 @@ app.use("/staff", staffAuthRoutes);
 app.use("/staff", staffConcessionRoutes);
 app.use("/staff", staffRoutes);
 app.use("/admin", adminRoutes);
+
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ message: "Not found" });
+});
+
+app.use((err: unknown, req: Request, res: Response, _next: NextFunction) => {
+  console.error("Unhandled error:", err);
+
+  if (res.headersSent) {
+    return;
+  }
+
+  res.status(500).json({ message: "Internal server error" });
+});
 
 export default app;

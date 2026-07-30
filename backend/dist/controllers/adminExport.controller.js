@@ -26,12 +26,28 @@ async function exportAdminExcel(req, res) {
         workbook.creator = "QuickConcession System";
         workbook.created = new Date();
         // ================= STUDENTS =================
+        const studentSelect = {
+            id: true,
+            enrollmentNo: true,
+            fullName: true,
+            email: true,
+            mobileNumber: true,
+            course: true,
+            year: true,
+            sem: true,
+            shift: true,
+            active: true,
+            isDeleted: true,
+            createdAt: true,
+        };
         const allStudents = await client_1.prisma.student.findMany({
             orderBy: { id: "asc" },
+            select: studentSelect,
         });
         const deletedStudents = await client_1.prisma.student.findMany({
             where: { isDeleted: true },
             orderBy: { id: "asc" },
+            select: studentSelect,
         });
         const studentSheet = workbook.addWorksheet("All Students");
         studentSheet.columns = [
@@ -81,12 +97,23 @@ async function exportAdminExcel(req, res) {
             fullName: deletedStudents.length,
         });
         // ================= STAFF =================
+        const staffSelect = {
+            id: true,
+            fullName: true,
+            email: true,
+            role: true,
+            active: true,
+            isDeleted: true,
+            createdAt: true,
+        };
         const allStaff = await client_1.prisma.staff.findMany({
             orderBy: { id: "asc" },
+            select: staffSelect,
         });
         const deletedStaff = await client_1.prisma.staff.findMany({
             where: { isDeleted: true },
             orderBy: { id: "asc" },
+            select: staffSelect,
         });
         const staffSheet = workbook.addWorksheet("All Staff");
         staffSheet.columns = [

@@ -3,7 +3,7 @@ import { prisma } from "../prisma/client";
 import { verifyPassword } from "../utils/password";
 import { signJwt } from "../utils/jwt";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import {
   sendStaffLoginOtpMail,
   sendStaffPasswordResetOtpMail,

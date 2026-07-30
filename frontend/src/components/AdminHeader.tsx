@@ -8,7 +8,7 @@ const AdminHeader = () => {
   const [admin, setAdmin] = useState<any>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("staffToken");
     if (!token) return;
 
     const payload = JSON.parse(atob(token.split(".")[1]));
@@ -19,7 +19,7 @@ const AdminHeader = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("staffToken");
     navigate("/");
   };
 

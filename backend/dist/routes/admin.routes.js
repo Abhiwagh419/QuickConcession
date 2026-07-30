@@ -6,12 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = require("../prisma/client");
 const requireAuth_1 = require("../middleware/requireAuth");
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const staffConcession_controller_1 = require("../controllers/staffConcession.controller");
 const upload_1 = require("../middleware/upload");
 const sync_1 = require("csv-parse/sync");
 const client_2 = require("@prisma/client");
 const adminExport_controller_1 = require("../controllers/adminExport.controller");
+const validate_1 = require("../utils/validate");
 const router = (0, express_1.Router)();
 /* =========================================================
    COMMON ADMIN CHECK
@@ -57,6 +58,14 @@ router.post("/students", requireAuth_1.requireAuth, async (req, res) => {
     if (!enrollmentNo || !fullName || !email || !password) {
         return res.status(400).json({ message: "Missing required fields" });
     }
+    if (!(0, validate_1.isValidEmail)(email)) {
+        return res.status(400).json({ message: "Invalid email address" });
+    }
+    if (!(0, validate_1.isValidPassword)(password)) {
+        return res
+            .status(400)
+            .json({ message: "Password must be at least 6 characters" });
+    }
     const existing = await client_1.prisma.student.findFirst({
         where: { OR: [{ enrollmentNo }, { email }] },
     });
@@ -65,7 +74,7 @@ router.post("/students", requireAuth_1.requireAuth, async (req, res) => {
             .status(400)
             .json({ message: "Enrollment number or email already exists" });
     }
-    const passwordHash = await bcryptjs_1.default.hash(password, 12);
+    const passwordHash = await bcrypt_1.default.hash(password, 12);
     const student = await client_1.prisma.student.create({
         data: {
             enrollmentNo,
@@ -79,6 +88,22 @@ router.post("/students", requireAuth_1.requireAuth, async (req, res) => {
             passwordHash,
             dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
             address,
+        },
+        select: {
+            id: true,
+            enrollmentNo: true,
+            fullName: true,
+            email: true,
+            mobileNumber: true,
+            course: true,
+            year: true,
+            sem: true,
+            shift: true,
+            dateOfBirth: true,
+            address: true,
+            active: true,
+            isDeleted: true,
+            createdAt: true,
         },
     });
     res.status(201).json(student);
@@ -148,7 +173,7 @@ router.post("/students/:id/reset-password", requireAuth_1.requireAuth, async (re
     if (!student) {
         return res.status(404).json({ message: "Student not found" });
     }
-    const passwordHash = await bcryptjs_1.default.hash(newPassword, 12);
+    const passwordHash = await bcrypt_1.default.hash(newPassword, 12);
     await client_1.prisma.student.update({
         where: { id: studentId },
         data: { passwordHash },
@@ -173,6 +198,21 @@ router.patch("/students/:id", requireAuth_1.requireAuth, async (req, res) => {
             shift,
             address,
             dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+        },
+        select: {
+            id: true,
+            enrollmentNo: true,
+            fullName: true,
+            email: true,
+            mobileNumber: true,
+            course: true,
+            year: true,
+            sem: true,
+            shift: true,
+            address: true,
+            dateOfBirth: true,
+            active: true,
+            isDeleted: true,
         },
     });
     res.json(updated);
@@ -209,7 +249,21 @@ router.get("/students/:id/full", requireAuth_1.requireAuth, async (req, res) => 
     const studentId = Number(req.params.id);
     const student = await client_1.prisma.student.findUnique({
         where: { id: studentId },
-        include: {
+        select: {
+            id: true,
+            enrollmentNo: true,
+            fullName: true,
+            email: true,
+            mobileNumber: true,
+            course: true,
+            year: true,
+            sem: true,
+            shift: true,
+            address: true,
+            dateOfBirth: true,
+            active: true,
+            isDeleted: true,
+            createdAt: true,
             applications: {
                 orderBy: { appliedAt: "desc" },
             },
@@ -333,6 +387,15 @@ router.patch("/staff/:id", requireAuth_1.requireAuth, async (req, res) => {
     const updated = await client_1.prisma.staff.update({
         where: { id },
         data: { fullName, email },
+        select: {
+            id: true,
+            fullName: true,
+            email: true,
+            role: true,
+            createdAt: true,
+            active: true,
+            isDeleted: true,
+        },
     });
     res.json(updated);
 });
@@ -349,6 +412,15 @@ router.patch("/staff/:id/toggle", requireAuth_1.requireAuth, async (req, res) =>
     const updated = await client_1.prisma.staff.update({
         where: { id },
         data: { active: !staff.active },
+        select: {
+            id: true,
+            fullName: true,
+            email: true,
+            role: true,
+            createdAt: true,
+            active: true,
+            isDeleted: true,
+        },
     });
     res.json(updated);
 });
@@ -382,7 +454,7 @@ router.post("/staff/:id/reset-password", requireAuth_1.requireAuth, async (req, 
             .status(400)
             .json({ message: "Password must be at least 6 characters" });
     }
-    const passwordHash = await bcryptjs_1.default.hash(newPassword, 12);
+    const passwordHash = await bcrypt_1.default.hash(newPassword, 12);
     await client_1.prisma.staff.update({
         where: { id },
         data: { passwordHash },
@@ -445,7 +517,7 @@ router.post("/staff/bulk/confirm", requireAuth_1.requireAuth, async (req, res) =
     }
     const finalData = [];
     for (const s of staff) {
-        const passwordHash = await bcryptjs_1.default.hash(s.password, 12);
+        const passwordHash = await bcrypt_1.default.hash(s.password, 12);
         finalData.push({
             fullName: s.fullName,
             email: s.email,
@@ -566,7 +638,7 @@ router.post("/students/bulk/confirm", requireAuth_1.requireAuth, async (req, res
     }
     const finalData = [];
     for (const s of students) {
-        const passwordHash = await bcryptjs_1.default.hash(s.password, 12);
+        const passwordHash = await bcrypt_1.default.hash(s.password, 12);
         finalData.push({
             enrollmentNo: s.enrollmentNo,
             fullName: s.fullName,
@@ -599,7 +671,14 @@ router.get("/staff/:id", requireAuth_1.requireAuth, async (req, res) => {
     const id = Number(req.params.id);
     const staff = await client_1.prisma.staff.findUnique({
         where: { id },
-        include: {
+        select: {
+            id: true,
+            fullName: true,
+            email: true,
+            role: true,
+            createdAt: true,
+            active: true,
+            isDeleted: true,
             _count: {
                 select: { approvedApplications: true },
             },
@@ -649,6 +728,14 @@ router.post("/staff", requireAuth_1.requireAuth, async (req, res) => {
             message: "Missing required fields",
         });
     }
+    if (!(0, validate_1.isValidEmail)(email)) {
+        return res.status(400).json({ message: "Invalid email address" });
+    }
+    if (!(0, validate_1.isValidPassword)(password)) {
+        return res
+            .status(400)
+            .json({ message: "Password must be at least 6 characters" });
+    }
     const existing = await client_1.prisma.staff.findUnique({
         where: { email },
     });
@@ -657,13 +744,22 @@ router.post("/staff", requireAuth_1.requireAuth, async (req, res) => {
             message: "Staff email already exists",
         });
     }
-    const passwordHash = await bcryptjs_1.default.hash(password, 12);
+    const passwordHash = await bcrypt_1.default.hash(password, 12);
     const staff = await client_1.prisma.staff.create({
         data: {
             fullName,
             email,
             passwordHash,
             role: client_2.UserRole.STAFF,
+        },
+        select: {
+            id: true,
+            fullName: true,
+            email: true,
+            role: true,
+            createdAt: true,
+            active: true,
+            isDeleted: true,
         },
     });
     res.status(201).json(staff);

@@ -40,4 +40,14 @@ app.use("/staff", staffAuth_routes_1.default);
 app.use("/staff", staffConcession_routes_1.default);
 app.use("/staff", staffConcession_routes_2.default);
 app.use("/admin", admin_routes_1.default);
+app.use((req, res) => {
+    res.status(404).json({ message: "Not found" });
+});
+app.use((err, req, res, _next) => {
+    console.error("Unhandled error:", err);
+    if (res.headersSent) {
+        return;
+    }
+    res.status(500).json({ message: "Internal server error" });
+});
 exports.default = app;

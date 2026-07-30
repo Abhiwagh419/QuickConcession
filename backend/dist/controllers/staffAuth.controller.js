@@ -9,7 +9,7 @@ exports.verifyStaffOtp = verifyStaffOtp;
 const client_1 = require("../prisma/client");
 const password_1 = require("../utils/password");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const mailer_1 = require("../utils/mailer");
 const OTP_EXPIRY_MINUTES = 10;
 async function staffLogin(req, res) {
@@ -44,7 +44,7 @@ async function staffLogin(req, res) {
             data: { isUsed: true },
         });
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const otpHash = await bcryptjs_1.default.hash(otp, 10);
+        const otpHash = await bcrypt_1.default.hash(otp, 10);
         await client_1.prisma.otpVerification.create({
             data: {
                 staffId: staff.id,
@@ -95,7 +95,7 @@ async function verifyStaffOtp(req, res) {
         if (!otpEntry) {
             return res.status(400).json({ message: "Invalid OTP or expired OTP" });
         }
-        const isValidOtp = await bcryptjs_1.default.compare(otp, otpEntry.otpHash);
+        const isValidOtp = await bcrypt_1.default.compare(otp, otpEntry.otpHash);
         if (!isValidOtp) {
             return res.status(400).json({ message: "Invalid OTP or expired OTP" });
         }
@@ -144,7 +144,7 @@ const requestStaffPasswordReset = async (req, res) => {
         data: { isUsed: true },
     });
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpHash = await bcryptjs_1.default.hash(otp, 10);
+    const otpHash = await bcrypt_1.default.hash(otp, 10);
     await client_1.prisma.otpVerification.create({
         data: {
             staffId: staff.id,
@@ -188,11 +188,11 @@ const resetStaffPassword = async (req, res) => {
     if (!otpEntry) {
         return res.status(400).json({ message: "Invalid OTP or expired OTP" });
     }
-    const isValidOtp = await bcryptjs_1.default.compare(otp, otpEntry.otpHash);
+    const isValidOtp = await bcrypt_1.default.compare(otp, otpEntry.otpHash);
     if (!isValidOtp) {
         return res.status(400).json({ message: "Invalid OTP or expired OTP" });
     }
-    const passwordHash = await bcryptjs_1.default.hash(newPassword, 12);
+    const passwordHash = await bcrypt_1.default.hash(newPassword, 12);
     await client_1.prisma.$transaction([
         client_1.prisma.staff.update({
             where: { id: staff.id },

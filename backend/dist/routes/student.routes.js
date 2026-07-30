@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const auth_middleware_1 = require("../middleware/auth.middleware");
+const requireAuth_1 = require("../middleware/requireAuth");
 const prisma_1 = require("../prisma");
 const router = (0, express_1.Router)();
-router.get("/me", auth_middleware_1.requireAuth, async (req, res) => {
+router.get("/me", requireAuth_1.requireAuth, async (req, res) => {
     const studentId = req.user.sub;
     const student = await prisma_1.prisma.student.findUnique({
         where: { id: studentId },
@@ -25,7 +25,7 @@ router.get("/me", auth_middleware_1.requireAuth, async (req, res) => {
     });
     res.json(student);
 });
-router.put("/me", auth_middleware_1.requireAuth, async (req, res) => {
+router.put("/me", requireAuth_1.requireAuth, async (req, res) => {
     try {
         const studentId = req.user.sub;
         const { year, sem, shift, email, mobileNumber, address, dateOfBirth } = req.body;

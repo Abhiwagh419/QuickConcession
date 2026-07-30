@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetStudentPassword = exports.requestStudentPasswordReset = void 0;
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const client_1 = require("../prisma/client");
 const mailer_1 = require("../utils/mailer");
 const OTP_EXPIRY_MINUTES = 10;
@@ -32,7 +32,7 @@ const requestStudentPasswordReset = async (req, res) => {
         data: { isUsed: true },
     });
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpHash = await bcryptjs_1.default.hash(otp, 10);
+    const otpHash = await bcrypt_1.default.hash(otp, 10);
     const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
     await client_1.prisma.otpVerification.create({
         data: {
@@ -77,11 +77,11 @@ const resetStudentPassword = async (req, res) => {
     if (!otpEntry) {
         return res.status(400).json({ message: "Invalid OTP or expired OTP" });
     }
-    const isValidOtp = await bcryptjs_1.default.compare(otp, otpEntry.otpHash);
+    const isValidOtp = await bcrypt_1.default.compare(otp, otpEntry.otpHash);
     if (!isValidOtp) {
         return res.status(400).json({ message: "Invalid OTP or expired OTP" });
     }
-    const passwordHash = await bcryptjs_1.default.hash(newPassword, 12);
+    const passwordHash = await bcrypt_1.default.hash(newPassword, 12);
     await client_1.prisma.$transaction([
         client_1.prisma.student.update({
             where: { id: student.id },

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { prisma } from "../prisma/client";
 import { sendPasswordResetOtpMail } from "../utils/mailer";
 import { time } from "console";

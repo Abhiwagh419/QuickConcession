@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { prisma } from "../prisma/client";
 import { requireAuth } from "../middleware/requireAuth";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import {
   approveConcessionApplication,
   rejectConcessionApplication,
@@ -10,6 +10,7 @@ import { upload } from "../middleware/upload";
 import { parse } from "csv-parse/sync";
 import { UserRole } from "@prisma/client";
 import { exportAdminExcel } from "../controllers/adminExport.controller";
+import { isValidEmail, isValidPassword } from "../utils/validate";
 
 const router = Router();
 
@@ -77,6 +78,16 @@ router.post("/students", requireAuth, async (req: any, res) => {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ message: "Invalid email address" });
+  }
+
+  if (!isValidPassword(password)) {
+    return res
+      .status(400)
+      .json({ message: "Password must be at least 6 characters" });
+  }
+
   const existing = await prisma.student.findFirst({
     where: { OR: [{ enrollmentNo }, { email }] },
   });
@@ -102,6 +113,22 @@ router.post("/students", requireAuth, async (req: any, res) => {
       passwordHash,
       dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
       address,
+    },
+    select: {
+      id: true,
+      enrollmentNo: true,
+      fullName: true,
+      email: true,
+      mobileNumber: true,
+      course: true,
+      year: true,
+      sem: true,
+      shift: true,
+      dateOfBirth: true,
+      address: true,
+      active: true,
+      isDeleted: true,
+      createdAt: true,
     },
   });
 
@@ -235,6 +262,21 @@ router.patch("/students/:id", requireAuth, async (req: any, res) => {
       address,
       dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
     },
+    select: {
+      id: true,
+      enrollmentNo: true,
+      fullName: true,
+      email: true,
+      mobileNumber: true,
+      course: true,
+      year: true,
+      sem: true,
+      shift: true,
+      address: true,
+      dateOfBirth: true,
+      active: true,
+      isDeleted: true,
+    },
   });
 
   res.json(updated);
@@ -277,7 +319,21 @@ router.get("/students/:id/full", requireAuth, async (req: any, res) => {
 
   const student = await prisma.student.findUnique({
     where: { id: studentId },
-    include: {
+    select: {
+      id: true,
+      enrollmentNo: true,
+      fullName: true,
+      email: true,
+      mobileNumber: true,
+      course: true,
+      year: true,
+      sem: true,
+      shift: true,
+      address: true,
+      dateOfBirth: true,
+      active: true,
+      isDeleted: true,
+      createdAt: true,
       applications: {
         orderBy: { appliedAt: "desc" },
       },
@@ -442,6 +498,15 @@ router.patch("/staff/:id", requireAuth, async (req: any, res) => {
   const updated = await prisma.staff.update({
     where: { id },
     data: { fullName, email },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      active: true,
+      isDeleted: true,
+    },
   });
 
   res.json(updated);
@@ -463,6 +528,15 @@ router.patch("/staff/:id/toggle", requireAuth, async (req: any, res) => {
   const updated = await prisma.staff.update({
     where: { id },
     data: { active: !staff.active },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      active: true,
+      isDeleted: true,
+    },
   });
 
   res.json(updated);
@@ -782,7 +856,14 @@ router.get("/staff/:id", requireAuth, async (req: any, res) => {
 
   const staff = await prisma.staff.findUnique({
     where: { id },
-    include: {
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      active: true,
+      isDeleted: true,
       _count: {
         select: { approvedApplications: true },
       },
@@ -838,6 +919,16 @@ router.post("/staff", requireAuth, async (req: any, res) => {
     });
   }
 
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ message: "Invalid email address" });
+  }
+
+  if (!isValidPassword(password)) {
+    return res
+      .status(400)
+      .json({ message: "Password must be at least 6 characters" });
+  }
+
   const existing = await prisma.staff.findUnique({
     where: { email },
   });
@@ -856,6 +947,15 @@ router.post("/staff", requireAuth, async (req: any, res) => {
       email,
       passwordHash,
       role: UserRole.STAFF,
+    },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      active: true,
+      isDeleted: true,
     },
   });
 

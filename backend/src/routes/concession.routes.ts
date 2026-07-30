@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { applyConcession } from "../controllers/concession.controller";
-import { requireAuth } from "../middleware/auth.middleware";
+import { requireAuth } from "../middleware/requireAuth";
 import { prisma } from "../prisma";
 
 const router = Router();
