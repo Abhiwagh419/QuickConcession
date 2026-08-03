@@ -10,6 +10,7 @@ import staffAuthRoutes from "./routes/staffAuth.routes";
 import staffConcessionRoutes from "./routes/staffConcession.routes";
 import staffRoutes from "./routes/staffConcession.routes";
 import adminRoutes from "./routes/admin.routes";
+import aiChatRoutes from "./routes/aiChat.routes";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use("/staff", staffAuthRoutes);
 app.use("/staff", staffConcessionRoutes);
 app.use("/staff", staffRoutes);
 app.use("/admin", adminRoutes);
+app.use("/ai", aiChatRoutes);
 
 app.use((req: Request, res: Response) => {
   res.status(404).json({ message: "Not found" });

@@ -26,6 +26,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import StudentHelpDialog from "@/components/StudentHelpDialog";
+import AIChatWidget from "@/components/AIChatWidget";
 
 type CubicBezier = [number, number, number, number];
 const EASE_OUT: CubicBezier = [0.16, 1, 0.3, 1];
@@ -423,6 +424,8 @@ const StudentDashboard = () => {
         onOpenChange={setOpenHelp}
         enrollmentNo={student.enrollmentNo}
       />
+
+      <AIChatWidget role="student" />
     </div>
   );
 };

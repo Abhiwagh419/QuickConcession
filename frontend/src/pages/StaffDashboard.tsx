@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode";
+import AIChatWidget from "@/components/AIChatWidget";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -954,6 +955,8 @@ const StaffDashboard = () => {
           </motion.div>
         </main>
       </PageWrapper>
+
+      <AIChatWidget role="staff" />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PageWrapper from "@/components/PageWrapper";
 import AdminHeader from "@/components/AdminHeader";
+import AIChatWidget from "@/components/AIChatWidget";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import {
@@ -627,6 +628,8 @@ const exportExcel = async () => {
           </motion.div>
         </main>
       </PageWrapper>
+
+      <AIChatWidget role="staff" />
     </div>
   );
 };

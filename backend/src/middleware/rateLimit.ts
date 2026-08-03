@@ -23,3 +23,11 @@ export const otpRequestLimiter = rateLimit({
   legacyHeaders: false,
   message: { message: "Too many requests. Please try again later." },
 });
+
+export const aiChatLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many assistant requests. Please slow down." },
+});
