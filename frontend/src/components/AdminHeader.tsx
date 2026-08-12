@@ -20,7 +20,7 @@ const AdminHeader = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("staffToken");
-    navigate("/");
+    navigate("/login");
   };
 
   const getBreadcrumbs = () => {

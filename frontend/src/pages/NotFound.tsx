@@ -60,7 +60,7 @@ const NotFound = () => {
 
               <div className="pt-2">
                 <Button
-                  onClick={() => navigate("/")}
+                  onClick={() => navigate("/login")}
                   variant="outline"
                   size="sm"
                   className="h-9 rounded-lg border-border text-sm font-semibold hover:bg-muted hover:border-primary/40 transition-all duration-150 flex items-center gap-2 mx-auto"

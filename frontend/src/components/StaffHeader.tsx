@@ -14,7 +14,7 @@ const StaffHeader = () => {
       .catch(() => {});
   }, []);
 
-  const handleLogout = () => navigate("/");
+  const handleLogout = () => navigate("/login");
 
   const getBreadcrumbs = () => {
     const path = location.pathname;

@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import ImportStudents from "@/pages/ImportStudents";
 import Index from "./pages/Index";
+import LandingPage from "./pages/LandingPage";
 import StudentDashboard from "./pages/StudentDashboard";
 import RailwayConcessionDashboard from "./pages/RailwayConcessionDashboard";
 import NewConcessionApplication from "./pages/NewConcessionApplication";
@@ -33,7 +34,8 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Index />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Index />} />
         <Route path="/student/dashboard" element={<StudentDashboard />} />
         <Route
           path="/student/railway"

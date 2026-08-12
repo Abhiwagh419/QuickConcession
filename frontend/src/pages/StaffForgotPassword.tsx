@@ -1,5 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Button } from "@/components/ui/button";
@@ -11,33 +18,16 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
-  Train,
   Shield,
 } from "lucide-react";
+import LoginHeader from "@/components/LoginHeader";
+import LoginFooter from "@/components/LoginFooter";
 import { apiFetch } from "@/lib/api";
 import PageWrapper from "@/components/PageWrapper";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-
 type Step = "request-otp" | "reset-password";
-type CubicBezier = [number, number, number, number];
-const EASE_OUT: CubicBezier = [0.16, 1, 0.3, 1];
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE_OUT } },
-};
 
 const StaffForgotPassword = () => {
   const navigate = useNavigate();
-  const reduceMotion = useReducedMotion();
 
   const [step, setStep] = useState<Step>("request-otp");
 
@@ -138,7 +128,7 @@ const StaffForgotPassword = () => {
 
       setSuccessMessage("Password reset successfully! Redirecting to login...");
 
-      setTimeout(() => navigate("/"), 2000);
+      setTimeout(() => navigate("/login"), 2000);
     } catch (err: any) {
       setErrorMessage(err.message || "Invalid OTP or expired OTP");
     } finally {
@@ -167,114 +157,63 @@ const StaffForgotPassword = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <LoginHeader />
+
       <PageWrapper>
-        <div className="relative flex-1 flex items-center justify-center overflow-hidden px-4 py-12 sm:px-6">
-          {/* Soft ambient tint, matching the sign-in page */}
-          <div className="absolute inset-0 -z-10" aria-hidden="true">
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse 900px 600px at 50% -10%, hsl(211 84% 92% / 0.6), transparent 60%)",
-              }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse 700px 500px at 100% 100%, hsl(211 84% 95% / 0.5), transparent 55%)",
-              }}
-            />
-          </div>
-
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="relative z-10 w-full max-w-[440px]"
-          >
-            <motion.div
-              variants={item}
-              className="mb-7 flex items-center justify-center gap-2.5"
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-sm">
-                <Train
-                  className="h-4 w-4 text-primary-foreground"
-                  strokeWidth={2.25}
-                />
+        <main className="flex-1 flex items-center justify-center px-4 py-8 md:py-12">
+          <div className="w-full max-w-md space-y-6">
+            <div className="text-center space-y-2">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <Shield className="w-8 h-8 text-primary" />
               </div>
-              <span className="text-[14px] font-semibold tracking-tight text-foreground">
-                QuickConcession
+              <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground">
+                Staff Forgot Password
+              </h1>
+              <p className="text-muted-foreground text-sm md:text-base">
+                {step === "request-otp"
+                  ? "Enter your official email to receive a password reset OTP"
+                  : "Enter the OTP and set your new password"}
+              </p>
+            </div>
+
+            <div className="flex justify-center">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/20">
+                <Shield className="w-3 h-3" />
+                Staff / Admin Account
               </span>
-            </motion.div>
+            </div>
 
-            <motion.div
-              variants={item}
-              className="relative overflow-hidden rounded-[24px] border border-border bg-card p-8 sm:p-9"
-              style={{
-                boxShadow:
-                  "0 1px 2px hsl(215 25% 15% / 0.04), 0 8px 24px -8px hsl(215 25% 15% / 0.10), 0 24px 48px -24px hsl(211 84% 55% / 0.16)",
-              }}
-            >
-              <div className="mb-7 flex flex-col items-center text-center">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
-                  <Shield className="h-5 w-5 text-primary" strokeWidth={2} />
-                </div>
-                <span className="mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-[10.5px] font-medium text-primary">
-                  <Shield className="h-3 w-3" strokeWidth={2.2} />
-                  Staff / Admin Account
-                </span>
-                <h1 className="text-[21px] font-semibold tracking-[-0.02em] text-foreground">
-                  {step === "request-otp" ? "Forgot password" : "Reset password"}
-                </h1>
-                <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
+            <Card className="border-2 border-primary/20 shadow-lg">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-xl font-heading text-foreground">
+                  {step === "request-otp" ? "Request OTP" : "Reset Password"}
+                </CardTitle>
+                <CardDescription>
                   {step === "request-otp"
-                    ? "Enter your official email and we'll send a reset OTP"
-                    : "Enter the OTP and choose a new password"}
-                </p>
-              </div>
+                    ? "We'll send a 6-digit OTP to your registered official email"
+                    : "Create a new secure password for your staff account"}
+                </CardDescription>
+              </CardHeader>
 
-              <AnimatePresence mode="wait">
+              <CardContent>
                 {successMessage && (
-                  <motion.div
-                    initial={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="mb-4 flex items-center gap-2 rounded-xl border border-success/20 bg-success/10 p-3"
-                  >
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-success" />
-                    <p className="text-[12.5px] text-success">{successMessage}</p>
-                  </motion.div>
+                  <div className="mb-4 p-3 rounded-md bg-success/10 border border-success/20 flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
+                    <p className="text-sm text-success">{successMessage}</p>
+                  </div>
                 )}
-                {errorMessage && (
-                  <motion.div
-                    initial={{ opacity: 0, y: reduceMotion ? 0 : -4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    role="alert"
-                    className="mb-4 flex items-center gap-2 rounded-xl border border-destructive/20 bg-destructive/10 p-3"
-                  >
-                    <AlertCircle className="h-4 w-4 shrink-0 text-destructive" />
-                    <p className="text-[12.5px] text-destructive">{errorMessage}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
-              <AnimatePresence mode="wait">
-                {step === "request-otp" ? (
-                  <motion.form
-                    key="request"
-                    initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: reduceMotion ? 0 : -8 }}
-                    transition={{ duration: 0.22, ease: EASE_OUT }}
-                    onSubmit={handleRequestOtp}
-                    className="space-y-5"
-                  >
+                {errorMessage && (
+                  <div className="mb-4 p-3 rounded-md bg-destructive/10 border border-destructive/20 flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0" />
+                    <p className="text-sm text-destructive">{errorMessage}</p>
+                  </div>
+                )}
+
+                {step === "request-otp" && (
+                  <form onSubmit={handleRequestOtp} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-foreground font-medium">
-                        Official Email ID
-                      </Label>
+                      <Label htmlFor="email">Official Email ID</Label>
                       <Input
                         id="email"
                         type="email"
@@ -291,36 +230,29 @@ const StaffForgotPassword = () => {
 
                     <Button
                       type="submit"
-                      className="w-full btn-primary-gradient h-11"
+                      className="w-full btn-primary-gradient"
                       disabled={isLoading}
                     >
                       {isLoading ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <Loader2 className="w-4 h-4 animate-spin" />
                           Sending OTP...
                         </>
                       ) : (
                         <>
-                          <Mail className="mr-2 h-4 w-4" />
+                          <Mail className="w-4 h-4" />
                           Send OTP
                         </>
                       )}
                     </Button>
-                  </motion.form>
-                ) : (
-                  <motion.form
-                    key="reset"
-                    initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: reduceMotion ? 0 : -8 }}
-                    transition={{ duration: 0.22, ease: EASE_OUT }}
-                    onSubmit={handleResetPassword}
-                    className="space-y-5"
-                  >
+                  </form>
+                )}
+
+                {step === "reset-password" && (
+                  <form onSubmit={handleResetPassword} className="space-y-4">
+                    {/* Email (Read-only) */}
                     <div className="space-y-2">
-                      <Label htmlFor="email-display" className="text-foreground font-medium">
-                        Official Email ID
-                      </Label>
+                      <Label htmlFor="email-display">Official Email ID</Label>
                       <Input
                         id="email-display"
                         type="email"
@@ -332,14 +264,12 @@ const StaffForgotPassword = () => {
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label htmlFor="otp" className="text-foreground font-medium">
-                          OTP Code
-                        </Label>
+                        <Label htmlFor="otp">OTP Code</Label>
                         <button
                           type="button"
                           onClick={handleResendOtp}
                           disabled={isLoading}
-                          className="text-[12px] font-medium text-accent hover:underline disabled:opacity-50"
+                          className="text-xs text-primary hover:text-primary/80 hover:underline disabled:opacity-50"
                         >
                           Resend OTP
                         </button>
@@ -359,9 +289,7 @@ const StaffForgotPassword = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="new-password" className="text-foreground font-medium">
-                        New Password
-                      </Label>
+                      <Label htmlFor="new-password">New Password</Label>
                       <PasswordInput
                         id="new-password"
                         placeholder="Enter new password"
@@ -376,7 +304,7 @@ const StaffForgotPassword = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="confirm-password" className="text-foreground font-medium">
+                      <Label htmlFor="confirm-password">
                         Confirm New Password
                       </Label>
                       <PasswordInput
@@ -391,17 +319,17 @@ const StaffForgotPassword = () => {
 
                     <Button
                       type="submit"
-                      className="w-full btn-primary-gradient h-11"
+                      className="w-full btn-primary-gradient"
                       disabled={isLoading}
                     >
                       {isLoading ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <Loader2 className="w-4 h-4 animate-spin" />
                           Resetting Password...
                         </>
                       ) : (
                         <>
-                          <KeyRound className="mr-2 h-4 w-4" />
+                          <KeyRound className="w-4 h-4" />
                           Reset Password
                         </>
                       )}
@@ -421,35 +349,37 @@ const StaffForgotPassword = () => {
                       }}
                       disabled={isLoading}
                     >
-                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      <ArrowLeft className="w-4 h-4 mr-2" />
                       Change Email Address
                     </Button>
-                  </motion.form>
+                  </form>
                 )}
-              </AnimatePresence>
 
-              <div className="mt-7 flex items-start gap-2.5 border-t border-border pt-5">
-                <Button
-                  type="button"
-                  variant="link"
-                  className="w-full text-muted-foreground hover:text-primary"
-                  onClick={() => navigate("/")}
-                >
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Login
-                </Button>
-              </div>
-            </motion.div>
+                <div className="mt-6 pt-4 border-t border-border">
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="w-full text-muted-foreground hover:text-primary"
+                    onClick={() => navigate("/login")}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back to Login
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
-            <motion.p
-              variants={item}
-              className="mt-5 text-center text-[11.5px] leading-relaxed text-muted-foreground"
-            >
-              Didn't receive the OTP? Check your spam folder or contact the IT
-              department for assistance.
-            </motion.p>
-          </motion.div>
-        </div>
+            <div className="bg-primary/5 rounded-lg p-4 border border-primary/10">
+              <p className="text-xs text-muted-foreground text-center">
+                <strong className="text-foreground">Need Help?</strong> If you
+                don't receive the OTP, please check your spam folder or contact
+                the IT department for assistance.
+              </p>
+            </div>
+          </div>
+        </main>
+
+        <LoginFooter />
       </PageWrapper>
     </div>
   );
