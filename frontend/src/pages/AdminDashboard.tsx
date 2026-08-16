@@ -52,7 +52,7 @@ const fadeIn = (delay: number = 0) => ({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-3 pl-0.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-400">
+    <p className="mb-3 pl-0.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-black/40">
       {children}
     </p>
   );
@@ -67,7 +67,7 @@ function Panel({
 }) {
   return (
     <div
-      className={`rounded-xl border border-slate-200 bg-white shadow-sm ${className}`}
+      className={`rounded-xl border border-black/[0.08] bg-white shadow-sm ${className}`}
     >
       {children}
     </div>
@@ -75,7 +75,7 @@ function Panel({
 }
 
 function InlineDivider() {
-  return <div className="my-4 h-px w-full bg-slate-100" />;
+  return <div className="my-4 h-px w-full bg-black/[0.04]" />;
 }
 
 // ─── Stat Card ────────────────────────────────────────────────────────────────
@@ -104,15 +104,15 @@ function StatCard({
           {icon}
         </div>
         <div className="min-w-0">
-          <p className="truncate text-[11px] font-semibold uppercase tracking-widest text-slate-400">
+          <p className="truncate text-[11px] font-semibold uppercase tracking-widest text-black/40">
             {label}
           </p>
           {loading ? (
-            <div className="mt-1.5 h-7 w-16 animate-pulse rounded bg-slate-100" />
+            <div className="mt-1.5 h-7 w-16 animate-pulse rounded bg-black/[0.04]" />
           ) : (
             <p
               className="mt-0.5 text-3xl font-semibold
- tabular-nums text-slate-800"
+ tabular-nums text-black/80"
             >
               {value.toLocaleString()}
             </p>
@@ -144,9 +144,9 @@ function StatusBar({
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between text-xs">
-        <span className="font-medium text-slate-600">{label}</span>
-        <span className="tabular-nums text-slate-500">
-          {count} <span className="text-slate-400">({pct}%)</span>
+        <span className="font-medium text-black/60">{label}</span>
+        <span className="tabular-nums text-black/50">
+          {count} <span className="text-black/40">({pct}%)</span>
         </span>
       </div>
       <div className={`h-2 w-full overflow-hidden rounded-full ${trackClass}`}>
@@ -175,13 +175,13 @@ function StatusBadge({
   const cls = {
     success: "bg-emerald-50 border-emerald-200 text-emerald-700",
     warning: "bg-amber-50 border-amber-200 text-amber-700",
-    neutral: "bg-slate-100 border-slate-200 text-slate-500",
+    neutral: "bg-black/[0.04] border-black/[0.08] text-black/50",
   }[variant];
 
   const dot = {
     success: "bg-emerald-500",
     warning: "bg-amber-500",
-    neutral: "bg-slate-400",
+    neutral: "bg-black/40",
   }[variant];
 
   return (
@@ -210,10 +210,10 @@ function HealthRow({
   right: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between border-b border-slate-100 py-2.5 last:border-0">
+    <div className="flex items-center justify-between border-b border-black/[0.06] py-2.5 last:border-0">
       <div className="flex items-center gap-2.5">
-        <span className="text-slate-400">{icon}</span>
-        <span className="text-sm text-slate-600">{label}</span>
+        <span className="text-black/40">{icon}</span>
+        <span className="text-sm text-black/60">{label}</span>
       </div>
       <div>{right}</div>
     </div>
@@ -250,8 +250,8 @@ function ModuleCard({
             {icon}
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
-            <p className="mt-0.5 text-[12px] leading-relaxed text-slate-400">
+            <h3 className="text-sm font-semibold text-black/80">{title}</h3>
+            <p className="mt-0.5 text-[12px] leading-relaxed text-black/40">
               {description}
             </p>
           </div>
@@ -259,7 +259,7 @@ function ModuleCard({
         <Button
           onClick={() => navigate(route)}
           variant="outline"
-          className="group mt-auto flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border-blue-200 text-sm font-semibold text-blue-700 transition-all duration-200 hover:border-blue-600 hover:bg-blue-600 hover:text-white"
+          className="group mt-auto flex h-9 w-full items-center justify-center gap-1.5 rounded-lg border-black/15 text-sm font-semibold text-black transition-all duration-200 hover:border-black hover:bg-[#171717] hover:text-white"
         >
           {buttonLabel}
           <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -342,7 +342,7 @@ const exportExcel = async () => {
       : 0;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-black/[0.02]">
       <AdminHeader />
 
       <PageWrapper>
@@ -354,17 +354,17 @@ const exportExcel = async () => {
           >
             <div>
               <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#171717]">
                   <ShieldCheck className="h-4 w-4 text-white" />
                 </div>
                 <h1
                   className="text-3xl font-semibold
- tracking-tight text-slate-900"
+ tracking-tight text-[#171717]"
                 >
                   Admin Dashboard
                 </h1>
               </div>
-              <p className="mt-1 pl-10 text-[13px] text-slate-400">
+              <p className="mt-1 pl-10 text-[13px] text-black/40">
                 QuickConcession &mdash; Government Polytechnic Institute
               </p>
             </div>
@@ -373,7 +373,7 @@ const exportExcel = async () => {
               {/* Export Excel Button */}
               <button
                 onClick={exportExcel}
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-[13px] font-semibold text-white shadow-sm transition-all duration-200 hover:bg-blue-700"
+                className="flex items-center gap-2 rounded-lg bg-[#171717] px-4 py-2 text-[13px] font-semibold text-white shadow-sm transition-all duration-200 hover:opacity-90"
               >
                 <FileText className="h-4 w-4" />
                 Export Full System Excel
@@ -383,11 +383,11 @@ const exportExcel = async () => {
               <button
                 onClick={fetchStats}
                 disabled={refreshing}
-                className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-[13px] text-slate-500 shadow-sm transition-all duration-200 hover:border-slate-300 hover:text-slate-700 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg border border-black/[0.08] bg-white px-3.5 py-2 text-[13px] text-black/50 shadow-sm transition-all duration-200 hover:border-black/20 hover:text-black disabled:opacity-50"
               >
                 <RefreshCw
                   className={`h-3.5 w-3.5 ${
-                    refreshing ? "animate-spin text-blue-500" : ""
+                    refreshing ? "animate-spin text-black/50" : ""
                   }`}
                 />
                 Refreshed at{" "}
@@ -406,8 +406,8 @@ const exportExcel = async () => {
               <StatCard
                 label="Total Students"
                 value={stats.totalStudents}
-                icon={<Users className="h-5 w-5 text-blue-600" />}
-                iconBg="bg-blue-50"
+                icon={<Users className="h-5 w-5 text-black" />}
+                iconBg="bg-black/[0.04]"
                 loading={loading}
                 delay={0.05}
               />
@@ -422,8 +422,8 @@ const exportExcel = async () => {
               <StatCard
                 label="Total Applications"
                 value={stats.totalApplications}
-                icon={<FileText className="h-5 w-5 text-slate-500" />}
-                iconBg="bg-slate-100"
+                icon={<FileText className="h-5 w-5 text-black/50" />}
+                iconBg="bg-black/[0.04]"
                 loading={loading}
                 delay={0.15}
               />
@@ -447,8 +447,8 @@ const exportExcel = async () => {
                 <Panel className="h-full p-6">
                   <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
-                      <BarChart3 className="h-4 w-4 text-blue-600" />
-                      <h2 className="text-sm font-semibold text-slate-700">
+                      <BarChart3 className="h-4 w-4 text-black" />
+                      <h2 className="text-sm font-semibold text-black/70">
                         Application Status Breakdown
                       </h2>
                     </div>
@@ -457,12 +457,12 @@ const exportExcel = async () => {
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         Approved: {stats.approvedApplications}
                       </span>
-                      <span className="text-slate-300">|</span>
+                      <span className="text-black/25">|</span>
                       <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-amber-600">
                         <Clock className="h-3.5 w-3.5" />
                         Pending: {stats.pendingApplications}
                       </span>
-                      <span className="text-slate-300">|</span>
+                      <span className="text-black/25">|</span>
                       <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-red-500">
                         <XCircle className="h-3.5 w-3.5" />
                         Rejected: {stats.rejectedApplications}
@@ -500,7 +500,7 @@ const exportExcel = async () => {
                   <InlineDivider />
 
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-[13px] text-slate-500">
+                    <div className="flex items-center gap-2 text-[13px] text-black/50">
                       <TrendingUp className="h-4 w-4 text-emerald-600" />
                       Overall Approval Performance:{" "}
                       <span className="font-semibold text-emerald-700">
@@ -509,7 +509,7 @@ const exportExcel = async () => {
                     </div>
                     <button
                       onClick={() => navigate("/admin/applications")}
-                      className="flex items-center gap-1 text-[12px] font-medium text-blue-600 transition-colors hover:text-blue-700"
+                      className="flex items-center gap-1 text-[12px] font-medium text-black transition-colors hover:text-black/70"
                     >
                       View all applications
                       <ChevronRight className="h-3.5 w-3.5" />
@@ -522,8 +522,8 @@ const exportExcel = async () => {
               <motion.div {...fadeIn(0.3)}>
                 <Panel className="h-full p-6">
                   <div className="mb-4 flex items-center gap-2">
-                    <ShieldCheck className="h-4 w-4 text-blue-600" />
-                    <h2 className="text-sm font-semibold text-slate-700">
+                    <ShieldCheck className="h-4 w-4 text-black" />
+                    <h2 className="text-sm font-semibold text-black/70">
                       Security &amp; System Health
                     </h2>
                   </div>
@@ -533,7 +533,7 @@ const exportExcel = async () => {
                       icon={<Activity className="h-4 w-4" />}
                       label="Last Admin Login"
                       right={
-                        <span className="tabular-nums text-[12px] text-slate-500">
+                        <span className="tabular-nums text-[12px] text-black/50">
                           Session Active
                         </span>
                       }
@@ -596,8 +596,8 @@ const exportExcel = async () => {
               <ModuleCard
                 title="Student Management"
                 description="View, verify, and manage registered student records."
-                icon={<Users className="h-5 w-5 text-blue-600" />}
-                iconBg="bg-blue-50"
+                icon={<Users className="h-5 w-5 text-black" />}
+                iconBg="bg-black/[0.04]"
                 route="/admin/students"
                 buttonLabel="Manage Students"
                 delay={0.35}
@@ -619,12 +619,12 @@ const exportExcel = async () => {
             {...fadeIn(0.6)}
             className="flex items-center gap-3 pb-6 pt-2"
           >
-            <div className="h-px flex-1 bg-slate-200" />
-            <p className="whitespace-nowrap px-3 text-[11px] text-slate-400">
+            <div className="h-px flex-1 bg-black/[0.08]" />
+            <p className="whitespace-nowrap px-3 text-[11px] text-black/40">
               QuickConcession &mdash; Government Polytechnic Institute &mdash;
               Admin Portal
             </p>
-            <div className="h-px flex-1 bg-slate-200" />
+            <div className="h-px flex-1 bg-black/[0.08]" />
           </motion.div>
         </main>
       </PageWrapper>

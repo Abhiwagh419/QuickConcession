@@ -209,12 +209,12 @@ const NewConcessionApplication = () => {
   };
 
   const selectTriggerClass = (field: string) =>
-    `w-full h-9 rounded-lg border border-slate-300 bg-white text-sm ${
+    `w-full h-9 rounded-lg border border-black/20 bg-white text-sm ${
       errors[field] ? "border-destructive" : ""
     }`;
 
   const disabledTriggerClass = (field: string) =>
-    `w-full h-9 rounded-lg border border-slate-200 bg-slate-100 text-sm ${
+    `w-full h-9 rounded-lg border border-black/[0.08] bg-black/[0.04] text-sm ${
       errors[field] ? "border-destructive" : ""
     }`;
 

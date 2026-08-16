@@ -27,12 +27,12 @@ export default function StudentHelpDialog({
           max-w-md sm:max-w-lg md:max-w-xl
           p-0 overflow-hidden
           bg-white
-          border border-slate-200
+          border border-black/[0.08]
           rounded-lg
           shadow-none
         "
       >
-        <DialogHeader className="px-6 pt-5 pb-3 border-b border-slate-200">
+        <DialogHeader className="px-6 pt-5 pb-3 border-b border-black/[0.08]">
           <DialogTitle className="text-base font-semibold text-black">
             Help & Support
           </DialogTitle>
@@ -42,11 +42,11 @@ export default function StudentHelpDialog({
           <div className="px-6 py-5 space-y-6">
             {/* FAQ */}
             <div>
-              <p className="text-xs font-semibold tracking-wider uppercase text-slate-400 mb-3">
+              <p className="text-xs font-semibold tracking-wider uppercase text-black/40 mb-3">
                 Frequently Asked Questions
               </p>
 
-              <div className="border border-slate-200 rounded-lg overflow-hidden">
+              <div className="border border-black/[0.08] rounded-lg overflow-hidden">
                 <FAQAccordion />
               </div>
             </div>
@@ -56,7 +56,7 @@ export default function StudentHelpDialog({
               className="
                 w-full h-11
                 bg-black text-white
-                hover:bg-slate-900
+                hover:bg-[#171717]
                 rounded-lg
                 font-medium
               "

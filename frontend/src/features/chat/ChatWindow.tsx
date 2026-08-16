@@ -106,7 +106,7 @@ export default function ChatWindow({
         />
 
         <Button
-          className="rounded-full bg-black text-white hover:bg-slate-900"
+          className="rounded-full bg-black text-white hover:bg-[#171717]"
           onClick={() => {
             if (!text.trim()) return;
             sendMessage(text, userId, role);

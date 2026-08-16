@@ -111,10 +111,10 @@ function StatusBadge({ status }: { status: string }) {
 function InfoField({ label, value }: { label: string; value?: string | null }) {
   return (
     <div className="space-y-0.5">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-black/40">
         {label}
       </p>
-      <p className="text-[13px] font-medium text-slate-800">{value || "—"}</p>
+      <p className="text-[13px] font-medium text-black/80">{value || "—"}</p>
     </div>
   );
 }
@@ -136,13 +136,13 @@ function TimelineEvent({
   return (
     <div className="flex gap-3">
       <div
-        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${accent ? "bg-primary text-primary-foreground" : "bg-slate-100 text-slate-500"}`}
+        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${accent ? "bg-primary text-primary-foreground" : "bg-black/[0.04] text-black/50"}`}
       >
         {icon}
       </div>
       <div className="pb-4 pt-0.5">
-        <p className="text-[12px] font-semibold text-slate-800">{label}</p>
-        <p className="text-[11px] text-slate-400">
+        <p className="text-[12px] font-semibold text-black/80">{label}</p>
+        <p className="text-[11px] text-black/40">
           {new Date(date).toLocaleString("en-IN", {
             day: "2-digit",
             month: "short",
@@ -152,7 +152,7 @@ function TimelineEvent({
           })}
         </p>
         {note && (
-          <p className="mt-1 text-[11px] text-slate-600 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5">
+          <p className="mt-1 text-[11px] text-black/60 bg-black/[0.02] border border-black/[0.08] rounded-lg px-2.5 py-1.5">
             {note}
           </p>
         )}
@@ -170,10 +170,10 @@ function SectionHeading({
 }) {
   return (
     <div className="flex items-center gap-2 mb-4">
-      <div className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-100 text-slate-500">
+      <div className="flex h-6 w-6 items-center justify-center rounded-md bg-black/[0.04] text-black/50">
         {icon}
       </div>
-      <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-slate-500">
+      <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-black/50">
         {label}
       </p>
     </div>
@@ -199,7 +199,7 @@ function ApplicationDialog({
       : "—";
 
   return (
-    <DialogContent className="max-w-2xl p-0 overflow-hidden rounded-2xl border border-slate-200 shadow-2xl gap-0">
+    <DialogContent className="max-w-2xl p-0 overflow-hidden rounded-2xl border border-black/[0.08] shadow-2xl gap-0">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -210,13 +210,13 @@ function ApplicationDialog({
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <div className="flex h-6 w-6 items-center justify-center rounded-md bg-white/60 border border-white/40">
-                  <Train className="h-3.5 w-3.5 text-slate-600" />
+                  <Train className="h-3.5 w-3.5 text-black/60" />
                 </div>
-                <p className="text-[13px] font-bold text-slate-800">
+                <p className="text-[13px] font-bold text-black/80">
                   Concession Application
                 </p>
               </div>
-              <p className="text-[11px] text-slate-500 pl-8">
+              <p className="text-[11px] text-black/50 pl-8">
                 Government Polytechnic Mumbai &mdash; Admin View
               </p>
             </div>
@@ -230,26 +230,26 @@ function ApplicationDialog({
 
           <div className="mt-4 flex items-center justify-center gap-3 bg-white/60 backdrop-blur-sm border border-white/40 rounded-xl px-5 py-3">
             <div className="flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-              <span className="text-sm font-semibold text-slate-800">
+              <MapPin className="h-3.5 w-3.5 text-black/40 shrink-0" />
+              <span className="text-sm font-semibold text-black/80">
                 {app.fromStation}
               </span>
-              <span className="text-[10px] text-slate-400 font-normal">
+              <span className="text-[10px] text-black/40 font-normal">
                 ({app.fromLine})
               </span>
             </div>
 
-            <div className="flex items-center gap-0.5 text-slate-300">
-              <div className="h-px w-4 bg-slate-300" />
-              <ArrowRight className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+            <div className="flex items-center gap-0.5 text-black/25">
+              <div className="h-px w-4 bg-black/[0.15]" />
+              <ArrowRight className="h-3.5 w-3.5 text-black/40 shrink-0" />
             </div>
 
             <div className="flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-              <span className="text-sm font-semibold text-slate-800">
+              <MapPin className="h-3.5 w-3.5 text-black/40 shrink-0" />
+              <span className="text-sm font-semibold text-black/80">
                 {app.toStation}
               </span>
-              <span className="text-[10px] text-slate-400 font-normal">
+              <span className="text-[10px] text-black/40 font-normal">
                 ({app.toLine})
               </span>
             </div>
@@ -257,7 +257,7 @@ function ApplicationDialog({
         </div>
 
         <div className="max-h-[60vh] overflow-y-auto">
-          <div className="px-6 py-5 border-b border-slate-100">
+          <div className="px-6 py-5 border-b border-black/[0.06]">
             <SectionHeading
               icon={<User className="h-3.5 w-3.5" />}
               label="Student Information"
@@ -275,7 +275,7 @@ function ApplicationDialog({
             </div>
           </div>
 
-          <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/60">
+          <div className="px-6 py-5 border-b border-black/[0.06] bg-black/[0.02]/60">
             <SectionHeading
               icon={<FileText className="h-3.5 w-3.5" />}
               label="Application Details"
@@ -286,7 +286,7 @@ function ApplicationDialog({
               <InfoField label="Applied On" value={fmt(app.appliedAt)} />
               {app.concessionNumber && (
                 <div className="space-y-0.5">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-400">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-black/40">
                     Pass Number
                   </p>
                   <p className="font-mono text-[13px] font-semibold text-blue-700">
@@ -316,7 +316,7 @@ function ApplicationDialog({
               label="Timeline"
             />
             <div className="relative pl-1">
-              <div className="absolute left-[13px] top-2 bottom-2 w-px bg-slate-100" />
+              <div className="absolute left-[13px] top-2 bottom-2 w-px bg-black/[0.04]" />
               <TimelineEvent
                 icon={<Calendar className="h-3 w-3" />}
                 label="Application Submitted"

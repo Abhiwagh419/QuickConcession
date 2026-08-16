@@ -100,7 +100,7 @@ const StudentHeader = () => {
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => navigate("/student/profile")}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-150 hover:bg-slate-100"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-150 hover:bg-black/[0.04]"
             >
               {student ? (
                 <>
@@ -112,7 +112,7 @@ const StudentHeader = () => {
                       {student.enrollmentNo}
                     </p>
                   </div>
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 text-[12px] font-semibold tracking-wide">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-black/[0.04] text-black/70 text-[12px] font-semibold tracking-wide">
                     {initials}
                   </div>
                 </>
