@@ -5,14 +5,21 @@ interface TicketMarkProps {
 const TicketMark = ({ variant = "light" }: TicketMarkProps) => {
   const ticketFill = variant === "dark" ? "#ffffff" : "#171717";
   const notchColor = variant === "dark" ? "#0a0a0a" : "#fafafa";
+  const ambientColor = variant === "dark" ? "#ffffff" : "#000000";
 
   return (
     <div className="group relative flex items-center justify-center">
       <div
-        className="pointer-events-none absolute h-[420px] w-[420px] opacity-0 blur-3xl transition-opacity duration-700 ease-out group-hover:opacity-60"
+        className="pointer-events-none absolute h-[110px] w-[110px] animate-[spin_26s_linear_infinite] opacity-[0.10] blur-md"
+        style={{
+          background: `conic-gradient(from 0deg, ${ambientColor}, transparent 30%, transparent 70%, ${ambientColor})`,
+        }}
+      />
+      <div
+        className="pointer-events-none absolute h-[190px] w-[190px] animate-[spin_26s_linear_infinite] opacity-0 blur-xl transition-opacity duration-[900ms] ease-out group-hover:opacity-40"
         style={{
           background:
-            "radial-gradient(circle at 30% 30%, #ff6ec4, transparent 55%), radial-gradient(circle at 72% 28%, #6ee7ff, transparent 55%), radial-gradient(circle at 50% 75%, #ffe66d, transparent 55%)",
+            "conic-gradient(from 0deg, #ff6ec4, #6ee7ff, #ffe66d, #ff6ec4)",
         }}
       />
       <svg

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
@@ -15,6 +16,11 @@ interface DecodedToken {
 
 const AdminLoginForm = () => {
   const navigate = useNavigate();
+  const fieldMotion = (index: number) => ({
+    initial: { opacity: 0, y: 8 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.35, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+  });
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -95,12 +101,15 @@ const AdminLoginForm = () => {
       className="space-y-5"
     >
       {error && (
-        <div className="bg-destructive/10 border border-destructive/30 text-destructive rounded-md p-3 text-sm">
+        <motion.div
+          {...fieldMotion(0)}
+          className="bg-destructive/10 border border-destructive/30 text-destructive rounded-md p-3 text-sm"
+        >
           {error}
-        </div>
+        </motion.div>
       )}
 
-      <div className="space-y-2">
+      <motion.div className="space-y-2" {...fieldMotion(1)}>
         <Label>Email</Label>
 
         <div className="relative">
@@ -114,9 +123,9 @@ const AdminLoginForm = () => {
             className="pl-10"
           />
         </div>
-      </div>
+      </motion.div>
 
-      <div className="space-y-2">
+      <motion.div className="space-y-2" {...fieldMotion(2)}>
         <Label>Password</Label>
 
         <PasswordInput
@@ -125,15 +134,31 @@ const AdminLoginForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           startAdornment={<Lock className="h-4 w-4" />}
         />
-      </div>
+      </motion.div>
 
       {!otpSent ? (
-        <Button type="submit" disabled={isSendingOtp} className="w-full">
-          {isSendingOtp ? "Sending OTP..." : "Send OTP"}
-        </Button>
+        <motion.div {...fieldMotion(3)}>
+          <Button
+            type="submit"
+            disabled={isSendingOtp}
+            className="w-full h-11 bg-[#171717] text-white hover:bg-[#171717] hover:opacity-90 transition-opacity font-medium"
+          >
+            {isSendingOtp ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending OTP...
+              </>
+            ) : (
+              <>
+                <Mail className="mr-2 h-4 w-4" />
+                Send OTP
+              </>
+            )}
+          </Button>
+        </motion.div>
       ) : (
         <>
-          <div className="relative">
+          <motion.div className="relative" {...fieldMotion(3)}>
             <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 
             <Input
@@ -144,22 +169,35 @@ const AdminLoginForm = () => {
               }
               className="pl-10"
             />
-          </div>
+          </motion.div>
 
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? "Verifying..." : "Login"}
-          </Button>
+          <motion.div {...fieldMotion(4)}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full h-11 bg-[#171717] text-white hover:bg-[#171717] hover:opacity-90 transition-opacity font-medium"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
+            </Button>
+          </motion.div>
         </>
       )}
-      <div className="text-center pt-2">
+      <motion.div className="text-center pt-2" {...fieldMotion(5)}>
         <button
           type="button"
           onClick={() => navigate("/staff/forgot-password")}
-          className="text-sm text-accent hover:underline"
+          className="text-sm text-black/70 hover:text-black underline underline-offset-2"
         >
           Forgot password?
         </button>
-      </div>
+      </motion.div>
     </form>
   );
 };

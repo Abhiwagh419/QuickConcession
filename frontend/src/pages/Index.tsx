@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Train,
@@ -25,6 +26,7 @@ const TAB_CONFIG = [
 ];
 
 const Index = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("student");
 
   return (
@@ -47,7 +49,10 @@ const Index = () => {
             />
 
             <div className="relative z-10 flex items-center justify-between mb-12">
-              <div className="flex items-center gap-2.5">
+              <button
+                onClick={() => navigate("/")}
+                className="flex items-center gap-2.5"
+              >
                 <div className="h-7 w-7 rounded-lg bg-white flex items-center justify-center">
                   <Train
                     className="h-3.5 w-3.5 text-[#0a0a0a]"
@@ -57,7 +62,7 @@ const Index = () => {
                 <span className="text-[13.5px] font-semibold text-white tracking-tight">
                   QuickConcession
                 </span>
-              </div>
+              </button>
               <span className="text-[9.5px] font-medium tracking-[0.16em] uppercase text-white/25">
                 GPM · Mumbai
               </span>
@@ -88,13 +93,13 @@ const Index = () => {
               flex flex-col
             "
           >
-            <div className="mx-auto w-10 h-1 rounded-full bg-slate-200 mb-7" />
+            <div className="mx-auto w-10 h-1 rounded-full bg-black/10 mb-7" />
 
             <div className="mb-6">
-              <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-slate-400 mb-1">
+              <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-black/40 mb-1">
                 Access portal
               </p>
-              <h2 className="text-[20px] font-semibold tracking-[-0.02em] text-slate-950">
+              <h2 className="text-[20px] font-semibold tracking-[-0.02em] text-[#171717]">
                 Sign in to continue
               </h2>
             </div>
@@ -104,7 +109,7 @@ const Index = () => {
               onValueChange={setActiveTab}
               className="w-full flex-1 flex flex-col"
             >
-              <TabsList className="grid grid-cols-3 w-full h-11 rounded-xl bg-slate-950 p-1 mb-7">
+              <TabsList className="grid grid-cols-3 w-full h-11 rounded-xl bg-[#171717] p-1 mb-7">
                 {TAB_CONFIG.map(({ value, label, icon: Icon }) => (
                   <TabsTrigger
                     key={value}
@@ -115,7 +120,7 @@ const Index = () => {
                       text-[11.5px] font-medium text-white/40
                       transition-all duration-150
                       data-[state=active]:bg-white
-                      data-[state=active]:text-slate-950
+                      data-[state=active]:text-[#171717]
                       data-[state=active]:font-semibold
                       data-[state=active]:shadow-none
                     "
@@ -139,22 +144,22 @@ const Index = () => {
               </div>
             </Tabs>
 
-            <div className="mt-6 pt-5 border-t border-slate-100 flex items-start gap-2">
+            <div className="mt-6 pt-5 border-t border-black/[0.06] flex items-start gap-2">
               <AlertCircle
-                className="h-3.5 w-3.5 shrink-0 mt-[1px] text-slate-300"
+                className="h-3.5 w-3.5 shrink-0 mt-[1px] text-black/25"
                 strokeWidth={1.75}
               />
-              <p className="text-[11px] leading-relaxed text-slate-400">
-                <span className="font-medium text-slate-500">Notice: </span>
+              <p className="text-[11px] leading-relaxed text-black/40">
+                <span className="font-medium text-black/50">Notice: </span>
                 Contact IT Support —{" "}
-                <span className="font-medium text-slate-500">
+                <span className="font-medium text-black/50">
                   Mon–Fri, 10 AM – 5 PM
                 </span>
                 .
               </p>
             </div>
 
-            <p className="mt-6 text-center text-[10px] text-slate-300">
+            <p className="mt-6 text-center text-[10px] text-black/25">
               © {new Date().getFullYear()} Government Polytechnic Mumbai
             </p>
           </motion.div>
@@ -177,15 +182,20 @@ const Index = () => {
             <div className="absolute right-0 top-0 bottom-0 w-px bg-white/[0.06]" />
 
             <div className="relative z-10 flex items-center gap-3">
-              <div className="h-7 w-7 flex items-center justify-center rounded-md bg-white">
-                <Train
-                  className="h-3.5 w-3.5 text-[#0a0a0a]"
-                  strokeWidth={2.25}
-                />
-              </div>
-              <span className="text-[14px] font-semibold tracking-tight text-white">
-                QuickConcession
-              </span>
+              <button
+                onClick={() => navigate("/")}
+                className="flex items-center gap-3"
+              >
+                <div className="h-7 w-7 flex items-center justify-center rounded-md bg-white">
+                  <Train
+                    className="h-3.5 w-3.5 text-[#0a0a0a]"
+                    strokeWidth={2.25}
+                  />
+                </div>
+                <span className="text-[14px] font-semibold tracking-tight text-white">
+                  QuickConcession
+                </span>
+              </button>
             </div>
 
             <div className="relative z-10 flex-1 flex items-center justify-center">
@@ -247,10 +257,10 @@ const Index = () => {
                   transition={{ duration: 0.45, ease: EASE_OUT, delay: 0.2 }}
                   className="mb-10"
                 >
-                  <h1 className="text-[28px] font-semibold tracking-[-0.025em] text-slate-950 leading-tight">
+                  <h1 className="text-[28px] font-semibold tracking-[-0.025em] text-[#171717] leading-tight">
                     Sign in
                   </h1>
-                  <p className="mt-2 text-[13.5px] text-slate-400 leading-snug">
+                  <p className="mt-2 text-[13.5px] text-black/40 leading-snug">
                     Use your college-issued credentials to access your portal.
                   </p>
                 </motion.div>
@@ -265,7 +275,7 @@ const Index = () => {
                     onValueChange={setActiveTab}
                     className="w-full"
                   >
-                    <TabsList className="grid grid-cols-3 w-full h-11 rounded-xl bg-slate-950 p-1 mb-8">
+                    <TabsList className="grid grid-cols-3 w-full h-11 rounded-xl bg-[#171717] p-1 mb-8">
                       {TAB_CONFIG.map(({ value, label, icon: Icon }) => (
                         <TabsTrigger
                           key={value}
@@ -276,7 +286,7 @@ const Index = () => {
                             text-[12px] font-medium text-white/40
                             transition-all duration-150
                             data-[state=active]:bg-white
-                            data-[state=active]:text-slate-950
+                            data-[state=active]:text-[#171717]
                             data-[state=active]:font-semibold
                             data-[state=active]:shadow-none
                           "
@@ -306,16 +316,16 @@ const Index = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.38 }}
-                  className="mt-10 pt-6 border-t border-slate-100 flex items-start gap-2.5"
+                  className="mt-10 pt-6 border-t border-black/[0.06] flex items-start gap-2.5"
                 >
                   <AlertCircle
-                    className="h-3.5 w-3.5 shrink-0 mt-[1px] text-slate-300"
+                    className="h-3.5 w-3.5 shrink-0 mt-[1px] text-black/25"
                     strokeWidth={1.75}
                   />
-                  <p className="text-[11.5px] leading-relaxed text-slate-400">
-                    <span className="font-medium text-slate-600">Notice: </span>
+                  <p className="text-[11.5px] leading-relaxed text-black/40">
+                    <span className="font-medium text-black/60">Notice: </span>
                     Contact IT Support —{" "}
-                    <span className="font-medium text-slate-600">
+                    <span className="font-medium text-black/60">
                       Mon–Fri, 10 AM – 5 PM
                     </span>
                     .
@@ -324,11 +334,11 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between px-12 xl:px-20 py-5 border-t border-slate-100">
-              <p className="text-[11px] text-slate-300">
+            <div className="flex items-center justify-between px-12 xl:px-20 py-5 border-t border-black/[0.06]">
+              <p className="text-[11px] text-black/25">
                 © {new Date().getFullYear()} Government Polytechnic Mumbai
               </p>
-              <p className="text-[11px] text-slate-300">
+              <p className="text-[11px] text-black/25">
                 Railway Concession Portal
               </p>
             </div>

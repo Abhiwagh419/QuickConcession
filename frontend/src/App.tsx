@@ -7,6 +7,8 @@ import { AnimatePresence } from "framer-motion";
 import ImportStudents from "@/pages/ImportStudents";
 import Index from "./pages/Index";
 import LandingPage from "./pages/LandingPage";
+import FaqPage from "./pages/FaqPage";
+import HelpPage from "./pages/HelpPage";
 import StudentDashboard from "./pages/StudentDashboard";
 import RailwayConcessionDashboard from "./pages/RailwayConcessionDashboard";
 import NewConcessionApplication from "./pages/NewConcessionApplication";
@@ -35,6 +37,8 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/faq" element={<FaqPage />} />
+        <Route path="/help" element={<HelpPage />} />
         <Route path="/login" element={<Index />} />
         <Route path="/student/dashboard" element={<StudentDashboard />} />
         <Route
