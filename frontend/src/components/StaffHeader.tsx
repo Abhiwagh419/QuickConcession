@@ -48,12 +48,12 @@ const StaffHeader = () => {
 
   return (
     <div className="px-5 pt-5">
-      <header className="relative rounded-xl bg-header-surface shadow-header border border-header-border backdrop-blur-sm">
+      <header className="relative rounded-2xl bg-white border border-black/[0.08] backdrop-blur-sm">
         <div className="flex items-center justify-between px-6 h-[72px]">
           <div className="flex items-center gap-4 min-w-0">
             <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
               <GraduationCap className="h-[18px] w-[18px]" />
-              <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[hsl(var(--header-status))] border-2 border-header-surface" />
+              <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-white" />
             </div>
 
             <div className="min-w-0">
@@ -113,7 +113,7 @@ const StaffHeader = () => {
               )}
             </div>
 
-            <div className="h-8 w-px bg-header-divider mx-1" />
+            <div className="h-8 w-px bg-black/[0.06] mx-1" />
 
             <button
               onClick={handleLogout}
@@ -126,7 +126,7 @@ const StaffHeader = () => {
         </div>
 
         {breadcrumbs.length > 1 && (
-          <div className="border-t border-header-divider px-6 h-10 flex items-center">
+          <div className="border-t border-black/[0.06] px-6 h-10 flex items-center">
             <div className="flex items-center gap-2">
               <Shield className="h-3.5 w-3.5 text-muted-foreground/50" />
               <span className="text-[12px] font-medium text-muted-foreground">

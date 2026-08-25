@@ -86,12 +86,12 @@ function StatTile({
   colorClass: string;
 }) {
   return (
-    <Card className="border shadow-sm hover:shadow-md transition-shadow duration-200">
+    <Card className="border-black/[0.08]">
       <CardContent className="p-5">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-black/35 mb-2">
           {label}
         </p>
-        <p className={`text-3xl font-bold tabular-nums ${colorClass}`}>
+        <p className={`font-mono text-[26px] font-semibold tracking-tight ${colorClass}`}>
           {value}
         </p>
       </CardContent>
@@ -101,16 +101,16 @@ function StatTile({
 
 function StatusChip({ status }: { status: string }) {
   const map: Record<string, string> = {
-    ISSUED: "bg-success/10 text-success border-success/30",
-    APPROVED: "bg-success/10 text-success border-success/30",
-    EXPIRED: "bg-warning/10 text-warning border-warning/30",
-    PENDING: "bg-primary/10 text-primary border-primary/30",
-    REJECTED: "bg-destructive/10 text-destructive border-destructive/30",
+    ISSUED: "bg-blue-50 text-blue-700 border-blue-200",
+    APPROVED: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    EXPIRED: "bg-black/[0.04] text-black/50 border-black/[0.08]",
+    PENDING: "bg-amber-50 text-amber-700 border-amber-200",
+    REJECTED: "bg-red-50 text-red-600 border-red-200",
   };
   return (
     <span
       className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${
-        map[status] ?? "bg-muted text-muted-foreground border-border"
+        map[status] ?? "bg-black/[0.04] text-black/50 border-black/[0.08]"
       }`}
     >
       {status}
@@ -338,18 +338,18 @@ const StaffDashboard = () => {
         <main className="container mx-auto max-w-6xl space-y-8 px-4 py-8">
           <motion.div
             {...fadeIn(0)}
-            className="flex items-start justify-between gap-4 flex-wrap"
+            className="flex items-start justify-between gap-4 flex-wrap pb-6 border-b border-black/[0.06]"
           >
             <div>
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                  <User className="h-4 w-4 text-primary-foreground" />
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#171717]">
+                  <User className="h-4 w-4 text-white" />
                 </div>
-                <h1 className="text-xl font-bold tracking-tight text-foreground">
+                <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-foreground">
                   Staff Dashboard
                 </h1>
               </div>
-              <p className="mt-1 pl-10 text-[13px] text-muted-foreground">
+              <p className="mt-1.5 pl-12 text-[13px] text-black/40">
                 Government Polytechnic Mumbai &mdash; Staff Portal
               </p>
             </div>
@@ -357,7 +357,7 @@ const StaffDashboard = () => {
 
           <motion.div {...fadeIn(0.05)}>
             <SectionLabel>Staff Identity</SectionLabel>
-            <Card className="border shadow-sm overflow-hidden">
+            <Card className="border-black/[0.08] overflow-hidden">
               <div className="flex items-center gap-3 border-b bg-muted/30 px-6 py-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                   <User className="h-5 w-5 text-primary" />
@@ -386,29 +386,29 @@ const StaffDashboard = () => {
               <StatTile
                 label="Pending"
                 value={pendingCount}
-                colorClass="text-warning"
+                colorClass="text-amber-600"
               />
               <StatTile
                 label="Approved"
                 value={approvedCount}
-                colorClass="text-success"
+                colorClass="text-emerald-600"
               />
               <StatTile
                 label="Rejected"
                 value={rejectedCount}
-                colorClass="text-destructive"
+                colorClass="text-red-600"
               />
               <StatTile
                 label="Issued"
                 value={issuedCount}
-                colorClass="text-primary"
+                colorClass="text-blue-600"
               />
             </div>
           </motion.div>
 
           <motion.div {...fadeIn(0.15)}>
             <SectionLabel>Export Records</SectionLabel>
-            <Card className="border shadow-sm">
+            <Card className="border-black/[0.08]">
               <CardHeader className="pb-3 border-b bg-muted/20">
                 <CardTitle className="flex items-center gap-2 text-base font-semibold">
                   <Download className="h-4 w-4 text-primary" />
@@ -439,7 +439,7 @@ const StaffDashboard = () => {
 
           <motion.div {...fadeIn(0.2)}>
             <SectionLabel>Student Lookup</SectionLabel>
-            <Card className="border shadow-sm">
+            <Card className="border-black/[0.08]">
               <CardHeader className="pb-3 border-b bg-muted/20">
                 <CardTitle className="flex items-center gap-2 text-base font-semibold">
                   <Search className="h-4 w-4 text-primary" />
@@ -683,7 +683,7 @@ const StaffDashboard = () => {
                         openApplicationDetails(app.id);
                       }
                     }}
-                    className="flex items-center justify-between rounded-xl border border-border bg-background px-4 py-3 cursor-pointer transition-all duration-150 hover:bg-muted/50 hover:shadow-sm"
+                    className="flex items-center justify-between rounded-xl border border-border bg-background px-4 py-3 cursor-pointer transition-all duration-150 hover:bg-black/[0.02]"
                   >
                     <div className="space-y-0.5">
                       <p className="text-sm font-medium text-foreground">
@@ -866,7 +866,7 @@ const StaffDashboard = () => {
 
           <motion.div {...fadeIn(0.25)}>
             <SectionLabel>Support</SectionLabel>
-            <Card className="border shadow-sm">
+            <Card className="border-black/[0.08]">
               <CardHeader className="pb-3 border-b bg-muted/20">
                 <CardTitle className="flex items-center gap-2 text-base font-semibold">
                   <HelpCircle className="h-4 w-4 text-primary" />
@@ -915,7 +915,7 @@ const StaffDashboard = () => {
                         );
                       }
                     }}
-                    className="group flex w-full items-start gap-4 rounded-xl border border-border bg-card p-5 text-left shadow-sm transition-all duration-200 hover:border-primary/30 hover:shadow-md"
+                    className="group flex w-full items-start gap-4 rounded-xl border border-black/[0.08] bg-card p-5 text-left transition-colors duration-200 hover:border-black/20"
                   >
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 group-hover:bg-primary/15 transition-colors duration-150">
                       <module.icon className="h-5 w-5 text-primary" />

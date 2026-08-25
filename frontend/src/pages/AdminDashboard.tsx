@@ -26,7 +26,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { apiFetch, getAuthToken } from "@/lib/api";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface DashboardStats {
   totalStudents: number;
@@ -37,7 +36,6 @@ interface DashboardStats {
   rejectedApplications: number;
 }
 
-// ─── Animation helpers ────────────────────────────────────────────────────────
 
 type CubicBezier = [number, number, number, number];
 const EASE_OUT: CubicBezier = [0.16, 1, 0.3, 1];
@@ -48,7 +46,6 @@ const fadeIn = (delay: number = 0) => ({
   transition: { duration: 0.38, ease: EASE_OUT, delay },
 });
 
-// ─── Primitives ───────────────────────────────────────────────────────────────
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -67,7 +64,7 @@ function Panel({
 }) {
   return (
     <div
-      className={`rounded-xl border border-black/[0.08] bg-white shadow-sm ${className}`}
+      className={`rounded-2xl border border-black/[0.08] bg-white ${className}`}
     >
       {children}
     </div>
@@ -78,7 +75,6 @@ function InlineDivider() {
   return <div className="my-4 h-px w-full bg-black/[0.04]" />;
 }
 
-// ─── Stat Card ────────────────────────────────────────────────────────────────
 
 function StatCard({
   label,
@@ -97,7 +93,7 @@ function StatCard({
 }) {
   return (
     <motion.div {...fadeIn(delay)}>
-      <Panel className="flex items-start gap-4 p-5 transition-shadow duration-200 hover:shadow-md">
+      <Panel className="flex items-start gap-4 p-5 transition-colors duration-200 hover:border-black/20">
         <div
           className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${iconBg}`}
         >
@@ -110,10 +106,7 @@ function StatCard({
           {loading ? (
             <div className="mt-1.5 h-7 w-16 animate-pulse rounded bg-black/[0.04]" />
           ) : (
-            <p
-              className="mt-0.5 text-3xl font-semibold
- tabular-nums text-black/80"
-            >
+            <p className="mt-0.5 font-mono text-[26px] font-semibold tracking-tight text-black/80">
               {value.toLocaleString()}
             </p>
           )}
@@ -123,7 +116,6 @@ function StatCard({
   );
 }
 
-// ─── Status Bar ───────────────────────────────────────────────────────────────
 
 function StatusBar({
   label,
@@ -161,7 +153,6 @@ function StatusBar({
   );
 }
 
-// ─── Status Badge ─────────────────────────────────────────────────────────────
 
 function StatusBadge({
   label,
@@ -198,7 +189,6 @@ function StatusBadge({
   );
 }
 
-// ─── Health Row ───────────────────────────────────────────────────────────────
 
 function HealthRow({
   icon,
@@ -220,7 +210,6 @@ function HealthRow({
   );
 }
 
-// ─── Module Card ──────────────────────────────────────────────────────────────
 
 function ModuleCard({
   title,
@@ -242,7 +231,7 @@ function ModuleCard({
   const navigate = useNavigate();
   return (
     <motion.div {...fadeIn(delay)} className="h-full">
-      <Panel className="flex h-full flex-col gap-4 p-5 transition-shadow duration-200 hover:shadow-md">
+      <Panel className="flex h-full flex-col gap-4 p-5 transition-colors duration-200 hover:border-black/20">
         <div className="flex items-start gap-3">
           <div
             className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${iconBg}`}
@@ -269,7 +258,6 @@ function ModuleCard({
   );
 }
 
-// ─── Dashboard ────────────────────────────────────────────────────────────────
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -299,7 +287,6 @@ const AdminDashboard = () => {
       setLastRefreshed(new Date());
     }
   };
-//
 const exportExcel = async () => {
   try {
     const response = await fetch(
@@ -347,30 +334,25 @@ const exportExcel = async () => {
 
       <PageWrapper>
         <main className="container mx-auto max-w-7xl space-y-8 px-4 py-8">
-          {/* ── Page Header ─────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0)}
-            className="flex flex-wrap items-start justify-between gap-4"
+            className="flex flex-wrap items-start justify-between gap-4 pb-6 border-b border-black/[0.06]"
           >
             <div>
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#171717]">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#171717]">
                   <ShieldCheck className="h-4 w-4 text-white" />
                 </div>
-                <h1
-                  className="text-3xl font-semibold
- tracking-tight text-[#171717]"
-                >
+                <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[#171717]">
                   Admin Dashboard
                 </h1>
               </div>
-              <p className="mt-1 pl-10 text-[13px] text-black/40">
+              <p className="mt-1.5 pl-12 text-[13px] text-black/40">
                 QuickConcession &mdash; Government Polytechnic Institute
               </p>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap">
-              {/* Export Excel Button */}
               <button
                 onClick={exportExcel}
                 className="flex items-center gap-2 rounded-lg bg-[#171717] px-4 py-2 text-[13px] font-semibold text-white shadow-sm transition-all duration-200 hover:opacity-90"
@@ -379,7 +361,6 @@ const exportExcel = async () => {
                 Export Full System Excel
               </button>
 
-              {/* Refresh Button */}
               <button
                 onClick={fetchStats}
                 disabled={refreshing}
@@ -399,7 +380,6 @@ const exportExcel = async () => {
             </div>
           </motion.div>
 
-          {/* ── Overview Stats ──────────────────────────────────────── */}
           <div>
             <SectionLabel>Overview</SectionLabel>
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -438,11 +418,9 @@ const exportExcel = async () => {
             </div>
           </div>
 
-          {/* ── Analytics ───────────────────────────────────────────── */}
           <div>
             <SectionLabel>Application Analytics</SectionLabel>
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-              {/* Status Breakdown */}
               <motion.div {...fadeIn(0.25)} className="lg:col-span-2">
                 <Panel className="h-full p-6">
                   <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -518,7 +496,6 @@ const exportExcel = async () => {
                 </Panel>
               </motion.div>
 
-              {/* Security & Health */}
               <motion.div {...fadeIn(0.3)}>
                 <Panel className="h-full p-6">
                   <div className="mb-4 flex items-center gap-2">
@@ -589,7 +566,6 @@ const exportExcel = async () => {
             </div>
           </div>
 
-          {/* ── Management Modules ───────────────────────────────────── */}
           <div>
             <SectionLabel>Management Modules</SectionLabel>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
@@ -614,7 +590,6 @@ const exportExcel = async () => {
             </div>
           </div>
 
-          {/* ── Footer ──────────────────────────────────────────────── */}
           <motion.div
             {...fadeIn(0.6)}
             className="flex items-center gap-3 pb-6 pt-2"
