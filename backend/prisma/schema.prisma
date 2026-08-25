@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id           Int                     @id @default(autoincrement())
+  enrollmentNo String                  @unique
+  passwordHash String
+  fullName     String
+  email        String                  @unique
+  mobileNumber String
+  course       String
+  year         Year
+  sem          Semester
+  shift        Shift
+  createdAt    DateTime                @default(now())
+  address      String?
+  dateOfBirth  DateTime?
+  applications ConcessionApplication[]
+  otpEntries   OtpVerification[]
+  active Boolean @default(true)
+   isDeleted    Boolean  @default(false) 
+}
+
+model OtpVerification {
+  id        Int      @id @default(autoincrement())
+
+  studentId Int?
+  staffId   Int?
+
+  otpHash   String
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  student   Student? @relation(fields: [studentId], references: [id])
+  staff     Staff?   @relation(fields: [staffId], references: [id])
+
+  @@index([studentId, staffId, isUsed, expiresAt])
+}
+
+
+model ConcessionApplication {
+  id                Int               @id @default(autoincrement())
+  studentId         Int
+  fromStation       String
+  toStation         String
+  travelClass       String
+  duration          String
+  status            ApplicationStatus @default(PENDING)
+  appliedAt         DateTime          @default(now())
+  fromLine          String
+  toLine            String
+  expiryDate        DateTime?
+  approvedAt        DateTime?
+  approvedByStaffId Int?
+  rejectedAt        DateTime?
+  rejectionReason   String?
+  concessionNumber  String?           @unique
+  approvedBy        Staff?            @relation("ApprovedBy", fields: [approvedByStaffId], references: [id])
+  student           Student           @relation(fields: [studentId], references: [id])
+}
+
+model Staff {
+  id                   Int                     @id @default(autoincrement())
+  fullName             String
+  email                String                  @unique
+  passwordHash         String
+  role                 UserRole                @default(STAFF)
+  createdAt            DateTime                @default(now())
+  approvedApplications ConcessionApplication[] @relation("ApprovedBy")
+active               Boolean                 @default(true)
+  isDeleted            Boolean                 @default(false)
+  otpEntries           OtpVerification[]
+}
+
+enum ApplicationStatus {
+  PENDING 
+  APPROVED
+  REJECTED
+  EXPIRED
+  ISSUED
+}
+
+enum Shift {
+  FIRST
+  SECOND
+}
+
+enum Semester {
+  SEM_I
+  SEM_II
+  SEM_III
+  SEM_IV
+  SEM_V
+  SEM_VI
+}
+
+enum Year {
+  FY
+  SY
+  TY
+}
+
+enum UserRole {
+  STAFF
+  ADMIN
+}
