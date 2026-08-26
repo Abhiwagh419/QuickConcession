@@ -90,9 +90,8 @@ const AdminStudents = () => {
 
       <PageWrapper>
         <main className="container mx-auto px-4 py-6 max-w-7xl">
-          {/* TITLE */}
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-[22px] font-semibold tracking-[-0.02em] flex items-center gap-2">
               <Users className="w-6 h-6 text-primary" />
               Student Management
             </h1>
@@ -149,7 +148,6 @@ const AdminStudents = () => {
                     <tr key={student.id} className="border-b hover:bg-muted/50">
                       <td className="py-3">{student.enrollmentNo}</td>
 
-                      {/* NAME CLICK ONLY */}
                       <td
                         onClick={() => openStudentDetails(student.id)}
                         className="cursor-pointer hover:text-primary font-medium"

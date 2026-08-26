@@ -46,7 +46,7 @@ function Panel({
 }) {
   return (
     <div
-      className={`rounded-xl border border-black/[0.08] bg-white shadow-sm ${className}`}
+      className={`rounded-2xl border border-black/[0.08] bg-white ${className}`}
     >
       {children}
     </div>

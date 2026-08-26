@@ -40,7 +40,6 @@ export default function StudentHelpDialog({
 
         {!openChat ? (
           <div className="px-6 py-5 space-y-6">
-            {/* FAQ */}
             <div>
               <p className="text-xs font-semibold tracking-wider uppercase text-black/40 mb-3">
                 Frequently Asked Questions

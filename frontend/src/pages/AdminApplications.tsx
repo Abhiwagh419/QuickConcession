@@ -405,7 +405,7 @@ const AdminApplications = () => {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <FileText className="h-4 w-4 text-primary-foreground" />
               </div>
-              <h1 className="text-xl font-bold tracking-tight text-foreground">
+              <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-foreground">
                 All Concession Applications
               </h1>
             </div>
@@ -416,7 +416,7 @@ const AdminApplications = () => {
           </motion.div>
 
           <motion.div {...fadeIn(0.07)}>
-            <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+            <Card className="border-black/[0.08] overflow-hidden">
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                 <CardTitle className="text-sm font-semibold text-foreground">
                   Application Records

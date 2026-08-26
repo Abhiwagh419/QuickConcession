@@ -82,7 +82,7 @@ const AdminStaff = () => {
       <PageWrapper>
         <main className="container mx-auto px-4 py-6 max-w-7xl">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-[22px] font-semibold tracking-[-0.02em] flex items-center gap-2">
               <Users className="w-6 h-6 text-primary" />
               Staff Management
             </h1>

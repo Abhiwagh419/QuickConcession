@@ -74,7 +74,7 @@ function InfoField({ label, value }: { label: string; value?: string }) {
 
 function StudentInfoSkeleton() {
   return (
-    <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+    <Card className="border-black/[0.08] overflow-hidden">
       <div className="border-b border-border bg-muted/20 px-6 py-4">
         <div className="h-4 w-32 rounded bg-muted animate-pulse" />
       </div>
@@ -229,7 +229,7 @@ const NewConcessionApplication = () => {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <Train className="h-4 w-4 text-primary-foreground" />
               </div>
-              <h1 className="text-xl font-bold tracking-tight text-foreground">
+              <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-foreground">
                 Apply for Railway Concession
               </h1>
             </div>
@@ -244,7 +244,7 @@ const NewConcessionApplication = () => {
             </motion.div>
           ) : (
             <motion.div {...fadeIn(0.06)}>
-              <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+              <Card className="border-black/[0.08] overflow-hidden">
                 <div className="border-b border-border bg-muted/20 px-6 py-4">
                   <p className="text-sm font-semibold text-foreground">
                     Applicant Details
@@ -269,7 +269,7 @@ const NewConcessionApplication = () => {
           )}
 
           <motion.div {...fadeIn(0.11)}>
-            <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+            <Card className="border-black/[0.08] overflow-hidden">
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                 <CardTitle className="text-sm font-semibold text-foreground">
                   Concession Details

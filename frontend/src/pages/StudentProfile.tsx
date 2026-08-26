@@ -171,7 +171,7 @@ const StudentProfile = () => {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                   <User className="h-4 w-4 text-primary-foreground" />
                 </div>
-                <h1 className="text-xl font-bold tracking-tight text-foreground">
+                <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-foreground">
                   Student Profile
                 </h1>
               </div>
@@ -199,9 +199,8 @@ const StudentProfile = () => {
             transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.06 }}
           >
             <Card
-              className={`border shadow-sm rounded-xl overflow-hidden transition-all duration-300 ${isEditing ? "ring-1 ring-primary/20" : ""}`}
+              className={`border-black/[0.08] overflow-hidden transition-all duration-300 ${isEditing ? "ring-1 ring-primary/20" : ""}`}
             >
-              {/* Card Header */}
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-semibold text-foreground">

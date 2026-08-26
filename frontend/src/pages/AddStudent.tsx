@@ -87,13 +87,17 @@ const AddStudent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-muted/40">
+    <div className="min-h-screen bg-black/[0.02]">
       <AdminHeader />
 
       <PageWrapper>
         <main className="container mx-auto px-4 py-8 max-w-5xl">
           <div className="flex justify-between items-center mb-6">
-            <Button variant="ghost" onClick={() => navigate("/admin/students")}>
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/admin/students")}
+              className="text-black/60 hover:text-black hover:bg-black/[0.04]"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Students
             </Button>
@@ -101,24 +105,27 @@ const AddStudent = () => {
             <Button
               variant="outline"
               onClick={() => navigate("/admin/students/import")}
+              className="border-black/15 text-black/70 hover:border-black/30 hover:bg-black/[0.02]"
             >
               Bulk Import CSV
             </Button>
           </div>
 
-          <Card className="shadow-xl border-0">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-2xl">
-                <UserPlus className="w-6 h-6 text-primary" />
+          <Card className="border-black/[0.08]">
+            <CardHeader className="border-b border-black/[0.06]">
+              <CardTitle className="flex items-center gap-2.5 text-[20px] font-semibold tracking-[-0.02em] text-[#171717]">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#171717]">
+                  <UserPlus className="w-4 h-4 text-white" />
+                </div>
                 Add New Student
               </CardTitle>
             </CardHeader>
 
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-8">
-                {/* PERSONAL SECTION */}
-                <div className="bg-muted/30 p-6 rounded-xl space-y-6">
-                  <h3 className="text-lg font-semibold">Personal Details</h3>
+                
+                <div className="bg-black/[0.02] border border-black/[0.06] p-6 rounded-2xl space-y-6">
+                  <h3 className="text-[15px] font-semibold text-black/80">Personal Details</h3>
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
@@ -186,9 +193,9 @@ const AddStudent = () => {
                   </div>
                 </div>
 
-                {/* ACADEMIC SECTION */}
-                <div className="bg-muted/30 p-6 rounded-xl space-y-6">
-                  <h3 className="text-lg font-semibold">Academic Details</h3>
+                
+                <div className="bg-black/[0.02] border border-black/[0.06] p-6 rounded-2xl space-y-6">
+                  <h3 className="text-[15px] font-semibold text-black/80">Academic Details</h3>
 
                   <div className="grid md:grid-cols-3 gap-6">
                     <div>
@@ -254,9 +261,9 @@ const AddStudent = () => {
                   </div>
                 </div>
 
-                {/* ACCOUNT SECTION */}
-                <div className="bg-muted/30 p-6 rounded-xl space-y-6">
-                  <h3 className="text-lg font-semibold">Account Setup</h3>
+                
+                <div className="bg-black/[0.02] border border-black/[0.06] p-6 rounded-2xl space-y-6">
+                  <h3 className="text-[15px] font-semibold text-black/80">Account Setup</h3>
 
                   <div className="flex gap-4 items-end">
                     <div className="flex-1">
@@ -284,7 +291,7 @@ const AddStudent = () => {
 
                 <Button
                   type="submit"
-                  className="w-full h-12 text-lg btn-primary-gradient"
+                  className="w-full h-12 text-[15px] font-medium bg-[#171717] text-white hover:bg-[#171717] hover:opacity-90 transition-opacity"
                   disabled={isLoading}
                 >
                   {isLoading ? (

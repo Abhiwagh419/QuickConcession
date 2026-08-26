@@ -124,10 +124,10 @@ const StaffRailwayManagement = () => {
           >
             <div>
               <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                   <Train className="h-4 w-4 text-primary-foreground" />
                 </div>
-                <h1 className="text-xl font-bold tracking-tight text-foreground">
+                <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-foreground">
                   Railway Concession Management
                 </h1>
               </div>
@@ -138,7 +138,7 @@ const StaffRailwayManagement = () => {
           </motion.div>
 
           <motion.div {...fadeIn(0.07)}>
-            <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+            <Card className="border-black/[0.08] overflow-hidden">
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                 <CardTitle className="text-sm font-semibold text-foreground">
                   Application Queue
@@ -333,7 +333,7 @@ const StaffRailwayManagement = () => {
                                   <Button
                                     size="sm"
                                     onClick={() => handleProcess(app.id)}
-                                    className="h-8 rounded-lg px-3 text-[12px] font-semibold bg-success hover:bg-success/90 text-success-foreground transition-colors duration-150 flex items-center gap-1.5 mx-auto"
+                                    className="h-8 rounded-lg px-3 text-[12px] font-semibold bg-success hover:bg-success/90 text-white transition-colors duration-150 flex items-center gap-1.5 mx-auto"
                                   >
                                     <FileCheck className="h-3.5 w-3.5" />
                                     Issue

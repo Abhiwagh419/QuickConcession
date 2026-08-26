@@ -417,14 +417,14 @@ const AdminStudentDialog = ({ open, onClose, data, refresh }: Props) => {
                       px-4 py-1 text-sm
                       ${
                         selectedApplication.status === "ISSUED"
-                          ? "bg-green-100 text-green-700"
+                          ? "bg-blue-50 text-blue-700"
                           : selectedApplication.status === "APPROVED"
-                            ? "bg-blue-100 text-blue-700"
+                            ? "bg-emerald-50 text-emerald-700"
                             : selectedApplication.status === "REJECTED"
-                              ? "bg-red-100 text-red-700"
+                              ? "bg-red-50 text-red-600"
                               : selectedApplication.status === "EXPIRED"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : "bg-gray-100 text-gray-700"
+                                ? "bg-black/[0.04] text-black/50"
+                                : "bg-amber-50 text-amber-700"
                       }
                     `}
                   >

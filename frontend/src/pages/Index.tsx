@@ -8,7 +8,6 @@ import {
   ShieldCheck,
   AlertCircle,
 } from "lucide-react";
-import LoginFooter from "@/components/LoginFooter";
 import StudentLoginForm from "@/components/StudentLoginForm";
 import StaffLoginForm from "@/components/StaffLoginForm";
 import PageWrapper from "@/components/PageWrapper";

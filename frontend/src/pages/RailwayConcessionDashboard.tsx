@@ -84,24 +84,24 @@ const RailwayConcessionDashboard = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "SUBMITTED":
-        return <Clock className="w-4 h-4 text-warning" />;
+        return <Clock className="w-4 h-4 text-amber-500" />;
       case "APPROVED":
-        return <CheckCircle className="w-4 h-4 text-accent" />;
+        return <CheckCircle className="w-4 h-4 text-emerald-600" />;
       case "REJECTED":
-        return <XCircle className="w-4 h-4 text-destructive" />;
+        return <XCircle className="w-4 h-4 text-red-500" />;
       case "ISSUED":
-        return <FileCheck className="w-4 h-4 text-success" />;
+        return <FileCheck className="w-4 h-4 text-blue-600" />;
     }
   };
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      SUBMITTED: "bg-warning/15 text-warning border-warning/30",
-      APPROVED: "bg-accent/15 text-accent border-accent/30",
-      REJECTED: "bg-destructive/15 text-destructive border-destructive/30",
-      ISSUED: "bg-success/15 text-success border-success/30",
+      SUBMITTED: "bg-amber-50 text-amber-700 border-amber-200",
+      APPROVED: "bg-emerald-50 text-emerald-700 border-emerald-200",
+      REJECTED: "bg-red-50 text-red-600 border-red-200",
+      ISSUED: "bg-blue-50 text-blue-700 border-blue-200",
     };
-    return styles[status] ?? "bg-muted text-muted-foreground border-border";
+    return styles[status] ?? "bg-black/[0.04] text-black/50 border-black/[0.08]";
   };
 
   const getStatusMessage = (status?: string) => {
@@ -152,18 +152,18 @@ const RailwayConcessionDashboard = () => {
         <main className="container mx-auto max-w-6xl space-y-6 px-4 py-8">
           <motion.div
             {...fadeIn(0)}
-            className="flex flex-wrap items-start justify-between gap-4"
+            className="flex flex-wrap items-start justify-between gap-4 pb-6 border-b border-black/[0.06]"
           >
             <div>
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                  <Train className="h-4 w-4 text-primary-foreground" />
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#171717]">
+                  <Train className="h-4 w-4 text-white" />
                 </div>
-                <h1 className="text-xl font-bold tracking-tight text-foreground">
+                <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-foreground">
                   Railway Concession Portal
                 </h1>
               </div>
-              <p className="mt-1 pl-10 text-[13px] text-muted-foreground">
+              <p className="mt-1.5 pl-12 text-[13px] text-muted-foreground">
                 Government Polytechnic Mumbai &mdash; Student Portal
               </p>
             </div>
@@ -172,7 +172,7 @@ const RailwayConcessionDashboard = () => {
               onClick={() => navigate("/student/railway/apply")}
               disabled={hasActivePass}
               size="sm"
-              className="flex items-center gap-2 rounded-lg h-9 px-4 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 rounded-lg h-9 px-4 text-sm font-semibold bg-[#171717] text-white hover:bg-[#171717] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Plus className="h-3.5 w-3.5" />
               New Application
@@ -180,7 +180,7 @@ const RailwayConcessionDashboard = () => {
           </motion.div>
 
           <motion.div {...fadeIn(0.07)}>
-            <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+            <Card className="border-black/[0.08] overflow-hidden">
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                 <CardTitle className="text-sm font-semibold text-foreground">
                   Current Application Status
@@ -260,7 +260,7 @@ const RailwayConcessionDashboard = () => {
           </motion.div>
 
           <motion.div {...fadeIn(0.13)}>
-            <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+            <Card className="border-black/[0.08] overflow-hidden">
               <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                 <CardTitle className="text-sm font-semibold text-foreground">
                   Application History

@@ -120,7 +120,7 @@ const ApplicationProcessing = () => {
         <StaffHeader />
         <PageWrapper>
           <main className="container mx-auto max-w-lg px-4 py-16">
-            <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+            <div className="rounded-2xl border-black/[0.08] bg-card overflow-hidden">
               <div className="border-b border-border bg-muted/20 px-6 py-4 flex items-center gap-2.5">
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-destructive/10">
                   <AlertCircle className="h-3.5 w-3.5 text-destructive" />
@@ -242,10 +242,10 @@ const ApplicationProcessing = () => {
               </Button>
               <div>
                 <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                     <Train className="h-4 w-4 text-primary-foreground" />
                   </div>
-                  <h1 className="text-xl font-bold tracking-tight text-foreground">
+                  <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-foreground">
                     Application Processing
                   </h1>
                 </div>
@@ -267,7 +267,7 @@ const ApplicationProcessing = () => {
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <motion.div {...fadeIn(0.07)}>
-              <Card className="border border-border shadow-sm rounded-xl overflow-hidden h-full">
+              <Card className="border-black/[0.08] overflow-hidden h-full">
                 <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                   <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
                     <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10">
@@ -334,7 +334,7 @@ const ApplicationProcessing = () => {
             </motion.div>
 
             <motion.div {...fadeIn(0.11)}>
-              <Card className="border border-border shadow-sm rounded-xl overflow-hidden h-full">
+              <Card className="border-black/[0.08] overflow-hidden h-full">
                 <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                   <CardTitle className="flex items-center gap-2 text-sm font-semibold text-foreground">
                     <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10">
@@ -454,7 +454,7 @@ const ApplicationProcessing = () => {
             (application.status === "APPROVED" &&
               !application.concessionNumber)) && (
             <motion.div {...fadeIn(0.16)}>
-              <Card className="border border-border shadow-sm rounded-xl overflow-hidden">
+              <Card className="border-black/[0.08] overflow-hidden">
                 <CardHeader className="px-6 py-4 border-b border-border bg-muted/20">
                   <CardTitle className="text-sm font-semibold text-foreground">
                     {showIssueSection
@@ -473,7 +473,7 @@ const ApplicationProcessing = () => {
                         <Button
                           onClick={handleApprove}
                           disabled={isProcessing}
-                          className="h-9 rounded-lg px-5 text-sm font-semibold bg-success hover:bg-success/90 text-success-foreground transition-colors duration-150 flex items-center gap-2"
+                          className="h-9 rounded-lg px-5 text-sm font-semibold bg-success hover:bg-success/90 text-white transition-colors duration-150 flex items-center gap-2"
                         >
                           <CheckCircle className="h-4 w-4" />
                           Approve Application

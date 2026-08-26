@@ -29,7 +29,7 @@ const NotFound = () => {
           transition={{ duration: 0.4, ease: EASE_OUT }}
           className="w-full max-w-md"
         >
-          <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+          <div className="rounded-2xl border-black/[0.08] bg-card overflow-hidden">
             <div className="border-b border-border bg-muted/20 px-6 py-4 flex items-center gap-2.5">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-destructive/10">
                 <FileX className="h-3.5 w-3.5 text-destructive" />

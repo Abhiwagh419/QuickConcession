@@ -54,7 +54,6 @@ export default function StaffChatPage() {
           transition={{ duration: 0.35, ease: EASE_OUT }}
           className="w-[300px] shrink-0 border-r border-border bg-card flex flex-col"
         >
-          {/* Sidebar Header */}
           <div className="px-4 pt-5 pb-4 border-b border-border space-y-3">
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10">
