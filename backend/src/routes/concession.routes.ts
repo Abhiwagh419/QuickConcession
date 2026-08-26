@@ -9,8 +9,6 @@ router.post("/apply", requireAuth, applyConcession);
 
 router.get("/my", requireAuth, async (req, res) => {
   try {
-    console.log("REQ.USER =", req.user);
-
     const studentId = req.user!.sub;
 
     const applications = await prisma.concessionApplication.findMany({
