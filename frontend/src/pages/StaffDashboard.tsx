@@ -309,7 +309,7 @@ const StaffDashboard = () => {
       label: "Scholarship Portal",
       icon: GraduationCap,
       type: "external",
-      url: "https://mahadbt.maharashtra.gov.in/Home/Index",
+      url: "https://mahadbt2.maharashtra.gov.in/",
       description: "Government scholarships & DBT status",
     },
   ];
