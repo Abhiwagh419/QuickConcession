@@ -157,7 +157,6 @@ const StaffDashboard = () => {
     const fetchApplications = async () => {
       try {
         const data = await getStaffApplications();
-        console.log("Staff API response:", data);
 
         setPendingApps(data.pending || []);
         setPersonalApps(data.personal || []);
