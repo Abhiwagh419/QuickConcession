@@ -37,16 +37,55 @@ async function callGroq(apiKey: string, messages: any[], useTools: boolean) {
     body.tool_choice = "auto";
   }
 
-  const response = await fetch(GROQ_API_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
+  // fetch() can throw (network blip, DNS failure, timeout) rather than
+  // resolving with a non-ok response. Without this try/catch, that throw
+  // becomes an unhandled rejection in the (unwrapped, plain-async) route
+  // handler — the request just hangs until the client times out, with no
+  // error shown to the student at all. Returning null lets the caller
+  // treat "couldn't reach Groq" the same way as "Groq returned an error".
+  try {
+    return await fetch(GROQ_API_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (networkError) {
+    console.error("Groq request failed (network):", networkError);
+    return null;
+  }
+}
 
-  return response;
+function extractLastUserMessage(history: ChatMessage[]): string | undefined {
+  for (let i = history.length - 1; i >= 0; i--) {
+    if (history[i].role === "user") {
+      return history[i].content;
+    }
+  }
+  return undefined;
+}
+
+// When Groq is unreachable, rate-limited, or otherwise erroring, this tries
+// a local (no-LLM) FAQ keyword match on the student's last message instead
+// of just failing outright. FAQ search is plain string matching in
+// knowledgeBase.ts — it has no dependency on Groq being up at all.
+async function tryLocalFaqFallback(
+  history: ChatMessage[],
+  context: ToolContext,
+): Promise<string | null> {
+  const query = extractLastUserMessage(history);
+  if (!query) return null;
+
+  const result: any = await executeTool("search_faq", { query }, context);
+
+  if (result?.found && result.results?.[0]) {
+    const { question, answer } = result.results[0];
+    return `I couldn't reach the full assistant right now, but here's a related FAQ answer:\n\n**${question}**\n${answer}`;
+  }
+
+  return null;
 }
 
 export async function runAssistant(
@@ -67,14 +106,18 @@ export async function runAssistant(
   for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
     const response = await callGroq(apiKey, messages, true);
 
-    if (!response.ok) {
-      const errorBody = await response.text().catch(() => "");
-      console.error("Groq API error:", response.status, errorBody);
+    if (!response || !response.ok) {
+      const status = response?.status;
+      const errorBody = response ? await response.text().catch(() => "") : "";
+
+      if (response) {
+        console.error("Groq API error:", status, errorBody);
+      }
 
       if (errorBody.includes("tool_use_failed")) {
         const fallback = await callGroq(apiKey, messages, false);
 
-        if (fallback.ok) {
+        if (fallback?.ok) {
           const fallbackData = await fallback.json();
           const fallbackContent = fallbackData.choices?.[0]?.message?.content;
 
@@ -82,6 +125,15 @@ export async function runAssistant(
             return fallbackContent;
           }
         }
+      }
+
+      const faqFallback = await tryLocalFaqFallback(history, context);
+      if (faqFallback) {
+        return faqFallback;
+      }
+
+      if (status === 429) {
+        return "QuickChat is getting a lot of questions right now — please try again in about a minute.";
       }
 
       return "Sorry, the assistant is temporarily unavailable. Please try again shortly.";
@@ -122,5 +174,5 @@ export async function runAssistant(
     }
   }
 
-  return "Sorry, that took too many steps to resolve. Please rephrase your question.";
+  return "Sorry, that took too many steps to resolve. Please try rephrasing your question more specifically.";
 }
