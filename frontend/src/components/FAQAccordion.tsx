@@ -9,6 +9,11 @@ type FAQ = {
 
 const faqs: FAQ[] = [
   {
+    question: "Am I eligible to apply?",
+    answer:
+      "If you're logged in here as a student, you're eligible — there's no separate category (General/OBC/SC/ST/etc.) requirement to worry about.",
+  },
+  {
     question: "How long does approval take?",
     answer:
       "Approval usually takes 1–3 working days after submission, depending on verification workload.",
@@ -16,12 +21,17 @@ const faqs: FAQ[] = [
   {
     question: "Why was my application rejected?",
     answer:
-      "Applications are rejected if details are incorrect, incomplete, or eligibility criteria are not met. Please check remarks in your application history.",
+      "Applications are rejected if details are incorrect or incomplete — for example a mismatched route or station. Check the specific rejection reason on your dashboard, then submit a fresh application with corrected details.",
+  },
+  {
+    question: "What class and duration can I choose?",
+    answer:
+      "Travel class: First Class or Second Class. Duration: Monthly or Quarterly.",
   },
   {
     question: "When will my concession expire?",
     answer:
-      "The concession expiry date depends on the selected duration and is shown once the pass is issued.",
+      "The concession expiry date depends on the selected duration and is shown once the pass is issued. It's marked expired automatically once that date passes.",
   },
   {
     question: "How to reapply for concession?",

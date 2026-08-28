@@ -13,15 +13,14 @@ export const toolDefinitions = [
     function: {
       name: "check_eligibility",
       description:
-        "Checks whether a student is eligible for a concession pass based on institution, year of study, and category.",
+        "Checks whether a student is eligible for a concession pass based on institution and year of study only. There is no category (General/OBC/SC/ST/etc.) requirement in this system — never ask the user for a category.",
       parameters: {
         type: "object",
         properties: {
           institution: { type: "string" },
           year: { type: "number" },
-          category: { type: "string" },
         },
-        required: ["institution", "year", "category"],
+        required: ["institution", "year"],
       },
     },
   },

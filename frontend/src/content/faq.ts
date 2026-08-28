@@ -5,9 +5,24 @@ export interface FaqItem {
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
+    question: "Who is eligible to apply for a concession pass?",
+    answer:
+      "Any actively enrolled student of Government Polytechnic, Mumbai is eligible — there's no separate category (General/OBC/SC/ST/etc.) requirement. If your college has issued you login credentials, you're eligible to apply.",
+  },
+  {
+    question: "How do I get my login details?",
+    answer:
+      "Student accounts are created by your college admin, who will share your enrollment number and initial password with you. If you haven't received these, contact the IT Department.",
+  },
+  {
     question: "How do I apply for a concession pass?",
     answer:
-      "Sign in with your enrollment number and password, verified by a one-time OTP, then submit your route, travel class, and concession duration from your dashboard.",
+      "Sign in with your enrollment number and password, verified by a one-time OTP, then go to New Application and submit your travel line/stations, travel class, and duration from your dashboard.",
+  },
+  {
+    question: "What travel class and duration options are there?",
+    answer:
+      "Travel class: First Class or Second Class. Duration: Monthly or Quarterly. You'll pick both when filling out your application.",
   },
   {
     question: "How will I know if my application is approved or rejected?",

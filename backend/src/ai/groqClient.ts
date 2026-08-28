@@ -17,7 +17,10 @@ function buildSystemPrompt(context: ToolContext): string {
     "the tool returns. If a tool returns an error or no result, say you don't have that information " +
     "rather than guessing. If the user asks for something no available tool covers, say plainly that " +
     "you don't currently support that, in plain text, without attempting to call a tool that isn't in " +
-    "your tool list. Keep answers short and plain.";
+    "your tool list. Keep answers short, warm, and in plain everyday language — avoid jargon. " +
+    "Eligibility in this system is based only on being an actively enrolled student here, with no " +
+    "separate category (General/OBC/SC/ST/EWS/etc.) requirement — never ask the user for a category " +
+    "or treat one as relevant, even if they mention it.";
 
   if (context.role === "STUDENT") {
     return `${base} The current user is a student. They can ask about their own application status, general FAQs, and eligibility.`;

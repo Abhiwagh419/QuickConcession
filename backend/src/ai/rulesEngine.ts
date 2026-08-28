@@ -3,7 +3,6 @@ import { eligibilityCriteria } from "./knowledgeBase";
 export interface EligibilityInput {
   institution: string;
   year: number;
-  category: string;
 }
 
 export interface EligibilityResult {
@@ -16,6 +15,10 @@ function normalize(value: string): string {
   return value.trim().toLowerCase();
 }
 
+// Eligibility is intentionally simple: any actively enrolled student of the
+// institution is eligible, regardless of category. There is no
+// caste/reservation category check here — see the note in knowledgeBase.ts
+// for why that field was removed.
 export function checkEligibility(input: EligibilityInput): EligibilityResult {
   const reasons: string[] = [];
 
@@ -24,7 +27,7 @@ export function checkEligibility(input: EligibilityInput): EligibilityResult {
 
   if (!institutionMatches) {
     reasons.push(
-      `Institution must be "${eligibilityCriteria.institution}".`,
+      `This portal is for students of "${eligibilityCriteria.institution}". If you study elsewhere, this system can't process your application.`,
     );
   }
 
@@ -36,18 +39,8 @@ export function checkEligibility(input: EligibilityInput): EligibilityResult {
     reasons.push("Year of study is not within the eligible range.");
   }
 
-  const categoryMatches = eligibilityCriteria.allowedCategories.some(
-    (allowed) => normalize(allowed) === normalize(input.category),
-  );
-
-  if (!categoryMatches) {
-    reasons.push(
-      `Category must be one of: ${eligibilityCriteria.allowedCategories.join(", ")}.`,
-    );
-  }
-
   return {
-    eligible: institutionMatches && yearMatches && categoryMatches,
+    eligible: institutionMatches && yearMatches,
     reasons,
     isPlaceholderPolicy: eligibilityCriteria.isPlaceholder,
   };
