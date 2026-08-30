@@ -1,111 +1,86 @@
-# QUICKCONCESSION PROPRIETARY SOURCE-VISIBLE LICENSE
+QUICKCONCESSION
+PROPRIETARY SOURCE-VISIBLE LICENSE
 
-**Copyright © 2026 Abhishek Chintamani Wagh. All Rights Reserved.**
+Copyright © 2026. All Rights Reserved.
 
-This license applies to the QuickConcession project and all original materials contained within it, including, but not limited to, source code, software, architecture, algorithms, artificial intelligence components, models, documentation, user interfaces, designs, assets, configurations, databases, and project structure (collectively, the **“Project”**).
 
-For the purposes of this License, **“Owner”** means **Abhishek Chintamani Wagh**, the sole and exclusive owner and copyright holder of the original Project.
+1. OWNERSHIP
 
----
+QuickConcession, including its original source code, software,
+architecture, algorithms, designs, documentation, assets, configurations,
+and other original components (collectively, the "Project"), is the
+exclusive intellectual property of the Owner.
 
-## 1. Exclusive Ownership
+All rights, title, interest, and intellectual property rights in the
+original Project are solely and exclusively reserved by the Owner.
 
-All rights, title, interests, and intellectual property rights in and to the original Project are **solely and exclusively vested in the Owner**.
+No ownership, license, right, title, interest, or authority is granted
+to any other individual or entity by accessing, viewing, downloading,
+cloning, forking, or otherwise obtaining the Project.
 
-The Owner retains complete and exclusive ownership of the Project and all original components thereof.
 
-Nothing in this License, and no act of viewing, accessing, downloading, cloning, forking, or otherwise obtaining the Project, shall be construed as transferring, assigning, granting, or creating any ownership right, license, interest, or claim in favour of any other person or entity.
+2. SOURCE-VISIBLE ONLY
 
----
+The Project is publicly visible solely for demonstration, portfolio,
+academic evaluation, and review purposes.
 
-## 2. Source-Visible Status
+Public visibility does not make the Project open source and does not
+grant permission to use, copy, modify, distribute, deploy, or otherwise
+exploit the Project.
 
-The Project may be publicly visible solely for the purposes of:
 
-* demonstration;
-* portfolio presentation;
-* academic evaluation; and
-* personal review or observation.
+3. RESTRICTIONS
 
-Public availability of the Project does **not** make it open source and does not grant any right to use, copy, modify, distribute, deploy, or otherwise exploit the Project.
+Without prior explicit written permission from the Owner, no person or
+entity may:
 
-No rights are granted except those expressly stated in this License or separately authorized in writing by the Owner.
+• use the Project for personal, academic, institutional, commercial, or
+  production purposes;
 
----
+• copy, reproduce, duplicate, extract, or retain substantial portions of
+  the Project;
 
-## 3. Restrictions
+• modify, adapt, alter, reverse engineer, or create derivative works;
 
-Except with the Owner's prior explicit written authorization, no person or entity may, directly or indirectly:
+• create clones, replicas, or substantially similar implementations based
+  on the Project or its original components;
 
-* use the Project or any original component thereof for any personal, academic, institutional, commercial, or production purpose;
-* copy, reproduce, duplicate, extract, or retain substantial portions of the Project;
-* modify, adapt, translate, alter, reverse engineer, or create derivative works based on the Project;
-* create clones, replicas, substantially similar implementations, or competing projects derived from the Project or its original implementation;
-* distribute, publish, upload, transmit, sublicense, sell, rent, lease, or otherwise transfer any part of the Project;
-* deploy, host, operate, or commercially exploit the Project or any substantial part of it;
-* incorporate any original source code, architecture, algorithms, designs, documentation, or implementation into another project;
-* remove, alter, conceal, or misrepresent any copyright, ownership, authorship, attribution, or license notice;
-* falsely claim authorship, ownership, contribution, or development rights over the Project;
-* submit the Project, or a copied or substantially derived version of it, as another person's academic, professional, commercial, or personal work;
-* use the Project or its original components for training, developing, or improving artificial intelligence or machine-learning systems.
+• distribute, publish, upload, share, sublicense, sell, transfer, deploy,
+  host, or commercially exploit the Project;
 
-**Any use of the Project not expressly authorized in writing by the Owner is strictly prohibited.**
+• incorporate any original component of the Project into another project;
 
----
+• remove or alter any copyright, ownership, authorship, or attribution
+  notice; or
 
-## 4. No Implied Rights
+• claim authorship, ownership, contribution, or development rights over
+  the Project or any original component thereof.
 
-No permission or license shall be implied from the public visibility or accessibility of the Project.
 
-The ability to view, access, download, clone, or fork the Project shall not constitute authorization to use, reproduce, modify, distribute, deploy, or exploit it.
+4. NO IMPLIED RIGHTS
 
----
+No permission shall be implied from the public availability of the
+Project. Any rights not expressly granted in prior written authorization
+by the Owner are strictly reserved.
 
-## 5. Permission
 
-Any intended use of the Project beyond mere viewing for the limited purposes described in this License requires the Owner's **prior explicit written permission**.
+5. THIRD-PARTY COMPONENTS
 
-Any permission granted shall be limited strictly to the specific purpose expressly authorized and shall not be interpreted as granting any broader, continuing, transferable, or sublicensable rights.
+This License applies only to original components of QuickConcession.
+Third-party libraries, frameworks, packages, APIs, and other external
+components remain subject to their respective licenses and terms.
 
----
 
-## 6. Enforcement and Remedies
+────────────────────────────────────────────────────────────────────
 
-Unauthorized use of the Project may constitute infringement of the Owner's intellectual property and other applicable rights.
+OWNER                 : Abhishek Wagh
+COPYRIGHT HOLDER      : Abhishek Wagh
+INTELLECTUAL PROPERTY
+RIGHTS HOLDER         : Abhishek Wagh
 
-The Owner reserves all rights to seek appropriate remedies available under applicable law in relation to any unauthorized use, reproduction, modification, distribution, misrepresentation, or exploitation of the Project.
+PROJECT               : QuickConcession
+YEAR                  : 2026
 
----
+────────────────────────────────────────────────────────────────────
 
-## 7. Third-Party Components
-
-This License applies only to the original work and original components of the Project owned by the Owner.
-
-Any third-party software, libraries, frameworks, packages, APIs, fonts, services, or other external materials included in or used by the Project remain subject to their respective licenses and terms.
-
-Nothing in this License shall be construed as claiming ownership over third-party materials.
-
----
-
-# Final Declaration
-
-**All rights, title, ownership, interests, and intellectual property rights in and to the original QuickConcession Project are solely and exclusively vested in the Owner.**
-
-**No other individual, developer, student, organization, institution, company, or entity is granted any ownership right, license, authority, or interest in the Project except through the Owner's prior explicit written authorization.**
-
-**ALL RIGHTS RESERVED.**
-
----
-
-## Ownership and Rights
-
-**Owner:** Abhishek Wagh
-**Copyright Holder:** Abhishek Wagh
-**Intellectual Property Rights Holder:** Abhishek Wagh
-
-**Project:** QuickConcession
-**Year:** 2026
-
-**ALL RIGHTS RESERVED.**
-
-The original QuickConcession Project and all applicable rights therein remain solely and exclusively vested in the Owner. No ownership, license, right, title, interest, or authority is granted to any other individual or entity except through prior explicit written authorization from the Owner.
+ALL RIGHTS RESERVED.
