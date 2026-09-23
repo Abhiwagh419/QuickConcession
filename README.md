@@ -16,6 +16,7 @@ QuickConcession is a full-stack web application built to digitize the railway co
 - [Project Structure](#project-structure)
 - [Installation & Setup](#installation--setup)
 - [Security Notes](#security-notes)
+- [Changelog](#changelog)
 - [Author](#author)
 - [License](#license)
 
@@ -157,7 +158,7 @@ npx prisma migrate deploy
 npx prisma generate
 ```
 
-This creates the `Student`, `Staff`, `ConcessionApplication`, and `OtpVerification` tables along with all required enums.
+This creates the `Student`, `Staff`, `ConcessionApplication`, and `OtpVerification` tables along with all required enums (`ApplicationStatus`, `Shift`, `Semester`, `Year`, `UserRole`, `OtpPurpose`).
 
 ### 4. Backend Setup
 
@@ -181,10 +182,22 @@ npm run dev
 
 - Passwords are hashed with bcrypt before storage; plaintext credentials are never persisted
 - Sensitive configuration (database URL, JWT secret, email provider keys) is managed via environment variables, excluded from version control
-- OTP verification adds a second authentication factor for both student and staff logins
-- All admin and staff routes are protected by role-based middleware (`requireAuth`, `requireStaff`, `requireAdmin`) enforced server-side
+- OTP verification adds a second authentication factor for student, staff, and admin logins
+- Login OTPs and password-reset OTPs are purpose-scoped and tracked separately — a code issued for one flow cannot be used to complete the other
+- Deactivated or soft-deleted accounts (student, staff, or admin) are blocked at every authentication step: login, OTP verification, password-reset request, and password-reset completion
+- All admin and staff routes are protected by role-based checks (`requireAuth`, `requireStaff`, and admin-role checks) enforced server-side
 - Helmet is used to set secure HTTP headers, and CORS is restricted to a defined allowlist of origins
 - Soft-delete is used for student and staff records, preserving historical data integrity while restricting access
+
+---
+
+## Changelog
+
+### 2026-09-24 — Authentication hardening
+- **Staff/admin accounts now respect `active`/`isDeleted` status.** Previously only student accounts were blocked from logging in while deactivated or soft-deleted; staff and admin accounts could still complete login even after being disabled. This is now enforced at both the password step and the OTP verification step.
+- **Login and password-reset OTPs are no longer interchangeable.** Added an `OtpPurpose` (`LOGIN` / `RESET`) field to `OtpVerification` so a code sent for a password reset can't be replayed against the login-OTP endpoint, and vice versa, for both students and staff.
+- **Password-reset flow now also respects account status.** A deactivated or soft-deleted account can no longer request or complete a password reset (the request step still returns a generic response to avoid leaking account existence/status).
+- Migration: `20260924120000_add_otp_purpose`.
 
 ---
 

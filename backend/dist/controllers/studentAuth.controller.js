@@ -23,9 +23,18 @@ const requestStudentPasswordReset = async (req, res) => {
             message: "If the enrollment number exists, an OTP has been sent to the registered email.",
         });
     }
+    // Same generic response either way — otherwise a caller could tell a
+    // deactivated/removed account apart from one that simply doesn't exist.
+    // We just quietly don't issue a working OTP for it.
+    if (student.isDeleted || !student.active) {
+        return res.status(200).json({
+            message: "If the enrollment number exists, an OTP has been sent to the registered email.",
+        });
+    }
     await client_1.prisma.otpVerification.updateMany({
         where: {
             studentId: student.id,
+            purpose: "RESET",
             isUsed: false,
             expiresAt: { gt: new Date() },
         },
@@ -38,6 +47,7 @@ const requestStudentPasswordReset = async (req, res) => {
         data: {
             studentId: student.id,
             otpHash,
+            purpose: "RESET",
             expiresAt,
         },
     });
@@ -66,9 +76,15 @@ const resetStudentPassword = async (req, res) => {
     if (!student) {
         return res.status(400).json({ message: "Invalid OTP or expired OTP" });
     }
+    // Re-checked here too (not just at the request step) in case the account
+    // was deactivated/soft-deleted after a valid OTP was already issued.
+    if (student.isDeleted || !student.active) {
+        return res.status(400).json({ message: "Invalid OTP or expired OTP" });
+    }
     const otpEntry = await client_1.prisma.otpVerification.findFirst({
         where: {
             studentId: student.id,
+            purpose: "RESET",
             isUsed: false,
             expiresAt: { gt: new Date() },
         },

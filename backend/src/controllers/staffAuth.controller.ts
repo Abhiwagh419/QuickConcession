@@ -31,6 +31,19 @@ export async function staffLogin(req: Request, res: Response) {
       });
     }
 
+    if (staff.isDeleted) {
+      return res.status(403).json({
+        message: "Your account has been removed from the system.",
+      });
+    }
+
+    if (!staff.active) {
+      return res.status(403).json({
+        message:
+          "Your account has been deactivated. Please contact administration.",
+      });
+    }
+
     const isPasswordValid = await verifyPassword(password, staff.passwordHash);
 
     if (!isPasswordValid) {
@@ -42,6 +55,7 @@ export async function staffLogin(req: Request, res: Response) {
     await prisma.otpVerification.updateMany({
       where: {
         staffId: staff.id,
+        purpose: "LOGIN",
         isUsed: false,
         expiresAt: { gt: new Date() },
       },
@@ -55,6 +69,7 @@ export async function staffLogin(req: Request, res: Response) {
       data: {
         staffId: staff.id,
         otpHash,
+        purpose: "LOGIN",
         expiresAt: new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000),
       },
     });
@@ -107,9 +122,26 @@ export async function verifyStaffOtp(req: Request, res: Response) {
       return res.status(400).json({ message: "Invalid OTP or expired OTP" });
     }
 
+    // Re-checked here (not just at the password step) so an account that gets
+    // deactivated/soft-deleted between "send OTP" and "verify OTP" can't still
+    // complete a login already in progress.
+    if (staff.isDeleted) {
+      return res.status(403).json({
+        message: "Your account has been removed from the system.",
+      });
+    }
+
+    if (!staff.active) {
+      return res.status(403).json({
+        message:
+          "Your account has been deactivated. Please contact administration.",
+      });
+    }
+
     const otpEntry = await prisma.otpVerification.findFirst({
       where: {
         staffId: staff.id,
+        purpose: "LOGIN",
         isUsed: false,
         expiresAt: { gt: new Date() },
       },
@@ -177,9 +209,20 @@ export const requestStaffPasswordReset = async (
     });
   }
 
+  // Same generic response either way — otherwise a caller could tell a
+  // deactivated/removed account apart from one that simply doesn't exist.
+  // We just quietly don't issue a working OTP for it.
+  if (staff.isDeleted || !staff.active) {
+    return res.status(200).json({
+      message:
+        "If the email exists, an OTP has been sent to the registered address.",
+    });
+  }
+
   await prisma.otpVerification.updateMany({
     where: {
       staffId: staff.id,
+      purpose: "RESET",
       isUsed: false,
       expiresAt: { gt: new Date() },
     },
@@ -193,6 +236,7 @@ export const requestStaffPasswordReset = async (
     data: {
       staffId: staff.id,
       otpHash,
+      purpose: "RESET",
       expiresAt: new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000),
     },
   });
@@ -239,9 +283,16 @@ export const resetStaffPassword = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "Invalid OTP or expired OTP" });
   }
 
+  // Re-checked here too (not just at the request step) in case the account
+  // was deactivated/soft-deleted after a valid OTP was already issued.
+  if (staff.isDeleted || !staff.active) {
+    return res.status(400).json({ message: "Invalid OTP or expired OTP" });
+  }
+
   const otpEntry = await prisma.otpVerification.findFirst({
     where: {
       staffId: staff.id,
+      purpose: "RESET",
       isUsed: false,
       expiresAt: { gt: new Date() },
     },

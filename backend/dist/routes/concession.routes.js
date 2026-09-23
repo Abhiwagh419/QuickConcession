@@ -8,7 +8,6 @@ const router = (0, express_1.Router)();
 router.post("/apply", requireAuth_1.requireAuth, concession_controller_1.applyConcession);
 router.get("/my", requireAuth_1.requireAuth, async (req, res) => {
     try {
-        console.log("REQ.USER =", req.user);
         const studentId = req.user.sub;
         const applications = await prisma_1.prisma.concessionApplication.findMany({
             where: { studentId },

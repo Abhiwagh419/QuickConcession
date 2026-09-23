@@ -28,6 +28,16 @@ async function staffLogin(req, res) {
                 message: "Invalid credentials",
             });
         }
+        if (staff.isDeleted) {
+            return res.status(403).json({
+                message: "Your account has been removed from the system.",
+            });
+        }
+        if (!staff.active) {
+            return res.status(403).json({
+                message: "Your account has been deactivated. Please contact administration.",
+            });
+        }
         const isPasswordValid = await (0, password_1.verifyPassword)(password, staff.passwordHash);
         if (!isPasswordValid) {
             return res.status(401).json({
@@ -37,6 +47,7 @@ async function staffLogin(req, res) {
         await client_1.prisma.otpVerification.updateMany({
             where: {
                 staffId: staff.id,
+                purpose: "LOGIN",
                 isUsed: false,
                 expiresAt: { gt: new Date() },
             },
@@ -48,6 +59,7 @@ async function staffLogin(req, res) {
             data: {
                 staffId: staff.id,
                 otpHash,
+                purpose: "LOGIN",
                 expiresAt: new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000),
             },
         });
@@ -83,9 +95,23 @@ async function verifyStaffOtp(req, res) {
         if (!staff) {
             return res.status(400).json({ message: "Invalid OTP or expired OTP" });
         }
+        // Re-checked here (not just at the password step) so an account that gets
+        // deactivated/soft-deleted between "send OTP" and "verify OTP" can't still
+        // complete a login already in progress.
+        if (staff.isDeleted) {
+            return res.status(403).json({
+                message: "Your account has been removed from the system.",
+            });
+        }
+        if (!staff.active) {
+            return res.status(403).json({
+                message: "Your account has been deactivated. Please contact administration.",
+            });
+        }
         const otpEntry = await client_1.prisma.otpVerification.findFirst({
             where: {
                 staffId: staff.id,
+                purpose: "LOGIN",
                 isUsed: false,
                 expiresAt: { gt: new Date() },
             },
@@ -134,9 +160,18 @@ const requestStaffPasswordReset = async (req, res) => {
             message: "If the email exists, an OTP has been sent to the registered address.",
         });
     }
+    // Same generic response either way — otherwise a caller could tell a
+    // deactivated/removed account apart from one that simply doesn't exist.
+    // We just quietly don't issue a working OTP for it.
+    if (staff.isDeleted || !staff.active) {
+        return res.status(200).json({
+            message: "If the email exists, an OTP has been sent to the registered address.",
+        });
+    }
     await client_1.prisma.otpVerification.updateMany({
         where: {
             staffId: staff.id,
+            purpose: "RESET",
             isUsed: false,
             expiresAt: { gt: new Date() },
         },
@@ -148,6 +183,7 @@ const requestStaffPasswordReset = async (req, res) => {
         data: {
             staffId: staff.id,
             otpHash,
+            purpose: "RESET",
             expiresAt: new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000),
         },
     });
@@ -176,9 +212,15 @@ const resetStaffPassword = async (req, res) => {
     if (!staff) {
         return res.status(400).json({ message: "Invalid OTP or expired OTP" });
     }
+    // Re-checked here too (not just at the request step) in case the account
+    // was deactivated/soft-deleted after a valid OTP was already issued.
+    if (staff.isDeleted || !staff.active) {
+        return res.status(400).json({ message: "Invalid OTP or expired OTP" });
+    }
     const otpEntry = await client_1.prisma.otpVerification.findFirst({
         where: {
             staffId: staff.id,
+            purpose: "RESET",
             isUsed: false,
             expiresAt: { gt: new Date() },
         },

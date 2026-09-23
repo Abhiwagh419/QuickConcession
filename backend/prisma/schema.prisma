@@ -28,20 +28,21 @@ model Student {
 }
 
 model OtpVerification {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
 
   studentId Int?
   staffId   Int?
 
   otpHash   String
+  purpose   OtpPurpose @default(LOGIN)
   expiresAt DateTime
-  isUsed    Boolean  @default(false)
-  createdAt DateTime @default(now())
+  isUsed    Boolean    @default(false)
+  createdAt DateTime   @default(now())
 
-  student   Student? @relation(fields: [studentId], references: [id])
-  staff     Staff?   @relation(fields: [staffId], references: [id])
+  student   Student?   @relation(fields: [studentId], references: [id])
+  staff     Staff?     @relation(fields: [staffId], references: [id])
 
-  @@index([studentId, staffId, isUsed, expiresAt])
+  @@index([studentId, staffId, purpose, isUsed, expiresAt])
 }
 
 
@@ -110,4 +111,9 @@ enum Year {
 enum UserRole {
   STAFF
   ADMIN
+}
+
+enum OtpPurpose {
+  LOGIN
+  RESET
 }

@@ -55,7 +55,14 @@ async function exportConcessionsExcel(req, res) {
                 },
             },
             include: {
-                student: true,
+                student: {
+                    select: {
+                        enrollmentNo: true,
+                        fullName: true,
+                        course: true,
+                        sem: true,
+                    },
+                },
             },
             orderBy: { approvedAt: "desc" },
         });
@@ -69,7 +76,13 @@ async function exportConcessionsExcel(req, res) {
                 },
             },
             include: {
-                student: true,
+                student: {
+                    select: {
+                        enrollmentNo: true,
+                        fullName: true,
+                        course: true,
+                    },
+                },
             },
             orderBy: { rejectedAt: "desc" },
         });

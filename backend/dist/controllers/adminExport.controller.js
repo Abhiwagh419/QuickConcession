@@ -68,11 +68,11 @@ async function exportAdminExcel(req, res) {
         allStudents
             .filter((s) => !s.isDeleted)
             .forEach((s) => {
-                studentSheet.addRow({
-                    ...s,
-                    createdAt: s.createdAt.toLocaleDateString("en-IN"),
-                });
+            studentSheet.addRow({
+                ...s,
+                createdAt: s.createdAt.toLocaleDateString("en-IN"),
             });
+        });
         studentSheet.addRow({});
         studentSheet.addRow({
             enrollmentNo: "TOTAL STUDENTS",
@@ -127,11 +127,11 @@ async function exportAdminExcel(req, res) {
         allStaff
             .filter((s) => !s.isDeleted)
             .forEach((s) => {
-                staffSheet.addRow({
-                    ...s,
-                    createdAt: s.createdAt.toLocaleDateString("en-IN"),
-                });
+            staffSheet.addRow({
+                ...s,
+                createdAt: s.createdAt.toLocaleDateString("en-IN"),
             });
+        });
         staffSheet.addRow({});
         staffSheet.addRow({
             fullName: "TOTAL STAFF",

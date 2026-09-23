@@ -53,6 +53,7 @@ export const login = async (req: Request, res: Response) => {
     data: {
       studentId: student.id,
       otpHash,
+      purpose: "LOGIN",
       expiresAt,
     },
   });
@@ -93,6 +94,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
   const record = await prisma.otpVerification.findFirst({
     where: {
       studentId: student.id,
+      purpose: "LOGIN",
       isUsed: false,
       expiresAt: { gt: new Date() },
     },

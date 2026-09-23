@@ -14,7 +14,6 @@ const client_2 = require("@prisma/client");
 const adminExport_controller_1 = require("../controllers/adminExport.controller");
 const validate_1 = require("../utils/validate");
 const router = (0, express_1.Router)();
-
 function ensureAdmin(req, res) {
     if (!req.user || req.user.role !== "ADMIN") {
         res.status(403).json({ message: "Forbidden" });
@@ -22,7 +21,6 @@ function ensureAdmin(req, res) {
     }
     return true;
 }
-
 router.get("/students", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -45,7 +43,6 @@ router.get("/students", requireAuth_1.requireAuth, async (req, res) => {
     });
     res.json(students);
 });
-
 router.post("/students", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -103,7 +100,6 @@ router.post("/students", requireAuth_1.requireAuth, async (req, res) => {
     });
     res.status(201).json(student);
 });
-
 router.patch("/students/:id/toggle", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -123,7 +119,6 @@ router.patch("/students/:id/toggle", requireAuth_1.requireAuth, async (req, res)
         active: updated.active,
     });
 });
-
 router.patch("/students/:id/delete", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -134,7 +129,6 @@ router.patch("/students/:id/delete", requireAuth_1.requireAuth, async (req, res)
     });
     res.json({ message: "Student deleted successfully" });
 });
-
 router.patch("/students/:id/restore", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -151,7 +145,6 @@ router.patch("/students/:id/restore", requireAuth_1.requireAuth, async (req, res
     });
     res.json({ message: "Student restored successfully" });
 });
-
 router.post("/students/:id/reset-password", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -175,7 +168,6 @@ router.post("/students/:id/reset-password", requireAuth_1.requireAuth, async (re
     });
     res.json({ message: "Password updated successfully" });
 });
-
 router.patch("/students/:id", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -212,7 +204,6 @@ router.patch("/students/:id", requireAuth_1.requireAuth, async (req, res) => {
     });
     res.json(updated);
 });
-
 router.get("/students/:id", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -292,8 +283,27 @@ router.get("/applications/:id", requireAuth_1.requireAuth, async (req, res) => {
     const application = await client_1.prisma.concessionApplication.findUnique({
         where: { id },
         include: {
-            student: true,
-            approvedBy: true,
+            student: {
+                select: {
+                    id: true,
+                    fullName: true,
+                    enrollmentNo: true,
+                    email: true,
+                    mobileNumber: true,
+                    course: true,
+                    year: true,
+                    sem: true,
+                    shift: true,
+                },
+            },
+            approvedBy: {
+                select: {
+                    id: true,
+                    fullName: true,
+                    email: true,
+                    role: true,
+                },
+            },
         },
     });
     if (!application) {
@@ -659,7 +669,6 @@ router.post("/students/bulk/confirm", requireAuth_1.requireAuth, async (req, res
         inserted: result.count,
     });
 });
-
 router.get("/staff/:id", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
@@ -713,7 +722,6 @@ router.get("/applications", requireAuth_1.requireAuth, async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
-
 router.post("/staff", requireAuth_1.requireAuth, async (req, res) => {
     if (!ensureAdmin(req, res))
         return;
