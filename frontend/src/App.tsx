@@ -28,6 +28,8 @@ import AdminStaff from "@/pages/AdminStaff";
 import AddStaff from "@/pages/AddStaff";
 import ImportStaff from "@/pages/ImportStaff";
 import AdminApplications from "./pages/AdminApplications";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 const queryClient = new QueryClient();
 function AnimatedRoutes() {
@@ -39,6 +41,8 @@ function AnimatedRoutes() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/help" element={<HelpPage />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
         <Route path="/login" element={<Index />} />
         <Route path="/student/dashboard" element={<StudentDashboard />} />
         <Route

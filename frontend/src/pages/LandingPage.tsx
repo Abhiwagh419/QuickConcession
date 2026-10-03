@@ -11,6 +11,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import TicketMark from "@/components/TicketMark";
+import Footer from "@/components/Footer";
 import { FAQ_ITEMS } from "@/content/faq";
 
 type CubicBezier = [number, number, number, number];
@@ -52,32 +53,6 @@ const ADMIN_FEATURES = [
   "Reset any staff member's password directly — no email loop, no waiting",
   "Step in and approve or reject an application yourself, whenever it's needed",
   "Export the complete student, staff, or application dataset to Excel",
-];
-
-const FOOTER_COLUMNS = [
-  {
-    title: "Portal",
-    links: [
-      { label: "Apply for concession", to: "/login" },
-      { label: "Track status", to: "/login" },
-      { label: "FAQ", to: "/faq" },
-    ],
-  },
-  {
-    title: "Roles",
-    links: [
-      { label: "Student sign in", to: "/login" },
-      { label: "Staff sign in", to: "/login" },
-      { label: "Admin sign in", to: "/login" },
-    ],
-  },
-  {
-    title: "Support",
-    links: [
-      { label: "Help & support", to: "/help" },
-      { label: "Contact IT — 10 AM to 5 PM", to: "/help" },
-    ],
-  },
 ];
 
 const LandingPage = () => {
@@ -510,49 +485,7 @@ const LandingPage = () => {
         </button>
       </section>
 
-      <footer className="border-t border-black/[0.06] px-6 py-14">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-10 md:grid-cols-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="flex h-5 w-5 items-center justify-center rounded-md bg-[#171717]">
-                  <Train className="h-2.5 w-2.5 text-white" strokeWidth={2.4} />
-                </div>
-                <span className="text-[13px] font-semibold">
-                  QuickConcession
-                </span>
-              </div>
-              <p className="mt-3 text-[12px] leading-relaxed text-black/40">
-                Government Polytechnic Mumbai — Official Academic Portal
-              </p>
-            </div>
-
-            {FOOTER_COLUMNS.map((column) => (
-              <div key={column.title}>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-black/35">
-                  {column.title}
-                </p>
-                <ul className="mt-3 space-y-2">
-                  {column.links.map((link) => (
-                    <li key={link.label}>
-                      <button
-                        onClick={() => navigate(link.to)}
-                        className="text-left text-[12.5px] text-black/50 transition-colors hover:text-black"
-                      >
-                        {link.label}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 border-t border-black/[0.06] pt-6 text-[11px] text-black/30">
-            © {new Date().getFullYear()} Government Polytechnic Mumbai
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
